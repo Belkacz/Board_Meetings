@@ -1,1 +1,104 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-checkbox.example-margin.mat-accent{
+  margin-left: -10px;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field {
+  border-radius: 5px;
+  border:solid;
+  border-color: gray;
+  border-width: 1px;
+}
+
+.select-buttons {
+  margin: 15px;
+}
+
+button.select-buttons.active {
+  background-color: black;
+  color: white;
+}
+
+
+
+/* .select-buttons:focus{
+    color: white !important;
+} */
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  background-color: black;
+  color: white;
+}
+
+mat-form-field.wider-input {
+  width: 40%;
+  min-width: 300px;
+  max-width: 600px;
+}
+
+.meeting-form {
+  margin-left: 100px;
+  padding: 20px;
+}
+/* 
+input{
+  border-radius: 100px!important;
+  border-style: solid;
+} */
+
+.mat-stroked-button {
+  border-radius: 4px;
+  border: 1px solid;
+  background-color: transparent;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.example-label {
+  display: table-cell;
+  font-size: 14px;
+  margin-left: 8px;
+  min-width: 120px;
+}
+
+.example-button-row {
+  display: table-cell;
+  max-width: 600px;
+}
+
+.example-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.example-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
+
+.example-section {
+  margin: 12px 0;
+}
+
+.example-margin {
+  margin: 0 12px;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}

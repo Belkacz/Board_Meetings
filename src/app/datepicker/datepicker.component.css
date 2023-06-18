@@ -1,0 +1,18 @@
+
+
+.mat-mdc-text-field-wrapper.mdc-text-field .mdc-text-field--filled .mdc-text-field--no-label{
+    width: 85px!important;
+}
+
+.mat-mdc-input-element.input-time {
+    text-align: center;
+}
+
+.custom-time-input{
+    margin-left: 10px;
+    width: 85px;
+}
+
+.input-time{
+    padding: 0px;
+}

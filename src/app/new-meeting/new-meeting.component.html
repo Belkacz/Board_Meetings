@@ -1,0 +1,52 @@
+<div>
+    <form [formGroup]="form" class="meeting-form">
+        <div>
+            <h2>New meeting</h2>
+            <div>
+                <h3>Meeting type</h3>
+                <div example-button-row class="select-buttons-grup">
+                    <button mat-stroked-button class="select-buttons" [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}" (click)="selectType('boardMeeting')">Board Meeting</button>
+                    <button mat-stroked-button class="select-buttons" [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}" (click)="selectType('generalAssembly')">General Assembly</button>
+                    <button mat-stroked-button class="select-buttons" [ngClass]="{'active': selectedMeetingType.value === 'other'}"
+                    (click)="selectType('other')">Other</button>
+                  </div>
+            </div>
+            <div>
+                <h3>Meeting name</h3>
+                <mat-form-field class="wider-input ">
+                    <input [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
+                    <button mat-icon-button matSuffix (click)="clearInput()">
+                        <mat-icon>clear</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div>
+                <h3>Date and time</h3>
+                <app-datepicker (startDateSelected)="handleDateSelected($event, 0)" (endDateSelected)="handleDateSelected($event, 1)"></app-datepicker>
+            </div>
+            <div>
+                <h3>Location</h3>
+                <section class="">
+                    <mat-checkbox class="example-margin">Location!</mat-checkbox>
+                    <br>
+                    <mat-form-field class="wider-input">
+                        <input matInput placeholder="Adress..." value="">
+                    </mat-form-field>
+                </section>
+                <h3>Online meeting</h3>
+                <section class="">
+                    <mat-checkbox class="example-margin">Online meeting!
+                    </mat-checkbox>
+                    <br>
+                    <mat-form-field class="wider-input">
+                        <input matInput placeholder="Paste meeting link ..." value="">
+                        <button mat-icon-button matSuffix (click)="clearInput()">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </section>
+            </div>
+
+        </div>
+    </form>
+</div>

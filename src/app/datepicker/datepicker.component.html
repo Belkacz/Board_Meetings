@@ -1,0 +1,15 @@
+<div class="calendar-container">
+  <mat-form-field class="calendar-field">
+    <input matInput [matDatepicker]="picker" placeholder="Data" (dateChange)="onDateChange($event.value)">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="custom-time-input">
+    <input matInput class="input-time" type="time" placeholder="start time" (change)="startTimeChange($event)">
+  </mat-form-field>
+  
+  <mat-form-field class="custom-time-input">
+    <input matInput class="input-time" type="time" placeholder="end time" (change)="endTimeChange($event)">
+  </mat-form-field>
+</div>
