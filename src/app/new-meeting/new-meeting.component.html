@@ -5,11 +5,16 @@
             <div>
                 <h3>Meeting type</h3>
                 <div example-button-row class="select-buttons-grup">
-                    <button mat-stroked-button class="select-buttons" [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}" (click)="selectType('boardMeeting')">Board Meeting</button>
-                    <button mat-stroked-button class="select-buttons" [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}" (click)="selectType('generalAssembly')">General Assembly</button>
-                    <button mat-stroked-button class="select-buttons" [ngClass]="{'active': selectedMeetingType.value === 'other'}"
-                    (click)="selectType('other')">Other</button>
-                  </div>
+                    <button mat-stroked-button class="select-buttons"
+                        [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
+                        (click)="selectType('boardMeeting')">Board Meeting</button>
+                    <button mat-stroked-button class="select-buttons"
+                        [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}"
+                        (click)="selectType('generalAssembly')">General Assembly</button>
+                    <button mat-stroked-button class="select-buttons"
+                        [ngClass]="{'active': selectedMeetingType.value === 'other'}"
+                        (click)="selectType('other')">Other</button>
+                </div>
             </div>
             <div>
                 <h3>Meeting name</h3>
@@ -22,7 +27,12 @@
             </div>
             <div>
                 <h3>Date and time</h3>
-                <app-datepicker (startDateSelected)="handleDateSelected($event, 0)" (endDateSelected)="handleDateSelected($event, 1)"></app-datepicker>
+                <div class="main calendar-container">
+                    <app-datepicker (dateSelected)="handleDateSelected($event)"></app-datepicker>
+                    <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
+                    <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
+                </div>
+
             </div>
             <div>
                 <h3>Location</h3>

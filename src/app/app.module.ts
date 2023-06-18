@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { BaseFormComponent } from './base-form/base-form.component';
+import { TimepickerComponent } from './timepicker/timepicker.component';
 
 
 
@@ -22,6 +23,7 @@ import { BaseFormComponent } from './base-form/base-form.component';
   declarations: [
     AppComponent,
     NewMeetingComponent,
+    TimepickerComponent,
   ],
   imports: [
     ReactiveFormsModule,
