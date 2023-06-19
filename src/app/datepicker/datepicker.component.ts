@@ -20,8 +20,6 @@ export class DatepickerComponent {
 
   constructor() {
     this.currentDate = new Date();
-
-
   }
 
   onDateChange(date: Date) {

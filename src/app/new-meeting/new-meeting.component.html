@@ -1,62 +1,71 @@
 <div>
-    <form [formGroup]="form" class="meeting-form">
-        <div>
-            <h2>New meeting</h2>
-            <div>
-                <h3>Meeting type</h3>
-                <div example-button-row class="select-buttons-grup">
-                    <button mat-stroked-button class="select-buttons"
-                        [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
-                        (click)="selectType('boardMeeting')">Board Meeting</button>
-                    <button mat-stroked-button class="select-buttons"
-                        [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}"
-                        (click)="selectType('generalAssembly')">General Assembly</button>
-                    <button mat-stroked-button class="select-buttons"
-                        [ngClass]="{'active': selectedMeetingType.value === 'other'}"
-                        (click)="selectType('other')">Other</button>
-                </div>
-            </div>
-            <div>
-                <h3>Meeting name</h3>
-                <mat-form-field class="wider-input ">
-                    <input [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
-                    <button mat-icon-button matSuffix (click)="clearInput()">
-                        <mat-icon>clear</mat-icon>
-                    </button>
-                </mat-form-field>
-            </div>
-            <div>
-                <h3>Date and time</h3>
-                <div class="main calendar-container">
-                    <app-datepicker (dateSelected)="handleDateSelected($event)"></app-datepicker>
-                    <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
-                    <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
-                </div>
-
-            </div>
-            <div>
-                <h3>Location</h3>
-                <section class="">
-                    <mat-checkbox class="example-margin">Location!</mat-checkbox>
-                    <br>
-                    <mat-form-field class="wider-input">
-                        <input matInput placeholder="Adress..." value="">
-                    </mat-form-field>
-                </section>
-                <h3>Online meeting</h3>
-                <section class="">
-                    <mat-checkbox class="example-margin">Online meeting!
-                    </mat-checkbox>
-                    <br>
-                    <mat-form-field class="wider-input">
-                        <input matInput placeholder="Paste meeting link ..." value="">
-                        <button mat-icon-button matSuffix (click)="clearInput()">
-                            <mat-icon>clear</mat-icon>
-                        </button>
-                    </mat-form-field>
-                </section>
-            </div>
-
+  <form [formGroup]="form" class="meeting-form">
+    <div>
+      <h2>New meeting</h2>
+      <div>
+          <h3>Meeting type</h3>
+          <div example-button-row class="select-buttons-grup">
+              <button mat-stroked-button class="select-buttons"
+                  [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
+                  (click)="selectType('boardMeeting')">Board Meeting</button>
+              <button mat-stroked-button class="select-buttons"
+                  [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}"
+                  (click)="selectType('generalAssembly')">General Assembly</button>
+              <button mat-stroked-button class="select-buttons"
+                  [ngClass]="{'active': selectedMeetingType.value === 'other'}"
+                  (click)="selectType('other')">Other</button>
+          </div>
+      </div>
+      <div>
+        <h3>Meeting name</h3>
+        <mat-form-field class="wider-input ">
+          <input [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
+          <button mat-icon-button matSuffix (click)="clearInput()">
+              <mat-icon>clear</mat-icon>
+          </button>
+      </mat-form-field>
+      </div>
+      <div>
+        <h3>Date and time</h3>
+        <div class="main calendar-container">
+          <app-datepicker (dateSelected)="handleDateSelected($event)"></app-datepicker>
+          <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
+          <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
         </div>
-    </form>
+      </div>
+      <div>
+        <h3>Location</h3>
+        <section class="">
+          <mat-checkbox [checked]="isAddressChecked" (click)="toggleAdress()"
+            class="example-margin">Location</mat-checkbox>
+          <br />
+          <mat-form-field class="wider-input">
+            <input matInput [formControl]="meetingAdrress" placeholder="Adress..." />
+          </mat-form-field>
+        </section>
+        <h3>Online meeting</h3>
+        <section class="">
+          <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="example-margin">Online
+            meeting</mat-checkbox>
+          <br />
+          <mat-form-field class="wider-input">
+            <input matInput [formControl]="onlineAddress" placeholder="Paste meeting link ..." value="" />
+          </mat-form-field>
+        </section>
+      </div>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Agenda1</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua.</mat-card-content>
+        <div class="select-buttons-grup">
+          <button class="select-buttons" mat-stroked-button>Create agenda</button>
+          <input type="file" #chosseFile style="display: none" (change)="onFileSelected($event)" />
+          <button mat-stroked-button (click)="openFilePicker()">Choose File</button>
+        </div>
+      </mat-card>
+    </div>
+  </form>
+  <button (click)="print1()">PRINT</button>
 </div>
