@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { TimepickerComponent } from './timepicker/timepicker.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 
 
 
@@ -39,8 +40,8 @@ import { MatCardModule } from '@angular/material/card';
     MatFormFieldModule, 
     MatInputModule,
     MatButtonToggleModule,
-    MatCardModule
-
+    MatCardModule,
+    MatListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

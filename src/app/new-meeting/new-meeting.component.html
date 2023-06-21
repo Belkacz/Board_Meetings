@@ -3,27 +3,26 @@
     <div>
       <h2>New meeting</h2>
       <div>
-          <h3>Meeting type</h3>
-          <div example-button-row class="select-buttons-grup">
-              <button mat-stroked-button class="select-buttons"
-                  [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
-                  (click)="selectType('boardMeeting')">Board Meeting</button>
-              <button mat-stroked-button class="select-buttons"
-                  [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}"
-                  (click)="selectType('generalAssembly')">General Assembly</button>
-              <button mat-stroked-button class="select-buttons"
-                  [ngClass]="{'active': selectedMeetingType.value === 'other'}"
-                  (click)="selectType('other')">Other</button>
-          </div>
+        <h3>Meeting type</h3>
+        <div example-button-row class="select-buttons-grup">
+          <button mat-stroked-button class="select-buttons"
+            [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
+            (click)="selectType('boardMeeting')">Board Meeting</button>
+          <button mat-stroked-button class="select-buttons"
+            [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}"
+            (click)="selectType('generalAssembly')">General Assembly</button>
+          <button mat-stroked-button class="select-buttons"
+            [ngClass]="{'active': selectedMeetingType.value === 'other'}" (click)="selectType('other')">Other</button>
+        </div>
       </div>
       <div>
         <h3>Meeting name</h3>
-        <mat-form-field class="wider-input ">
+        <mat-form-field class="wider-element wider-container wider-box">
           <input [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
           <button mat-icon-button matSuffix (click)="clearInput()">
-              <mat-icon>clear</mat-icon>
+            <mat-icon>clear</mat-icon>
           </button>
-      </mat-form-field>
+        </mat-form-field>
       </div>
       <div>
         <h3>Date and time</h3>
@@ -39,7 +38,7 @@
           <mat-checkbox [checked]="isAddressChecked" (click)="toggleAdress()"
             class="example-margin">Location</mat-checkbox>
           <br />
-          <mat-form-field class="wider-input">
+          <mat-form-field class="wider-element wider-container wider-box">
             <input matInput [formControl]="meetingAdrress" placeholder="Adress..." />
           </mat-form-field>
         </section>
@@ -53,7 +52,7 @@
           </mat-form-field>
         </section>
       </div>
-      <mat-card>
+      <mat-card class="wider-element wider-container wider-box">
         <mat-card-header>
           <mat-card-title>Agenda1</mat-card-title>
         </mat-card-header>
@@ -61,10 +60,32 @@
           labore et dolore magna aliqua.</mat-card-content>
         <div class="select-buttons-grup">
           <button class="select-buttons" mat-stroked-button>Create agenda</button>
-          <input type="file" #chosseFile style="display: none" (change)="onFileSelected($event)" />
-          <button mat-stroked-button (click)="openFilePicker()">Choose File</button>
+          <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
+          <button mat-stroked-button (click)="openFilePicker(chooseFileInput)">Choose File</button>
         </div>
       </mat-card>
+      <div>
+        <h3>Documents</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eliut, sed do eiusmod tempor</p>
+        <div class="select-buttons-grup">
+          <div>
+            <ul class="wider-element wider-container wider-box">
+              <li *ngFor="let doc of addedDocumentFormArray.value; let i = index" (click)="downloadFile(doc)">
+                <div class="avatar-container text-listcontainter diplay-flex">
+                  <mat-icon class=" elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
+                  <p class=" elements-in-list margin-left">{{ doc.name }}</p>
+                  <button mat-icon-button matSuffix class="clear-button" (click)="deleteDocs(i)">
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <input type="file" #addDocument style="display: none"
+            (change)="onFileSelected($event, FileType.AddDocument)" />
+          <button mat-stroked-button (click)="openFilePicker(addDocumentInput)">Add Documents</button>
+        </div>
+      </div>
     </div>
   </form>
   <button (click)="print1()">PRINT</button>

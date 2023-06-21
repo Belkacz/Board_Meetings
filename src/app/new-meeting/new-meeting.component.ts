@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { BaseFormComponent } from '../base-form/base-form.component';
-import { TimeType } from '../shared/enums';
+import { TimeType, FileType } from '../shared/enums';
+import { DownloadFile } from '../shared/interfaces';
+import { FileDownloadService } from '../services/file-download.service';
 
 @Component({
   selector: 'app-new-meeting',
@@ -9,7 +11,10 @@ import { TimeType } from '../shared/enums';
   styleUrls: ['./new-meeting.component.css'],
 })
 export class NewMeetingComponent extends BaseFormComponent implements OnInit {
-  @ViewChild('chosseFile') fileInput!: ElementRef;
+  @ViewChild('chooseFile ') chooseFileInput !: ElementRef;
+  @ViewChild('addDocument  ') addDocumentInput !: ElementRef;
+
+  FileType = FileType;
 
   public selectedMeetingType!: FormControl;
   public mettingName!: FormControl;
@@ -23,9 +28,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public onlineAddress!: FormControl;
   public isAddressChecked!: boolean
   public isOnlineChecked!: boolean
-  private chossedFileControl!: FormControl;
+  private choosedFileControl!: FormControl;
+  private addedDocumentControl!: FormControl
+  public addedDocumentFormArray!: FormArray;
 
-  constructor() {
+  constructor(private fileDownloadService: FileDownloadService) {
     super();
     this.dateStart = new Date();
     this.dateEnd = new Date(this.dateStart.getHours() + 1);
@@ -41,13 +48,18 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   print1() {
-    console.log(this.form);
+    //console.log(this.form);
+    console.log(this.addedDocumentFormArray.value[0].name)
+  }
+
+  print2(elem: any) {
+    console.log(elem)
   }
 
   createFormControls(): void {
     this.selectedMeetingType = new FormControl();
     this.mettingName = new FormControl();
-    this.meetingAdrress = new FormControl({value: '', disabled: true});
+    this.meetingAdrress = new FormControl({ value: '', disabled: true });
     this.dateSelected = new FormControl();
     this.dateStartControl = new FormControl();
     this.dateEndControl = new FormControl();
@@ -55,7 +67,9 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.onlineAddress = new FormControl();
     this.meetingAdrress = new FormControl();
     this.onlineAddress = new FormControl();
-    this.chossedFileControl = new FormControl();
+    this.choosedFileControl = new FormControl();
+    this.addedDocumentControl = new FormControl();
+    this.addedDocumentFormArray = new FormArray<FormControl>([]);
     this.form = new FormGroup({
       selectedMeetingType: this.selectedMeetingType,
       mettingName: this.mettingName,
@@ -63,8 +77,10 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       dateEnd: this.dateEndControl,
       meetingAdrress: this.meetingAdrress,
       onlineAddress: this.onlineAddress,
-      chosseFile: this.chossedFileControl
+      chooseFile: this.choosedFileControl,
+      addedDocuments: this.addedDocumentFormArray
     });
+    console.log(this.form)
   }
 
   selectType(option: string) {
@@ -110,28 +126,52 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.mettingName.setValue('');
   }
 
-  toggleAdress(){
+  toggleAdress() {
     this.meetingAdrress.enable();
     this.onlineAddress.disable();
     this.isOnlineChecked = false;
     this.isAddressChecked = !this.isAddressChecked;
   }
 
-  toggleOnline(){
+  toggleOnline() {
     this.meetingAdrress.disable();
     this.onlineAddress.enable();
     this.isAddressChecked = false;
     this.isOnlineChecked = !this.isOnlineChecked;
   }
 
-  openFilePicker(): void {
-    this.fileInput.nativeElement.click();
+  openFilePicker(inputElement: ElementRef): void {
+    inputElement.nativeElement.click();
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    this.chossedFileControl.setValue(file);
-    console.log(file);
+  onFileSelected(event: Event, type: FileType): void {
+    const target = event.target as HTMLInputElement;
+    if (target?.files !== null) {
+      const selectedFile = target.files[0];
+      if (type === FileType.ChooseFile) {
+        this.choosedFileControl.setValue(selectedFile);
+      }
+      if (type === FileType.AddDocument) {
+        const addedDocumentControl = new FormControl(selectedFile);
+        this.addedDocumentFormArray.push(addedDocumentControl);
+      }
+    }
+  }
+  // downloadDoc(indexDox: number): void {
+  //   const fileDocument = this.addedDocumentFormArray.value[indexDox];
+  //   if (fileDocument) {
+  //     const downloadLink = document.createElement('a');
+  //     //downloadLink.href = fileDocument.fileUrl;
+  //     downloadLink.download = fileDocument.name;
+  //     downloadLink.click();
+  //   }
+  // }
+
+  downloadFile(doc: DownloadFile): void {
+    this.fileDownloadService.downloadFile(doc);
   }
 
+  deleteDocs(docIndex: number) {
+    this.addedDocumentFormArray.value.splice(docIndex, 1);
+  }
 }
