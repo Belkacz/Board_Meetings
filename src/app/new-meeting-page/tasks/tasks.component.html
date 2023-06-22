@@ -1,0 +1,28 @@
+<div class="side-menu">
+      <div class="flex-box">
+        <h3>
+            Tasks
+        </h3>
+    <button mat-stroked-button class="near-button-container "
+        (click)="addTask()">New Task</button>
+      </div>
+      <div calass="div-list ">
+        <ul>
+            <li *ngFor="let task of tasksList; let i = index" class="list-item margin-left--40px">
+              <div class="flex-box">
+                <span class="task-name">{{ task }}</span>
+                <div class="near-button-container margin-left-50">
+                  <button mat-icon-button matSuffix class="addTask()">
+                    <mat-icon>edit_note</mat-icon>
+                  </button>
+                  <button mat-icon-button matSuffix (click)="clearInput(i)">
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+          
+          
+      </div>
+</div>

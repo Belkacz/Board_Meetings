@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { BaseFormComponent } from '../base-form/base-form.component';
-import { TimeType, FileType } from '../shared/enums';
-import { DownloadFile } from '../shared/interfaces';
-import { FileDownloadService } from '../services/file-download.service';
+import { BaseFormComponent } from '../../base-form/base-form.component';
+import { TimeType, FileType } from '../../shared/enums';
+import { DownloadFile } from '../../shared/interfaces';
+import { FileDownloadService } from '../../services/file-download.service';
 
 @Component({
   selector: 'app-new-meeting',
@@ -48,7 +48,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   print1() {
-    //console.log(this.form);
+
     console.log(this.addedDocumentFormArray.value[0].name)
   }
 
@@ -80,7 +80,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       chooseFile: this.choosedFileControl,
       addedDocuments: this.addedDocumentFormArray
     });
-    console.log(this.form)
   }
 
   selectType(option: string) {
@@ -102,8 +101,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
       this.dateStartControl.setValue(this.dateStart);
       this.dateEndControl.setValue(this.dateStart);
-      // console.log('Wybrana data startowa:', this.dateStart);
-      // console.log('Wybrana data koncowa:', this.dateEnd);
     }
   }
 
@@ -157,6 +154,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       }
     }
   }
+
+  // first version of function to download only a dox
   // downloadDoc(indexDox: number): void {
   //   const fileDocument = this.addedDocumentFormArray.value[indexDox];
   //   if (fileDocument) {

@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NewMeetingComponent } from './new-meeting/new-meeting.component';
-import { DatepickerComponent } from './datepicker/datepicker.component';
+import { NewMeetingComponent } from './new-meeting-page/new-meeting/new-meeting.component';
+import { DatepickerComponent } from './shared/datepicker/datepicker.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,9 +14,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { TimepickerComponent } from './timepicker/timepicker.component';
+import { TimepickerComponent } from './shared/timepicker/timepicker.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
+import { NewMeetingPageComponent } from './new-meeting-page/new-meeting-page.component';
+import { TasksFormComponent } from './new-meeting-page/tasks-form/tasks-form.component';
+import { TasksComponent } from './new-meeting-page/tasks/tasks.component';
 
 
 
@@ -25,6 +28,9 @@ import { MatListModule } from '@angular/material/list';
     AppComponent,
     NewMeetingComponent,
     TimepickerComponent,
+    NewMeetingPageComponent,
+    TasksFormComponent,
+    TasksComponent
   ],
   imports: [
     ReactiveFormsModule,

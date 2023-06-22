@@ -2,8 +2,8 @@
 
 @include mat.core();
 
-$my-primary: mat.define-palette(mat.$grey-palette, 900);
-$my-accent: mat.define-palette(mat.$grey-palette);
+$my-primary: mat.define-palette(mat.$grey-palette,900, 50);
+$my-accent: mat.define-palette(mat.$grey-palette, 900, 50);
 
 $koia-theme: mat.define-light-theme((
  color: (

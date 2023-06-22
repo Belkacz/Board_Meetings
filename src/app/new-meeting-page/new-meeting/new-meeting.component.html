@@ -18,7 +18,7 @@
       <div>
         <h3>Meeting name</h3>
         <mat-form-field class="wider-element wider-container wider-box">
-          <input [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
+          <input class="wider-input" [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
           <button mat-icon-button matSuffix (click)="clearInput()">
             <mat-icon>clear</mat-icon>
           </button>
@@ -47,7 +47,7 @@
           <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="example-margin">Online
             meeting</mat-checkbox>
           <br />
-          <mat-form-field class="wider-input">
+          <mat-form-field class="wider-element wider-container wider-box ">
             <input matInput [formControl]="onlineAddress" placeholder="Paste meeting link ..." value="" />
           </mat-form-field>
         </section>
