@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TasksFormComponent } from './tasks-form.component';
+import { InvatesComponent } from './invates.component';
 
-describe('TasksFormComponent', () => {
-  let component: TasksFormComponent;
-  let fixture: ComponentFixture<TasksFormComponent>;
+describe('InvatesComponent', () => {
+  let component: InvatesComponent;
+  let fixture: ComponentFixture<InvatesComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TasksFormComponent]
+      declarations: [InvatesComponent]
     });
-    fixture = TestBed.createComponent(TasksFormComponent);
+    fixture = TestBed.createComponent(InvatesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

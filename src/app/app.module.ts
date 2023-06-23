@@ -18,8 +18,8 @@ import { TimepickerComponent } from './shared/timepicker/timepicker.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { NewMeetingPageComponent } from './new-meeting-page/new-meeting-page.component';
-import { TasksFormComponent } from './new-meeting-page/tasks-form/tasks-form.component';
 import { TasksComponent } from './new-meeting-page/tasks/tasks.component';
+import { InvatesComponent } from './new-meeting-page/invates/invates.component';
 
 
 
@@ -29,8 +29,8 @@ import { TasksComponent } from './new-meeting-page/tasks/tasks.component';
     NewMeetingComponent,
     TimepickerComponent,
     NewMeetingPageComponent,
-    TasksFormComponent,
-    TasksComponent
+    TasksComponent,
+    InvatesComponent
   ],
   imports: [
     ReactiveFormsModule,

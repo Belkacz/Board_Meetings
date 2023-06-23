@@ -5,7 +5,7 @@
       <div>
         <h3>Meeting type</h3>
         <div example-button-row class="select-buttons-grup">
-          <button mat-stroked-button class="select-buttons"
+          <button mat-stroked-button class="margin-left-0px select-buttons"
             [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
             (click)="selectType('boardMeeting')">Board Meeting</button>
           <button mat-stroked-button class="select-buttons"
@@ -17,10 +17,11 @@
       </div>
       <div>
         <h3>Meeting name</h3>
-        <mat-form-field class="wider-element wider-container wider-box">
-          <input class="wider-input" [formControl]="mettingName" matInput placeholder="CompanyName Board meeting No.12">
-          <button mat-icon-button matSuffix (click)="clearInput()">
-            <mat-icon>clear</mat-icon>
+        <mat-form-field style="padding: 0px" class="wider-element wider-container wider-box lower-input">
+          <input style="padding: 0px" class="wider-input" [formControl]="mettingName" matInput
+            placeholder="CompanyName Board meeting No.12">
+          <button style="padding: 0px" mat-icon-button matSuffix (click)="clearInput()">
+            <mat-icon style="padding: 0px">clear</mat-icon>
           </button>
         </mat-form-field>
       </div>
@@ -38,7 +39,7 @@
           <mat-checkbox [checked]="isAddressChecked" (click)="toggleAdress()"
             class="example-margin">Location</mat-checkbox>
           <br />
-          <mat-form-field class="wider-element wider-container wider-box">
+          <mat-form-field class="wider-element wider-container wider-box lower-input">
             <input matInput [formControl]="meetingAdrress" placeholder="Adress..." />
           </mat-form-field>
         </section>
@@ -47,7 +48,7 @@
           <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="example-margin">Online
             meeting</mat-checkbox>
           <br />
-          <mat-form-field class="wider-element wider-container wider-box ">
+          <mat-form-field class="wider-element wider-container wider-box lower-input">
             <input matInput [formControl]="onlineAddress" placeholder="Paste meeting link ..." value="" />
           </mat-form-field>
         </section>
@@ -59,9 +60,10 @@
         <mat-card-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
           labore et dolore magna aliqua.</mat-card-content>
         <div class="select-buttons-grup">
-          <button class="select-buttons" mat-stroked-button>Create agenda</button>
+          <button mat-stroked-button class="select-buttons-agenda">Create agenda</button>
           <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button (click)="openFilePicker(chooseFileInput)">Choose File</button>
+          <button mat-stroked-button class="select-buttons-agenda" (click)="openFilePicker(chooseFileInput)">Choose
+            File</button>
         </div>
       </mat-card>
       <div>
