@@ -20,8 +20,9 @@ import { MatListModule } from '@angular/material/list';
 import { NewMeetingPageComponent } from './new-meeting-page/new-meeting-page.component';
 import { TasksComponent } from './new-meeting-page/tasks/tasks.component';
 import { InvatesComponent } from './new-meeting-page/invates/invates.component';
-
-
+import { MatTabsModule } from '@angular/material/tabs';
+import { BoardComponent } from './new-meeting-page/invates/board/board.component';
+import { GuestsComponent } from './new-meeting-page/invates/guests/guests.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { InvatesComponent } from './new-meeting-page/invates/invates.component';
     TimepickerComponent,
     NewMeetingPageComponent,
     TasksComponent,
-    InvatesComponent
+    InvatesComponent,
+    BoardComponent,
+    GuestsComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -48,6 +51,7 @@ import { InvatesComponent } from './new-meeting-page/invates/invates.component';
     MatButtonToggleModule,
     MatCardModule,
     MatListModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

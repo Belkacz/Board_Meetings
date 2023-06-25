@@ -9,3 +9,7 @@ export interface Gest {
     surname: string;
     jobPosition: string | null;
 }
+
+export interface GestInvited extends Gest {
+    invited: boolean;
+  }

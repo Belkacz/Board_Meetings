@@ -1,0 +1,26 @@
+<div>
+    <div>
+        <mat-form-field class="wider-input">
+            <input matInput [(ngModel)]="wanted" (input)="search()" placeholder="Search" />
+        </mat-form-field>
+        <ul>
+            <mat-checkbox (click)="handleCheckAll()" class="margin-left-minus-40px">
+                <span class=""> ALL </span>
+            </mat-checkbox>
+            <div class="separator-with-space"></div>
+            <div class="div-list">
+                <li *ngFor="let pop of searchedList; let i = index" class="list-item margin-left-minus-40px">
+                    <div class="padding-bottom-10px">
+                        <mat-checkbox [checked]="pop.invited" (click)="checkPerson(i)" class="margin-minus-10px">
+                            <span class=""> {{ pop.name }} </span>
+                            <span class=""> {{ pop.surname }} </span>
+                            <br>
+                            <span class="job-positon"> {{ pop.jobPosition }} </span>
+                        </mat-checkbox>
+                        <br>
+                    </div>
+                </li>
+            </div>
+        </ul>
+    </div>
+</div>

@@ -47,15 +47,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     // this.isOnlineChecked = false
   }
 
-  print1() {
-
-    console.log(this.addedDocumentFormArray.value[0].name)
-  }
-
-  print2(elem: any) {
-    console.log(elem)
-  }
-
   createFormControls(): void {
     this.selectedMeetingType = new FormControl();
     this.mettingName = new FormControl();
