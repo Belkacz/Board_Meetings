@@ -1,10 +1,10 @@
 <div>
     <ul>
         <li *ngFor="let pop of gestsList; let i = index" class="list-item margin-left-minus-40px">
-            <div *ngIf="pop.invited" class="">
-                <span class=""> {{ pop.name }} </span>
-                <span class=""> {{ pop.surname }} </span>
-                <span class="" style="color:grey"> {{ pop.jobPosition }} </span>
+            <div *ngIf="pop.invited">
+                <span> {{ pop.name }} </span>
+                <span> {{ pop.surname }} </span>
+                <span class="job-positon-color"> {{ pop.jobPosition }} </span>
                 <br>
                 <br>
             </div>

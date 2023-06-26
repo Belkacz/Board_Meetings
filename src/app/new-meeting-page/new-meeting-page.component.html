@@ -1,10 +1,20 @@
+<div class="header">
+    <div class="padding-left-30px">
+        <button mat-icon-button matSuffix (click)="goback()" ><mat-icon>keyboard_backspace</mat-icon></button>
+    </div>
+    <div class="near-button-container gap-20px">
+        <button mat-stroked-button (click)="saveDraft()">Save as draft</button>
+        <button mat-stroked-button (click)="saveAndPublish()" [disabled]="!formNotReady()">Save & Publish</button>
+    </div>
+</div>
+<div class="separator-horizontal margin-top-10px" style></div>
 <div class="flex-container">
     <div class="main-menu">
         <app-new-meeting></app-new-meeting>
     </div>
-    <div class="separator"></div>
+    <div class="separator-vertical"></div>
     <div class="side-menu">
-        <app-tasks></app-tasks>
+        <app-tasks (tasksListOutput)="saveTasksList($event)"></app-tasks>
         <app-invates></app-invates>
     </div>
 

@@ -4,10 +4,10 @@
             <input matInput [(ngModel)]="wanted" (input)="search()" placeholder="Search" />
         </mat-form-field>
         <ul>
-            <mat-checkbox (click)="handleCheckAll()" class="margin-left-minus-40px">
+            <mat-checkbox (click)="handleCheckAll()" [checked]="allChecked" class="margin-left-minus-40px">
                 <span class=""> ALL </span>
             </mat-checkbox>
-            <div class="separator-with-space"></div>
+            <div class="separator-25rem-width"></div>
             <div class="div-list">
                 <li *ngFor="let pop of searchedList; let i = index" class="list-item margin-left-minus-40px">
                     <div class="padding-bottom-10px">

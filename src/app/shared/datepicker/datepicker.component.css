@@ -18,6 +18,20 @@
     padding: 0px;
 }
 
-::ng-deep .mat-mdc-icon-button.mat-mdc-button-base{
+.mat-mdc-icon-button.mat-mdc-button-base{
     padding-top: 2px!important;
+}
+.mdc-icon-button .mat-mdc-icon-button .mat-unthemed .mat-mdc-button-base{
+    padding-top: 8px;
+}
+
+.mat-mdc-icon-button.mat-mdc-button-base{
+    padding-top: 10px;
+}
+
+.calendar-field{
+    height: 4rem;
+}
+::ng-deep .calendar-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex >.mat-mdc-form-field-icon-suffix.ng-star-inserted{
+    margin-top: -5px!important;
 }

@@ -6,7 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./timepicker.component.css']
 })
 export class TimepickerComponent {
-  selectedTime: string
+  selectedTime: string | null;
   @Output() timeSelected = new EventEmitter<string>();
 
 

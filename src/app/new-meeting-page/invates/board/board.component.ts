@@ -1,31 +1,25 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { InviteService } from 'src/app/services/inviteService.service';
+import { workerList } from 'src/app/shared/enums';
 import { Gest } from 'src/app/shared/interfaces';
 
 interface GestInvited extends Gest {
   invited: boolean;
 }
-const workerList: Gest[] = [{ id: 1, name: "Wade", surname: "Warner", jobPosition: "Cair of the board" },
-{ id: 2, name: "Floyd", surname: "Miles", jobPosition: "Board memeber" }, { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" },
-{ id: 3, name: "Guy", surname: "Howkins", jobPosition: "Board secretary" }, { id: 4, name: "Darrell", surname: "Steward", jobPosition: "Board tresurer" },
-{ id: 5, name: "Wade", surname: "Warner2", jobPosition: "dubler" }]
-
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
+
 export class BoardComponent {
-  guests: Gest[];
-  gestsList: GestInvited[];
-  wanted: string;
-  searchedList: GestInvited[];
-  allChecked: boolean;
+  public gestsList: GestInvited[];
+  public wanted: string;
+  public searchedList: GestInvited[];
+  public allChecked: boolean;
 
   constructor(private inviteService: InviteService) {
-    this.guests = []
     this.searchedList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.wanted = "";
     this.allChecked = false;
@@ -33,7 +27,6 @@ export class BoardComponent {
   }
 
   ngOnInit(): void {
-    this.guests = workerList;
     this.searchedList = workerList.map(guest => ({ ...guest, invited: false }));;
   }
 
@@ -64,6 +57,18 @@ export class BoardComponent {
         pop.invited = this.searchedList[i].invited;
       }
     });
+    
+    let allSerchedCheck = true;
+    this.searchedList.forEach(pop => {
+      if(pop.invited === false){
+        allSerchedCheck = false;
+      }
+    });
+    if(allSerchedCheck){
+      this.allChecked = true;
+    } else{
+      this.allChecked = false;
+    }
     this.emitGestList();
   }
 

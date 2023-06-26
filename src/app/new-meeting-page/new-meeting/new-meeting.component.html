@@ -15,15 +15,21 @@
             [ngClass]="{'active': selectedMeetingType.value === 'other'}" (click)="selectType('other')">Other</button>
         </div>
       </div>
+      <button style="width: 40px; height: 40px;" (click)="print1()"></button>
       <div>
         <h3>Meeting name</h3>
-        <mat-form-field style="padding: 0px" class="wider-element wider-container wider-box lower-input">
-          <input style="padding: 0px" class="wider-input" [formControl]="mettingName" matInput
-            placeholder="CompanyName Board meeting No.12">
-          <button style="padding: 0px" mat-icon-button matSuffix (click)="clearInput()">
-            <mat-icon style="padding: 0px">clear</mat-icon>
+        <mat-form-field class="wider-element wider-container wider-box lower-input">
+          <input class="wider-input" [formControl]="meetingName" matInput placeholder="CompanyName Board meeting No.12">
+          <button mat-icon-button matSuffix (click)="clearInput()">
+            <mat-icon>clear</mat-icon>
           </button>
         </mat-form-field>
+        <mat-error *ngIf="meetingName.errors?.['notEmpty']">
+          Meeting name is required.
+        </mat-error>
+        <mat-error *ngIf="meetingName.touched && !meetingName.value && !meetingName.errors?.['notEmpty']">
+          Meeting cannot be empty.
+        </mat-error>
       </div>
       <div>
         <h3>Date and time</h3>
@@ -32,6 +38,9 @@
           <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
           <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
         </div>
+        <mat-error *ngIf="dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning']
+        && !dateStartControl.pristine && !dateEndControl.pristine">The start date cannot be earlier than the end
+          date</mat-error>
       </div>
       <div>
         <h3>Location</h3>
