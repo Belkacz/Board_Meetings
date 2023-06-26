@@ -15,7 +15,6 @@
             [ngClass]="{'active': selectedMeetingType.value === 'other'}" (click)="selectType('other')">Other</button>
         </div>
       </div>
-      <button style="width: 40px; height: 40px;" (click)="print1()"></button>
       <div>
         <h3>Meeting name</h3>
         <mat-form-field class="wider-element wider-container wider-box lower-input">
@@ -46,7 +45,7 @@
         <h3>Location</h3>
         <section class="">
           <mat-checkbox [checked]="isAddressChecked" (click)="toggleAdress()"
-            class="example-margin">Location</mat-checkbox>
+            class="minus-10-margin">Location</mat-checkbox>
           <br />
           <mat-form-field class="wider-element wider-container wider-box lower-input">
             <input matInput [formControl]="meetingAdrress" placeholder="Adress..." />
@@ -54,7 +53,7 @@
         </section>
         <h3>Online meeting</h3>
         <section class="">
-          <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="example-margin">Online
+          <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="minus-10-margin">Online
             meeting</mat-checkbox>
           <br />
           <mat-form-field class="wider-element wider-container wider-box lower-input">
@@ -85,7 +84,7 @@
                 <div class="avatar-container text-listcontainter diplay-flex">
                   <mat-icon class=" elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
                   <p class=" elements-in-list margin-left">{{ doc.name }}</p>
-                  <button mat-icon-button matSuffix class="clear-button" (click)="deleteDocs(i)">
+                  <button mat-icon-button matSuffix (click)="deleteDocs(i)">
                     <mat-icon>clear</mat-icon>
                   </button>
                 </div>

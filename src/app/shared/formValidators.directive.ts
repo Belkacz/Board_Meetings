@@ -5,7 +5,6 @@ export class FormValidators {
     public static notEmpty(): ValidatorFn {
         return (control: AbstractControl) => {
             const value = control.value;
-            //console.log(control)
             if (!value && !control.pristine) {
                 return { notEmpty: true };
             }
@@ -16,8 +15,6 @@ export class FormValidators {
     public static startBeforeEnd(endDate: Date | null): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors | null> => {
             const value = control.value;
-            //console.log(value);
-            console.log(endDate)
             if (value && endDate && value > endDate ) {
                 return of({ endBeforeBeginning: true });
             }
@@ -30,7 +27,6 @@ export class FormValidators {
           if (startDate.getTime() > endDate.getTime()) {
             startControl.setErrors({ endBeforeBeginning: true });
             endControl.setErrors({ endBeforeBeginning: true });
-            console.log(startControl);
           }
           else {
             startControl.setErrors(null);

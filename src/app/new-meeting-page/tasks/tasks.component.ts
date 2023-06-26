@@ -25,10 +25,8 @@ export class TasksComponent implements OnInit {
     const lastNumberRegex = /\d+$/;
     let maxNumber = 0;
     this.tasksList.forEach(task => {
-      console.log(task)
       if (task !== '' && task) {
         const taskNumber = task.match(lastNumberRegex);
-        console.log(taskNumber)
         if (taskNumber && parseInt(taskNumber[0], 10) > maxNumber) {
           maxNumber = (parseInt(taskNumber[0], 10));
         }
@@ -36,13 +34,13 @@ export class TasksComponent implements OnInit {
     });
     maxNumber = maxNumber + 1;
     this.tasksList.push("New task name " + maxNumber)
-    console.log('ADD TASK placeholder')
+    console.log('Add task placeholder')
     alert("add task placeholder");
     this.sendTasksList();
   }
 
   editTask() {
-    console.log('ADD TASK placeholder')
+    console.log('Edit task placeholder')
     alert("add task placeholder");
     this.sendTasksList();
   }

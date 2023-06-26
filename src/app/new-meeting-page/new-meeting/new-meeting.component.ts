@@ -73,10 +73,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     });
   }
 
-  print1(){
-    console.log(this.selectedMeetingType)
-  }
-
   selectType(option: string) {
     if (this.form) {
       this.form.patchValue({
