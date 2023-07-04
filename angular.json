@@ -25,7 +25,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/assets/koia-style.scss",
+              "src/assets/my-style.scss",
               "src/styles.css"
             ],
             "scripts": []
@@ -96,5 +96,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

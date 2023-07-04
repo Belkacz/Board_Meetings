@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NewMeetingComponent } from './new-meeting-page/new-meeting/new-meeting.component';
 import { DatepickerComponent } from './shared/datepicker/datepicker.component';
@@ -23,6 +22,9 @@ import { InvatesComponent } from './new-meeting-page/invates/invates.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BoardComponent } from './new-meeting-page/invates/board/board.component';
 import { GuestsComponent } from './new-meeting-page/invates/guests/guests.component';
+import { AppRoutingModule } from './shared/app-routing.module';
+import { MainMenuComponent } from './main-menu/main-menu.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { GuestsComponent } from './new-meeting-page/invates/guests/guests.compon
     TasksComponent,
     InvatesComponent,
     BoardComponent,
-    GuestsComponent
+    GuestsComponent,
+    MainMenuComponent,
+    AboutComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -42,16 +46,16 @@ import { GuestsComponent } from './new-meeting-page/invates/guests/guests.compon
     DatepickerComponent,
     BrowserAnimationsModule,
     MatCheckboxModule,
-    MatButtonModule, 
-    MatDividerModule, 
+    MatButtonModule,
+    MatDividerModule,
     MatIconModule,
-    FormsModule, 
-    MatFormFieldModule, 
+    FormsModule,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonToggleModule,
     MatCardModule,
     MatListModule,
-    MatTabsModule
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

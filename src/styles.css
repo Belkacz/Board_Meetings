@@ -73,6 +73,10 @@ ul {
   margin-top: 4px;
 }
 
+
+.margin-left-20px{
+  margin-left: 20px;
+}
 .margin-left-minus-30px {
   margin-left: -30px;
 }
@@ -97,12 +101,16 @@ ul {
   margin-left: 60%;
 }
 
+.margin-top-10px {
+  margin-top: 10px;
+}
+
 .padding-left-30px {
   padding-left: 30px;
 }
 
-.margin-top-10px {
-  margin-top: 10px;
+.padding-20px{
+  padding: 20px;
 }
 
 .wider-element.wider-container.wider-box {
@@ -121,6 +129,19 @@ ul {
 
 .flex-container {
   display: flex;
+}
+
+.centered-top-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .list-item {
