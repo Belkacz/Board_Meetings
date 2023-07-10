@@ -26,6 +26,13 @@ export interface BoardMeetingData{
     chooseFile: Array<FileType>
     addedDocuments: Array<FileType>
     gests: Array<Gest>
-    tasksList: Array<string>
+    tasksList: Array<Task>
     [key: string]: any
+}
+
+export interface Task{
+    id: number;
+    name: string;
+    description?: string;
+    priority?: number;
 }

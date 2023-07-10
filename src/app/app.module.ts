@@ -25,6 +25,8 @@ import { GuestsComponent } from './new-meeting-page/invates/guests/guests.compon
 import { AppRoutingModule } from './shared/app-routing.module';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { AboutComponent } from './about/about.component';
+import { DialogFormComponent } from './dialog-form/dialog-form.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import { AboutComponent } from './about/about.component';
     BoardComponent,
     GuestsComponent,
     MainMenuComponent,
-    AboutComponent
+    AboutComponent,
+    DialogFormComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -56,6 +59,9 @@ import { AboutComponent } from './about/about.component';
     MatCardModule,
     MatListModule,
     MatTabsModule,
+    MatIconModule,
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

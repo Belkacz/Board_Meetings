@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
-import { BoardMeetingData, GestInvited } from '../shared/interfaces';
+import { BoardMeetingData, GestInvited, Task } from '../shared/interfaces';
 import { InviteService } from '../services/inviteService.service';
 import { DataService } from '../services/dataService.service';
 
@@ -14,7 +14,7 @@ export class NewMeetingPageComponent implements OnInit {
   @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
 
   private gestsList: GestInvited[];
-  private tasksList: string[]
+  private tasksList: Task[]
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
 
@@ -79,7 +79,7 @@ export class NewMeetingPageComponent implements OnInit {
     alert('Go back Placeholder')
     console.log("go back")
   }
-  saveTasksList(tasksList: string[]): void {
+  saveTasksList(tasksList: Task[]): void {
     this.tasksList = tasksList;
   }
 
