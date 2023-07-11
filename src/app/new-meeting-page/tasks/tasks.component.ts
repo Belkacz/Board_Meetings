@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogFormComponent } from 'src/app/dialog-form/dialog-form.component';
 import { Task } from 'src/app/shared/interfaces';
@@ -9,7 +9,7 @@ import { Task } from 'src/app/shared/interfaces';
   styleUrls: ['./tasks.component.css']
 })
 
-export class TasksComponent implements OnInit {
+export class TasksComponent implements OnInit, OnDestroy {
   @Output() tasksListOutput = new EventEmitter<Task[]>();
 
   public tasksList: Task[];
@@ -23,7 +23,7 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tasksList = [{id: 1, name: "New task name 1"}, {id: 1, name: "New task name 1"}]
+    this.tasksList = [{id: 1, name: "New task name 1"}, {id: 2, name: "New task name 2"}]
     this.sendTasksList();
   }
 
@@ -45,18 +45,39 @@ export class TasksComponent implements OnInit {
   //   this.sendTasksList();
   // }
 
+
   showOrHideTaskDialog(title: string, fields: string[]) {
     this.showTaskMenu = !this.showTaskMenu;
     const dialogRef = this.dialog.open(DialogFormComponent)
+    //const dialogRef = this.dialog.open(DialogFormComponent, { title: title })
     dialogRef.componentInstance.title = title
-    //dialogRef.componentInstance.fields = [title, 'priority', 'time']
+    dialogRef.componentInstance.fields = [title, 'priority', 'time']
     fields.forEach(field => {
       dialogRef.componentInstance.fields = [field]
     });
-    
-    dialogRef.afterClosed().subscribe(result =>  {
+    dialogRef.componentInstance.formSubmit.subscribe((formValue: any) => {
+      const lastTask = this.tasksList[this.tasksList.length - 1];
+      let newTask: Task = { id: 0, name: formValue.name };
+      if(lastTask != undefined){
+        newTask.id = lastTask.id + 1;
+      } else {
+        newTask.id = 1;
+      }
+      this.tasksList.push(newTask)
+      console.log(newTask.id)
       this.sendTasksList();
-    })
+    });
+    //dialogRef.componentInstance.formSubmit.unsubscribe
+
+
+    // dialogRef.afterClosed().subscribe(result =>  {
+    //   console.log("Dialog output:", result)
+    //   this.sendTasksList();
+    // })
+  }
+
+  ngOnDestroy(){
+
   }
 
   editTask() {

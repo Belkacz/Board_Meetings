@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-timepicker',
@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class TimepickerComponent {
   selectedTime: string | null;
   @Output() timeSelected = new EventEmitter<string>();
-
+  @Input() inputTime: any
 
   constructor() {
     this.selectedTime = "00:00"
@@ -16,8 +16,11 @@ export class TimepickerComponent {
 
 
   timeChange(event: Event) {
+    console.log(this.inputTime)
+    //console.log(window)
     if (event.target instanceof HTMLInputElement) {
       const time = event.target.value;
+      //console.log(time)
       this.timeSelected.emit(time);
     }
   }

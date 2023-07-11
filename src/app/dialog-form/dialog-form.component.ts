@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-form',
@@ -12,7 +13,8 @@ export class DialogFormComponent {
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<DialogFormComponent>) {
+    //@Inject(MAT_DIALOG_DATA) public title: string
     this.title = 'title';
     this.fields = [];
     this.form = new FormGroup({})
@@ -25,10 +27,11 @@ export class DialogFormComponent {
     }
   }
 
-  onSubmit() {
-    console.log('sumbit')
+  SaveDialog() {
     if (this.form.valid) {
       this.formSubmit.emit(this.form.value);
+      this.dialogRef.close()
+      //this.dialogRef.close(this.form.value);
     }
   }
 }

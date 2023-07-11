@@ -7,3 +7,7 @@
 .mdc-icon-button.mat-mdc-icon-button.mat-unthemed.mat-mdc-button-base{
     margin-top: 0px;
 }
+
+.button-X{
+    margin-top: -4px!important;
+}
