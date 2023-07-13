@@ -3,7 +3,7 @@
     <h2>
       Tasks
     </h2>
-    <button mat-stroked-button class="near-button-container gap-0" (click)="showOrHideTaskDialog('New Task', ['name'])">New Task</button>
+    <button mat-stroked-button class="near-button-container gap-0" (click)="newTask('New Task', ['name'])">New Task</button>
   </div>
   <div class="div-list">
     <ul>
@@ -11,7 +11,7 @@
         <div class="flex-box">
           <span class="task-name">{{ task.name }}</span>
           <div class="near-button-container gap-0 margin-left-50prc">
-            <button mat-icon-button matSuffix (click)="editTask()">
+            <button mat-icon-button matSuffix (click)="editTask('Edit Task', task , ['name'])">
               <mat-icon>edit_note</mat-icon>
             </button>
             <button mat-icon-button matSuffix (click)="clearInput(i)">
