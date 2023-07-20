@@ -46,22 +46,31 @@
         <section class="">
           <mat-checkbox [checked]="isAddressChecked" (click)="toggleAdress()"
             class="minus-10-margin">Location</mat-checkbox>
-          <br />
+          <br>
           <mat-form-field class="wider-element wider-container wider-box lower-input">
-            <input matInput [formControl]="meetingAdrress" placeholder="Adress..." />
+            <input matInput [formControl]="meetingAddress" placeholder="Adress..." />
           </mat-form-field>
         </section>
         <h3>Online meeting</h3>
         <section class="">
           <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="minus-10-margin">Online
             meeting</mat-checkbox>
-          <br />
+          <br>
           <mat-form-field class="wider-element wider-container wider-box lower-input">
             <input matInput [formControl]="onlineAddress" placeholder="Paste meeting link ..." value="" />
           </mat-form-field>
         </section>
+        <h3>Hybride: Online and stationary</h3>
+        <section class="">
+          <mat-checkbox [checked]="isHybrideChecked" (click)="toggleHybride()" class="minus-10-margin">Hybride</mat-checkbox>
+          <br>
+        </section>
       </div>
-      <mat-card class="wider-element wider-container wider-box">
+      <mat-error *ngIf="(isHybrideChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
+        Meeting address cannot be empty.
+      </mat-error>
+      <br>
+      <mat-card class="wider-element wider-container wider-box grey-box-shadow">
         <mat-card-header>
           <mat-card-title>Agenda1</mat-card-title>
         </mat-card-header>

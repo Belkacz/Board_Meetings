@@ -26,7 +26,7 @@ export class NewMeetingPageComponent implements OnInit {
     this.combinedData = {
       meetingType: '',
       meetingName: '',
-      meetingAdrress: null,
+      meetingAddress: null,
       onlineAddress: null,
       dateStart: null,
       dateEnd: null,
@@ -67,7 +67,7 @@ export class NewMeetingPageComponent implements OnInit {
       alert("meeting name cannot be empty")
     } else if ((this.newMeetingComponent.dateStartControl.pristine || this.newMeetingComponent.dateEndControl.pristine)) {
       alert("You need to chose date")
-    } else if (!this.combinedData.onlineAddress && !this.combinedData.meetingAdrress) {
+    } else if (!this.combinedData.onlineAddress && !this.combinedData.meetingAddress) {
       alert("You need to provide a location or choose an online option")
     } else {
       alert('Save And Publish Placeholder, open console for more details')
@@ -84,10 +84,12 @@ export class NewMeetingPageComponent implements OnInit {
   }
 
   formNotReady(): boolean {
-    return this.newMeetingComponent.selectedMeetingType.value &&
-      this.newMeetingComponent.meetingName.value !== null &&
-      this.newMeetingComponent.selectedMeetingType.value !== null &&
-      (this.newMeetingComponent.meetingAdrress.value || this.newMeetingComponent.onlineAddress.value) &&
-      !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
+    // return this.newMeetingComponent.selectedMeetingType.value &&
+    //   this.newMeetingComponent.meetingName.value !== null &&
+    //   this.newMeetingComponent.selectedMeetingType.value !== null &&
+    //   (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
+    //   !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
+      const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
+      return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
   }
 }

@@ -237,3 +237,7 @@ app-tasks {
 .mdc-checkbox .mdc-checkbox__background {
   border-color: black;
 }
+
+.wider-element.wider-container.wider-box.grey-box-shadow{
+  box-shadow: 0px 0px 5px 1px #616161;
+}

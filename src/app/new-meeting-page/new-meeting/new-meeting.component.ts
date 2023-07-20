@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType } from '../../shared/enums';
 import { DownloadFile } from '../../shared/interfaces';
@@ -25,12 +25,14 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public dateSelected!: FormControl;
   public dateStartControl!: FormControl;
   public dateEndControl!: FormControl;
-  public meetingAdrress!: FormControl;
+  public meetingAddress!: FormControl;
   public onlineAddress!: FormControl;
-  public isAddressChecked!: boolean
-  public isOnlineChecked!: boolean
+  private hybridType!: FormControl;
+  public isHybrideChecked!: boolean;
+  public isAddressChecked!: boolean;
+  public isOnlineChecked!: boolean;
   private choosedFileControl!: FormControl;
-  private addedDocumentControl!: FormControl
+  private addedDocumentControl!: FormControl;
   public addedDocumentFormArray!: FormArray;
 
   constructor(private fileDownloadService: FileDownloadService) {
@@ -40,37 +42,38 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.meetingAdrress.setValue('online');
+    this.meetingAddress.setValue('online');
     this.createFormControls();
-    this.meetingAdrress.disable();
+    this.meetingAddress.disable();
     this.onlineAddress.disable();
-    // this.isAddressChecked = false
-    // this.isOnlineChecked = false
+
   }
 
   createFormControls(): void {
     this.selectedMeetingType = new FormControl('', [Validators.required]);
     this.meetingName = new FormControl();
-    this.meetingAdrress = new FormControl({ value: '', disabled: true });
+    this.meetingAddress = new FormControl({ value: '', disabled: true });
     this.dateSelected = new FormControl();
-    this.dateStartControl = new FormControl();
-    this.dateEndControl = new FormControl();
-    this.meetingAdrress = new FormControl();
+    this.dateStartControl = new FormControl('', [Validators.required])
+    this.dateEndControl = new FormControl('', [Validators.required])
+    this.meetingAddress = new FormControl();
     this.onlineAddress = new FormControl();
+    this.hybridType = new FormControl();
     this.choosedFileControl = new FormControl();
     this.addedDocumentControl = new FormControl();
     this.addedDocumentFormArray = new FormArray<FormControl>([]);
-    this.formValidators();
     this.form = new FormGroup({
       selectedMeetingType: this.selectedMeetingType,
       meetingName: this.meetingName,
       dateStart: this.dateStartControl,
       dateEnd: this.dateEndControl,
-      meetingAdrress: this.meetingAdrress,
+      meetingAddress: this.meetingAddress,
       onlineAddress: this.onlineAddress,
       chooseFile: this.choosedFileControl,
-      addedDocuments: this.addedDocumentFormArray
+      addedDocuments: this.addedDocumentFormArray,
+      hybridType: this.hybridType
     });
+    this.formValidators();
   }
 
   selectType(option: string) {
@@ -119,26 +122,37 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   toggleAdress() {
-    this.meetingAdrress.enable();
+    this.meetingAddress.enable();
     this.onlineAddress.disable();
     this.isOnlineChecked = false;
+    this.isHybrideChecked = false;
     this.isAddressChecked = !this.isAddressChecked;
     if (this.isAddressChecked === true) {
-      this.meetingAdrress.enable();
+      this.meetingAddress.enable();
     } else {
-      this.meetingAdrress.disable();
+      this.meetingAddress.disable();
     }
   }
 
   toggleOnline() {
-    this.meetingAdrress.disable();
+    this.meetingAddress.disable();
     this.isAddressChecked = false;
+    this.isHybrideChecked = false;
     this.isOnlineChecked = !this.isOnlineChecked;
     if (this.isOnlineChecked === true) {
       this.onlineAddress.enable();
     } else {
       this.onlineAddress.disable();
     }
+  }
+
+  toggleHybride() {
+    this.isHybrideChecked = !this.isHybrideChecked;
+    this.isAddressChecked = false;
+    this.isOnlineChecked = false;
+    this.meetingAddress.enable()
+    this.onlineAddress.enable()
+    this.hybridType.setValue(this.isHybrideChecked)
   }
 
   openFilePicker(inputElement: ElementRef): void {
@@ -178,16 +192,26 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.addedDocumentFormArray.value.splice(docIndex, 1);
   }
 
-  protected formValidators():void{
+  protected formValidators(): void {
     this.meetingName.setValidators([
       Validators.required,
       FormValidators.notEmpty()
     ]),
-    this.dateStartControl.setAsyncValidators([
-      FormValidators.startBeforeEnd2(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl)
-    ]),
-    this.dateEndControl.setAsyncValidators([
-      FormValidators.startBeforeEnd2(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl)
-    ])
+      this.dateStartControl.setAsyncValidators([
+        FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl),
+      ]),
+      this.dateEndControl.setAsyncValidators([
+        FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl)
+      ]),
+      this.dateStartControl.setValidators([
+        Validators.required,
+      ]),
+      this.dateEndControl.setValidators([
+        Validators.required,
+      ])
+      ,
+      this.form.setValidators([
+        FormValidators.locationValidator(this.isHybrideChecked, this.isAddressChecked, this.isOnlineChecked),
+      ])
   }
 }

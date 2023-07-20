@@ -1,6 +1,6 @@
 <div class="header">
     <div class="padding-left-30px">
-        <button mat-icon-button matSuffix routerLink="/home" ><mat-icon>keyboard_backspace</mat-icon></button>
+        <button mat-icon-button matSuffix routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
     </div>
     <div class="near-button-container gap-20px">
         <button mat-stroked-button (click)="saveDraft()">Save as draft</button>
@@ -17,5 +17,4 @@
         <app-tasks (tasksListOutput)="saveTasksList($event)"></app-tasks>
         <app-invates></app-invates>
     </div>
-
 </div>

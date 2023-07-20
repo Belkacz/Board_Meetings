@@ -2,6 +2,7 @@ import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, Valid
 import { Observable, of } from "rxjs";
 
 export class FormValidators {
+
     public static notEmpty(): ValidatorFn {
         return (control: AbstractControl) => {
             const value = control.value;
@@ -12,16 +13,16 @@ export class FormValidators {
         };
     }
 
-    public static startBeforeEnd(endDate: Date | null): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<ValidationErrors | null> => {
-            const value = control.value;
-            if (value && endDate && value > endDate ) {
-                return of({ endBeforeBeginning: true });
-            }
-            return of(null);
-        };
-    }
-    public static startBeforeEnd2(startDate: Date, endDate: Date, startControl: FormControl, endControl: FormControl): AsyncValidatorFn {
+    // public static startBeforeEnd(endDate: Date | null): AsyncValidatorFn {
+    //     return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    //         const value = control.value;
+    //         if (value && endDate && value > endDate ) {
+    //             return of({ endBeforeBeginning: true });
+    //         }
+    //         return of(null);
+    //     };
+    // }
+    public static startBeforeEnd(startDate: Date, endDate: Date, startControl: FormControl, endControl: FormControl): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors | null> => {
           const value = control.value;
           if (startDate.getTime() > endDate.getTime()) {
@@ -35,4 +36,26 @@ export class FormValidators {
           return of(null);
         };
       }
+
+      public static locationValidator(isHybrideChecked: boolean, isAddressChecked: boolean, isOnlineChecked: boolean){
+        return (control: AbstractControl) => {
+          //console.log(control)
+          const onlineAddress = control.get('onlineAddress');
+          const meetingAddress = control.get('meetingAddress');
+          const hybridType = control.get('hybridType');
+          
+          let validLocation = false
+          if(hybridType!.value){
+            validLocation = onlineAddress!.value && meetingAddress!.value ? true : false
+          } else {
+            validLocation = onlineAddress!.value || meetingAddress!.value ? true : false
+          }
+
+          if (!validLocation) {
+            return { 'addressRequired': true };
+          }
+          return null;
+        };
+      }
+
 }

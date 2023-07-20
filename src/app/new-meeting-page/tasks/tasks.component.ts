@@ -86,8 +86,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.newTaskSub.unsubscribe();
-    this.dialogEditSub.unsubscribe();
+    if(this.newTaskSub){
+      this.newTaskSub.unsubscribe();
+    }
+    if(this.dialogEditSub){
+      this.dialogEditSub.unsubscribe();
+    }
   }
 
   clearInput(index: number) {

@@ -19,7 +19,7 @@ export interface GestInvited extends Gest {
 export interface BoardMeetingData{
     meetingType: string;
     meetingName: string;
-    meetingAdrress: string | null;
+    meetingAddress: string | null;
     onlineAddress: string | null;
     dateStart: Date | null;
     dateEnd: Date | null;
