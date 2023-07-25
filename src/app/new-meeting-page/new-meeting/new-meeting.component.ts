@@ -94,7 +94,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.dateEnd.setDate(selectedDate.getDate());
 
       this.dateStartControl.setValue(this.dateStart);
-      this.dateEndControl.setValue(this.dateStart);
+      this.dateEndControl.setValue(this.dateEnd);
       this.dateStartControl.markAsDirty()
       this.dateEndControl.markAsDirty()
     }

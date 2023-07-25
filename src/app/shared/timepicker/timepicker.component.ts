@@ -6,21 +6,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./timepicker.component.css']
 })
 export class TimepickerComponent {
-  selectedTime: string | null;
+  selectedTime: string | undefined;
   @Output() timeSelected = new EventEmitter<string>();
-  @Input() inputTime: any
-
-  constructor() {
-    this.selectedTime = "00:00"
-  }
 
 
   timeChange(event: Event) {
-    console.log(this.inputTime)
-    //console.log(window)
     if (event.target instanceof HTMLInputElement) {
       const time = event.target.value;
-      //console.log(time)
       this.timeSelected.emit(time);
     }
   }

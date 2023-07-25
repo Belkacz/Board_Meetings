@@ -11,19 +11,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   templateUrl: 'datepicker.component.html',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule],
-  styleUrls: ['./datepicker.component.css']
+  styleUrls: ['./datepicker.component.css'],
 })
 export class DatepickerComponent {
 
-  currentDate: Date;
   @Output() dateSelected = new EventEmitter<Date>();
 
-  constructor() {
-    this.currentDate = new Date();
-  }
-
   onDateChange(date: Date) {
-    this.currentDate = date;
-    this.dateSelected.emit(this.currentDate);
+    this.dateSelected.emit(date);
   }
 }
