@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    declarations: [AppComponent]
+    imports: [RouterTestingModule, MatTabsModule],
+    declarations: [AppComponent],
   }));
 
   it('should create the app', () => {

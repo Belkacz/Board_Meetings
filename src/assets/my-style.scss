@@ -5,7 +5,7 @@
 $my-primary: mat.define-palette(mat.$grey-palette,900, 50);
 $my-accent: mat.define-palette(mat.$grey-palette, 900, 50);
 
-$koia-theme: mat.define-light-theme((
+$board-meetings-theme: mat.define-light-theme((
  color: (
    primary: $my-primary,
    accent: $my-accent,
