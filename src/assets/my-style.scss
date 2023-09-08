@@ -14,4 +14,4 @@ $board-meetings-theme: mat.define-light-theme((
  density: 0,
 ));
 
-@include mat.all-component-themes($koia-theme);
+@include mat.all-component-themes($board-meetings-theme);
