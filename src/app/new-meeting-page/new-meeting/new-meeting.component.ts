@@ -100,6 +100,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.dateEndControl.setValue(this.dateEnd);
       this.dateStartControl.markAsDirty()
       this.dateEndControl.markAsDirty()
+      this.confirmTheExistenceOfTime();
     }
   }
 
@@ -120,12 +121,36 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
     this.dateStartControl.markAsDirty()
     this.dateEndControl.markAsDirty()
+    this.confirmTheExistenceOfTime();
+    // this.formValidators();
+    // console.log('this.dateStartControl ', this.dateStartControl)
+    // console.log('this.dateEndControl ', this.dateEndControl)
+  }
+
+  private confirmTheExistenceOfTime(): void {
     if (!this.pickedStartTimeString) {
-      this.dateStartControl.setErrors({ 'noStartingTime': true })
+      const currentErrors = this.dateStartControl.errors || {};
+      currentErrors['noStartingTime'] = true;
+      this.dateStartControl.setErrors(currentErrors);
     } else {
-      this.dateStartControl.setErrors({ 'noStartingTime': null })
+      const currentErrors = this.dateStartControl.errors;
+      if (currentErrors && currentErrors['noStartingTime']) {
+        delete currentErrors['noStartingTime'];
+        this.dateStartControl.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
+      }
     }
-    !this.pickedEndTimeString ? this.dateEndControl.setErrors({ 'noEndTime': true }) : this.dateStartControl.setErrors({ 'noEndTime': null })
+    
+    if (!this.pickedEndTimeString) {
+      const currentErrors = this.dateEndControl.errors || {};
+      currentErrors['noEndTime'] = true;
+      this.dateEndControl.setErrors(currentErrors);
+    } else {
+      const currentErrors = this.dateEndControl.errors;
+      if (currentErrors && currentErrors['noEndTime']) {
+        delete currentErrors['noEndTime'];
+        this.dateEndControl.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
+      }
+    }
   }
 
   clearInput() {

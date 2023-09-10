@@ -37,7 +37,7 @@
           <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
           <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
         </div>
-        <mat-error *ngIf="dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning']
+        <mat-error *ngIf="(dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning'])
         && !dateStartControl.pristine && !dateEndControl.pristine">The start date cannot be earlier than the end
           date</mat-error>
           <mat-error *ngIf="dateStartControl.hasError('noStartingTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
