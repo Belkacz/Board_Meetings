@@ -40,15 +40,21 @@
         <mat-error *ngIf="dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning']
         && !dateStartControl.pristine && !dateEndControl.pristine">The start date cannot be earlier than the end
           date</mat-error>
+          <mat-error *ngIf="dateStartControl.hasError('noStartingTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
+            No starting meeting time
+          </mat-error>
+          <mat-error
+          *ngIf="dateEndControl.hasError('noEndTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
+          No end meeting time</mat-error>
       </div>
       <div>
         <h3>Location</h3>
         <section class="">
-          <mat-checkbox [checked]="isAddressChecked" (click)="toggleAdress()"
+          <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()"
             class="minus-10-margin">Location</mat-checkbox>
           <br>
           <mat-form-field class="wider-element wider-container wider-box lower-input">
-            <input matInput [formControl]="meetingAddress" placeholder="Adress..." />
+            <input matInput [formControl]="meetingAddress" placeholder="Address..." />
           </mat-form-field>
         </section>
         <h3>Online meeting</h3>
@@ -60,13 +66,14 @@
             <input matInput [formControl]="onlineAddress" placeholder="Paste meeting link ..." value="" />
           </mat-form-field>
         </section>
-        <h3>Hybride: Online and stationary</h3>
+        <h3>Hybrid: Online and stationary</h3>
         <section class="">
-          <mat-checkbox [checked]="isHybrideChecked" (click)="toggleHybride()" class="minus-10-margin">Hybride</mat-checkbox>
+          <mat-checkbox [checked]="isHybridChecked" (click)="toggleHybrid()"
+            class="minus-10-margin">Hybrid</mat-checkbox>
           <br>
         </section>
       </div>
-      <mat-error *ngIf="(isHybrideChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
+      <mat-error *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
         Meeting address cannot be empty.
       </mat-error>
       <br>

@@ -37,7 +37,7 @@ export class FormValidators {
         };
       }
 
-      public static locationValidator(isHybrideChecked: boolean, isAddressChecked: boolean, isOnlineChecked: boolean){
+      public static locationValidator(isHybridChecked: boolean, isAddressChecked: boolean, isOnlineChecked: boolean){
         return (control: AbstractControl) => {
           //console.log(control)
           const onlineAddress = control.get('onlineAddress');

@@ -47,7 +47,7 @@ export class NewMeetingPageComponent implements OnInit {
   saveDraft(): void {
     this.draft = this.combinedData;
     alert('Save as Draft Placeholder');
-    //console.log(this.newMeetingComponent.form)
+    console.log(this.newMeetingComponent.form)
     console.log("draft Saved");
   }
 
