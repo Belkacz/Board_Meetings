@@ -18,7 +18,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { NewMeetingPageComponent } from './new-meeting-page/new-meeting-page.component';
 import { TasksComponent } from './new-meeting-page/tasks/tasks.component';
-import { InvatesComponent } from './new-meeting-page/invates/invates.component';
+import { InvitesComponent } from './new-meeting-page/invates/invites.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BoardComponent } from './new-meeting-page/invates/board/board.component';
 import { GuestsComponent } from './new-meeting-page/invates/guests/guests.component';
@@ -35,7 +35,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     TimepickerComponent,
     NewMeetingPageComponent,
     TasksComponent,
-    InvatesComponent,
+    InvitesComponent,
     BoardComponent,
     GuestsComponent,
     MainMenuComponent,

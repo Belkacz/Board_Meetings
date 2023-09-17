@@ -8,7 +8,7 @@ import { GestInvited } from '../shared/interfaces';
 export class InviteService {
     inviteList$ = new BehaviorSubject<GestInvited[]>([]);
 
-    updateGestsList(gestsList: GestInvited[]) {
+    public updateGestsList(gestsList: GestInvited[]) {
         const invitedGuests: GestInvited[] = gestsList.filter(guest => guest.invited === true);
         this.inviteList$.next(invitedGuests);
     }

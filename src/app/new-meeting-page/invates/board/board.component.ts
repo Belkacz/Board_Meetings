@@ -30,13 +30,13 @@ export class BoardComponent {
     this.searchedList = workerList.map(guest => ({ ...guest, invited: false }));;
   }
 
-  search() {
-    this.searchedList = this.gestsList.filter(serchedPerson =>
-      (serchedPerson.name.toLowerCase().includes(this.wanted.toLowerCase()) || serchedPerson.surname.toLowerCase().includes(this.wanted.toLowerCase()))
+  public search() {
+    this.searchedList = this.gestsList.filter(wantedPerson =>
+      (wantedPerson.name.toLowerCase().includes(this.wanted.toLowerCase()) || wantedPerson.surname.toLowerCase().includes(this.wanted.toLowerCase()))
     )
   }
 
-  handleCheckAll() {
+  public handleCheckAll() {
     this.allChecked = !this.allChecked;
     this.searchedList.forEach(item => item.invited = this.allChecked);
     this.searchedList.forEach(serchedPop => {
@@ -50,7 +50,7 @@ export class BoardComponent {
     //this.gestsList.forEach(item => item.invited = this.allChecked);
   }
 
-  checkPerson(i: number) {
+  public checkPerson(i: number) {
     this.searchedList[i].invited = !this.searchedList[i].invited;
     this.gestsList.forEach(pop => {
       if (pop.id === this.searchedList[i].id) {
@@ -72,11 +72,11 @@ export class BoardComponent {
     this.emitGestList();
   }
 
-  resetList() {
-    this.searchedList = this.gestsList;
-  }
+  // resetList() {
+  //   this.searchedList = this.gestsList;
+  // }
 
-  emitGestList() {
+  private emitGestList() {
     this.inviteService.updateGestsList(this.gestsList)
   }
 }

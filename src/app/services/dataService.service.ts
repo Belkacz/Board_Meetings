@@ -7,7 +7,7 @@ import { promiseData } from './promise';
 export class DataService {
   constructor() {}
 
-  sendData(data: any): Promise<any> {
+  public sendData(data: any): Promise<any> {
     return promiseData(data)
     .then(() => {
         console.log('Wysyłanie danych zakończone sukcesem');

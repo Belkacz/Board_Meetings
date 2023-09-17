@@ -17,7 +17,7 @@ export class DatepickerComponent {
 
   @Output() dateSelected = new EventEmitter<Date>();
 
-  onDateChange(date: Date) {
+  public onDateChange(date: Date) {
     this.dateSelected.emit(date);
   }
 }

@@ -10,7 +10,7 @@ export class TimepickerComponent {
   @Output() timeSelected = new EventEmitter<string>();
 
 
-  timeChange(event: Event) {
+  public timeChange(event: Event) {
     if (event.target instanceof HTMLInputElement) {
       const time = event.target.value;
       this.timeSelected.emit(time);

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InvatesComponent } from './invates.component';
+import { InvitesComponent } from './invites.component';
 import { MatTabsModule } from '@angular/material/tabs';
 
-describe('InvatesComponent', () => {
-  let component: InvatesComponent;
-  let fixture: ComponentFixture<InvatesComponent>;
+describe('InvitesComponent', () => {
+  let component: InvitesComponent;
+  let fixture: ComponentFixture<InvitesComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [InvatesComponent],
+      declarations: [InvitesComponent],
       imports: [MatTabsModule],
     });
-    fixture = TestBed.createComponent(InvatesComponent);
+    fixture = TestBed.createComponent(InvitesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

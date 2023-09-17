@@ -44,14 +44,14 @@ export class NewMeetingPageComponent implements OnInit {
     })
   }
 
-  saveDraft(): void {
+  public saveDraft(): void {
     this.draft = this.combinedData;
     alert('Save as Draft Placeholder');
     console.log(this.newMeetingComponent.form)
     console.log("draft Saved");
   }
 
-  saveAndPublish(): void {
+  public saveAndPublish(): void {
     const formValue = this.newMeetingComponent.form.value;
     for (const key in formValue) {
       if (key in this.combinedData) {
@@ -76,15 +76,11 @@ export class NewMeetingPageComponent implements OnInit {
     }
   }
 
-  goback(): void {
-    alert('Go back Placeholder')
-    console.log("go back")
-  }
-  saveTasksList(tasksList: Task[]): void {
+  public saveTasksList(tasksList: Task[]): void {
     this.tasksList = tasksList;
   }
 
-  formNotReady(): boolean {
+  public formNotReady(): boolean {
     // return this.newMeetingComponent.selectedMeetingType.value &&
     //   this.newMeetingComponent.meetingName.value !== null &&
     //   this.newMeetingComponent.selectedMeetingType.value !== null &&

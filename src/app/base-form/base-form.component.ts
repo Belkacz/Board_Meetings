@@ -9,5 +9,5 @@ export abstract class BaseFormComponent {
     this.createFormControls();
   }
 
-  abstract createFormControls(): void;
+  protected abstract createFormControls(): void;
 }

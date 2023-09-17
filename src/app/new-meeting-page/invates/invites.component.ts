@@ -6,7 +6,7 @@ import { Gest, GestInvited } from 'src/app/shared/interfaces';
   templateUrl: './invates.component.html',
   styleUrls: ['./invates.component.css'],
 })
-export class InvatesComponent {
+export class InvitesComponent {
 
 }
 

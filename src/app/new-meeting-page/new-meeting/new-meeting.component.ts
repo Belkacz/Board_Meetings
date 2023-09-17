@@ -79,7 +79,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.formValidators();
   }
 
-  selectType(option: string) {
+  public selectType(option: string) {
     if (this.form) {
       this.form.patchValue({
         selectedMeetingType: option
@@ -87,7 +87,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-  handleDateSelected(selectedDate: Date) {
+  public handleDateSelected(selectedDate: Date) {
     if (selectedDate !== null) {
       this.dateStart.setFullYear(selectedDate.getFullYear());
       this.dateStart.setMonth(selectedDate.getMonth());
@@ -104,7 +104,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-  handleTimeSelected(time: string, type: TimeType): void {
+  public handleTimeSelected(time: string, type: TimeType): void {
     const hour = time.split(':')[0];
     const min = time.split(':')[1];
     if (type === TimeType.Start) {
@@ -153,7 +153,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-  clearInput() {
+  public clearInput() {
     this.meetingName.setValue('');
   }
 
