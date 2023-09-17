@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Gest, GestInvited } from 'src/app/shared/interfaces';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-invates',
-  templateUrl: './invates.component.html',
-  styleUrls: ['./invates.component.css'],
+  selector: 'app-invites',
+  templateUrl: './invites.component.html',
+  styleUrls: ['./invites.component.css'],
 })
 export class InvitesComponent {
 

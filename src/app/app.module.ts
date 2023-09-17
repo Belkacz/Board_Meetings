@@ -28,6 +28,7 @@ import { AboutComponent } from './about/about.component';
 import { DialogFormComponent } from './dialog-form/dialog-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
+
 @NgModule({
   declarations: [
     AppComponent,
