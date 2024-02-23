@@ -67,7 +67,7 @@ export class TasksComponent implements OnInit, OnDestroy {
         newTask.id = 1;
       }
       this.tasksList.push(newTask)
-      console.log(newTask.id)
+      // console.log(newTask.id)
       this.sendTasksList();
     });
   }

@@ -25,20 +25,20 @@ export class FormValidators {
     public static startBeforeEnd(startDate: Date, endDate: Date, startControl: FormControl, endControl: FormControl): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors | null> => {
           const value = control.value;
-          console.log('startDate ', startDate)
-          console.log('endDate ', endDate)
+          // console.log('startDate ', startDate)
+          // console.log('endDate ', endDate)
           if (startDate.getTime() > endDate.getTime()) {
-            console.log("startDate.getTime() > endDate.getTime()")
+            // console.log("startDate.getTime() > endDate.getTime()")
             startControl.setErrors({ endBeforeBeginning: true });
             endControl.setErrors({ endBeforeBeginning: true });
           } else {
-            console.log('else')
+            // console.log('else')
             startControl.setErrors({ endBeforeBeginning: null });
             endControl.setErrors({ endBeforeBeginning: null });
           }
           return of(null);
-          console.log(startControl)
-          console.log(endControl)
+          // console.log(startControl)
+          // console.log(endControl)
         };
       }
 

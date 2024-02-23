@@ -27,6 +27,7 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { AboutComponent } from './about/about.component';
 import { DialogFormComponent } from './dialog-form/dialog-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTabsModule,
     MatIconModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    HttpClientModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

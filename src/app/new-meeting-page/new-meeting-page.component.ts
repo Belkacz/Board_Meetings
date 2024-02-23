@@ -47,8 +47,9 @@ export class NewMeetingPageComponent implements OnInit {
   public saveDraft(): void {
     this.draft = this.combinedData;
     alert('Save as Draft Placeholder');
-    console.log(this.newMeetingComponent.form)
+    console.log(this.draft)
     console.log("draft Saved");
+    this.dataService.sendDataToPHP(this.draft)
   }
 
   public saveAndPublish(): void {
@@ -72,7 +73,8 @@ export class NewMeetingPageComponent implements OnInit {
       alert("You need to provide a location or choose an online option")
     } else {
       alert('Save And Publish Placeholder, open console for more details')
-      this.dataService.sendData(this.combinedData)
+      // this.dataService.sendData(this.combinedData)
+      this.dataService.sendDataToPHP(this.combinedData);
     }
   }
 
@@ -81,12 +83,13 @@ export class NewMeetingPageComponent implements OnInit {
   }
 
   public formNotReady(): boolean {
-    // return this.newMeetingComponent.selectedMeetingType.value &&
-    //   this.newMeetingComponent.meetingName.value !== null &&
-    //   this.newMeetingComponent.selectedMeetingType.value !== null &&
-    //   (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
-    //   !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
-      const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
-      return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
+    return this.newMeetingComponent.selectedMeetingType.value &&
+      this.newMeetingComponent.meetingName.value !== null &&
+      this.newMeetingComponent.selectedMeetingType.value !== null &&
+      (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
+      !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
+      // const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
+      // console.log(this.newMeetingComponent.form)
+      // return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
   }
 }
