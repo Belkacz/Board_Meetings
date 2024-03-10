@@ -30,8 +30,8 @@ export class DataService {
       end_date : dataToSend.dateEnd,
       meeting_address : dataToSend.meetingAddress,
       online_address : dataToSend.onlineAddress,
-      fk_id_gests : dataToSend.gests,
-      fk_id_tasks : dataToSend.tasksList
+      guests : dataToSend.guests,
+      tasks : dataToSend.tasksList
     };
     this.http.post('http://localhost/meetings.php', packedText, { responseType: 'text' })
       .subscribe({

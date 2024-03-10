@@ -13,7 +13,7 @@ import { DataService } from '../services/dataService.service';
 export class NewMeetingPageComponent implements OnInit {
   @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
 
-  private gestsList: GestInvited[];
+  private guestsList: GestInvited[];
   private tasksList: Task[]
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
@@ -21,7 +21,7 @@ export class NewMeetingPageComponent implements OnInit {
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private dataService: DataService) {
     this.newMeetingComponent = newMeeting;
-    this.gestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
+    this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
     this.combinedData = {
       meetingType: '',
@@ -32,7 +32,7 @@ export class NewMeetingPageComponent implements OnInit {
       dateEnd: null,
       chooseFile: [],
       addedDocuments: [],
-      gests: [],
+      guests: [],
       tasksList: []
     }
     this.draft = this.combinedData;
@@ -40,7 +40,7 @@ export class NewMeetingPageComponent implements OnInit {
 
   ngOnInit() {
     this.inviteService.inviteList$.subscribe(invited => {
-      this.gestsList = invited;
+      this.guestsList = invited;
     })
   }
 
@@ -49,6 +49,21 @@ export class NewMeetingPageComponent implements OnInit {
     alert('Save as Draft Placeholder');
     console.log(this.draft)
     console.log("draft Saved");
+    this.draft = {
+      meetingType:"boardMeeting",
+      meetingName:"picie",
+      dateStart: new Date("2024-03-10T13:14:50.985Z"),
+      dateEnd: new Date("2024-03-10T15:16:50.985Z"),
+      meetingAddress:"park sledzia",
+      onlineAddress:null,
+      guests:[
+        {id:1,name :"Wade",surname:"Warner",jobPosition:"Cair of the board"},
+        {id:2,name:"Floyd",surname:"Miles",jobPosition:"Board memeber"},
+        {id:3,name:"Brooklyn",surname:"Simmons",jobPosition:"Board memeber"}],
+      tasksList: [{"id":1,"name":"New task name 1"},{"id":2,"name":"New task name 2"}],
+      chooseFile: null,
+      addedDocuments: null
+    }
     this.dataService.sendDataToPHP(this.draft)
   }
 
@@ -60,7 +75,7 @@ export class NewMeetingPageComponent implements OnInit {
       }
     }
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
-    this.combinedData.gests = this.gestsList;
+    this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
 
     if (this.combinedData.meetingType === "") {

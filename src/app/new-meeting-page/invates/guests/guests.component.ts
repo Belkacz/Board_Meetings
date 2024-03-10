@@ -9,14 +9,14 @@ import { GestInvited } from 'src/app/shared/interfaces';
 })
 export class GuestsComponent implements OnInit {
 
-  gestsList!: GestInvited[];
+  guestsList!: GestInvited[];
 
   constructor(private inviteService: InviteService) {
   }
 
   ngOnInit() {
     this.inviteService.inviteList$.subscribe(invited => {
-      this.gestsList = invited;
+      this.guestsList = invited;
     })
   }
 }

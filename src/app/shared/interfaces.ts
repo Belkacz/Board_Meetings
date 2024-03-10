@@ -5,14 +5,14 @@ export interface DownloadFile {
     name: string;
 }
 
-export interface Gest {
+export interface Guest {
     id: number;
     name: string;
     surname: string;
     jobPosition: string | null;
 }
 
-export interface GestInvited extends Gest {
+export interface GestInvited extends Guest {
     invited: boolean;
   }
 
@@ -23,9 +23,9 @@ export interface BoardMeetingData{
     onlineAddress: string | null;
     dateStart: Date | null;
     dateEnd: Date | null;
-    chooseFile: Array<FileType>
-    addedDocuments: Array<FileType>
-    gests: Array<Gest>
+    chooseFile: Array<FileType> | null;
+    addedDocuments: Array<FileType> | null;
+    guests: Array<Guest>
     tasksList: Array<Task>
     [key: string]: any
 }
