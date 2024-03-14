@@ -51,7 +51,7 @@ export class NewMeetingPageComponent implements OnInit {
     console.log("draft Saved");
     this.draft = {
       meetingType:"boardMeeting",
-      meetingName:"picie",
+      meetingName:"spotkanie",
       dateStart: new Date("2024-03-10T13:14:50.985Z"),
       dateEnd: new Date("2024-03-10T15:16:50.985Z"),
       meetingAddress:"park sledzia",
