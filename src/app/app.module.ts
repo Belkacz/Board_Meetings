@@ -28,6 +28,7 @@ import { AboutComponent } from './about/about.component';
 import { DialogFormComponent } from './dialog-form/dialog-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
+import { CreateAgendaComponent } from './create-agenda/create-agenda.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { HttpClientModule } from '@angular/common/http';
     GuestsComponent,
     MainMenuComponent,
     AboutComponent,
-    DialogFormComponent
+    DialogFormComponent,
+    CreateAgendaComponent
   ],
   imports: [
     ReactiveFormsModule,

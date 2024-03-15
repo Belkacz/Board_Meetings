@@ -79,20 +79,18 @@
       <br>
       <mat-card class="wider-element wider-container wider-box grey-box-shadow">
         <mat-card-header>
-          <mat-card-title>Agenda1</mat-card-title>
+          <mat-card-title>Agenda</mat-card-title>
         </mat-card-header>
-        <mat-card-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-          labore et dolore magna aliqua.</mat-card-content>
+        <mat-card-content>agenda of the meeting</mat-card-content>
         <div class="select-buttons-grup">
           <button mat-stroked-button class="select-buttons-agenda">Create agenda</button>
           <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button class="select-buttons-agenda" (click)="openFilePicker(chooseFileInput)">Choose
-            File</button>
+          <button mat-stroked-button class="select-buttons-agenda" (click)="openFilePicker(chooseFileInput)" disabled="true">Choose File</button>
         </div>
       </mat-card>
       <div>
         <h3>Documents</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eliut, sed do eiusmod tempor</p>
+        <p>Documents attached to the meeting</p>
         <div class="select-buttons-grup">
           <div>
             <ul class="wider-element wider-container wider-box">

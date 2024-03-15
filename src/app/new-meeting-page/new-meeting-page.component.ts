@@ -98,13 +98,13 @@ export class NewMeetingPageComponent implements OnInit {
   }
 
   public formNotReady(): boolean {
-    return this.newMeetingComponent.selectedMeetingType.value &&
-      this.newMeetingComponent.meetingName.value !== null &&
-      this.newMeetingComponent.selectedMeetingType.value !== null &&
-      (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
-      !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
-      // const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
-      // console.log(this.newMeetingComponent.form)
-      // return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
+    // return this.newMeetingComponent.selectedMeetingType.value &&
+    //   this.newMeetingComponent.meetingName.value !== null &&
+    //   this.newMeetingComponent.selectedMeetingType.value !== null &&
+    //   (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
+    //   !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
+    const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
+    // console.log(this.newMeetingComponent.form)
+    return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
   }
 }
