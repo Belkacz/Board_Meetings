@@ -17,29 +17,29 @@ function saveMeetingToDatabase($dataReceived, $servername, $username, $password,
         }
 
         if($dataReceived['start_date'] != NULL) {
-            $start_date = date('Y-m-d H:i:s', strtotime($dataReceived['start_date']));
+            $startDate = date('Y-m-d H:i:s', strtotime($dataReceived['start_date']));
         }
         if($dataReceived['end_date'] != NULL) {
-            $end_date = date('Y-m-d H:i:s', strtotime($dataReceived['end_date']));
+            $endDate = date('Y-m-d H:i:s', strtotime($dataReceived['end_date']));
         }
 
         $create_meeting = "INSERT INTO t_meetings (meeting_type, meeting_name, start_date, end_date, meeting_address, online_address) 
         VALUES ('" . $dataReceived['meeting_type'] .
         "', '" . $dataReceived['meeting_name'] .
-        "', '" . $start_date .
-        "', '" . $end_date .
+        "', '" . $startDate .
+        "', '" . $endDate .
         "', '" . $dataReceived['meeting_address'] .
         "', '" . $dataReceived['online_address'] . "')";
 
         if ($conn->query($create_meeting) === TRUE) {
-            $meeting_id = $conn->insert_id;
-            echo "New record created successfully. Meeting ID: " . $meeting_id . "<br>";
+            $meetingId = $conn->insert_id;
+            echo "New record created successfully. Meeting ID: " . $meetingId . "<br>";
 
             if($dataReceived['guests'] != NULL){
-                addGuestsToMeeting($dataReceived['guests'], $meeting_id, $conn);
+                addGuestsToMeeting($dataReceived['guests'], $meetingId, $conn);
             }
             if($dataReceived['tasks'] != NULL){
-                addTasksToMeeting($dataReceived['tasks'], $meeting_id, $conn);
+                addTasksToMeeting($dataReceived['tasks'], $meetingId, $conn);
             }
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -51,18 +51,18 @@ function saveMeetingToDatabase($dataReceived, $servername, $username, $password,
     }
 }
 
-function addGuestsToMeeting($guests, $meeting_id, $conn) {
+function addGuestsToMeeting($guests, $meetingId, $conn) {
     foreach ($guests as $guest) {
-        $found_guest_flag = FALSE;
-        $guest_id = $guest['id'];
+        $foundGuestFlag = FALSE;
+        $guestId = $guest['id'];
 
-        $sql_person = "SELECT id_person, firstname, surname FROM t_person";
-        $database_persons = $conn->query($sql_person);
+        $sqlPersonSelect = "SELECT id_person, firstname, surname FROM t_person";
+        $databasePersons = $conn->query($sqlPersonSelect);
 
-        if ($database_persons->num_rows > 0) {
-            while ($row = $database_persons->fetch_assoc()) {
-                if ($row["id_person"] == $guest_id) {
-                    $found_guest_flag = TRUE;
+        if ($databasePersons->num_rows > 0) {
+            while ($row = $databasePersons->fetch_assoc()) {
+                if ($row["id_person"] == $guestId) {
+                    $foundGuestFlag = TRUE;
                     break;
                 }
             }
@@ -70,43 +70,43 @@ function addGuestsToMeeting($guests, $meeting_id, $conn) {
             echo "0 results from t_persons table";
         }
 
-        if ($found_guest_flag) {
-            $sql_guests = "INSERT INTO t_guests (fk_id_meeting, fk_id_person) 
-                            VALUES ('$meeting_id', '$guest_id')";
+        if ($foundGuestFlag) {
+            $sqlInsertGuests = "INSERT INTO t_guests (fk_id_meeting, fk_id_person) 
+                            VALUES ('$meetingId', '$guestId')";
         } else {
-            $sql_insert_person = "INSERT INTO t_person (firstname, surname, contact_email)
+            $sqlInsertPerson = "INSERT INTO t_person (firstname, surname, contact_email)
                 VALUES ('" . $guest['name'] . "', '" . $guest['surname'] . "', '" . $guest['contact_email'] . "')";
-            if ($conn->query($sql_insert_person) === TRUE) {
-                $guest_id = $conn->insert_id;
+            if ($conn->query($sqlInsertPerson) === TRUE) {
+                $guestId = $conn->insert_id;
         
-                $sql_guests = "INSERT INTO t_guests (fk_id_meeting, fk_id_person) 
-                                VALUES ('$meeting_id', '$guest_id')";
-                echo "New Person created successfully. Guest ID: " . $guest_id . "<br>";
+                $sqlInsertGuests = "INSERT INTO t_guests (fk_id_meeting, fk_id_person) 
+                                VALUES ('$meetingId', '$guestId')";
+                echo "New Person created successfully. Guest ID: " . $guestId . "<br>";
             } else {
-                echo "Error: " . $sql_insert_person . "<br>" . $conn->error;
+                echo "Error: " . $sqlInsertPerson . "<br>" . $conn->error;
             }
         }
 
-        if ($conn->query($sql_guests) === TRUE) {
-            echo "Guest added successfully. Guest ID: " . $guest_id . "<br>";
+        if ($conn->query($sqlInsertGuests) === TRUE) {
+            echo "Guest added successfully. Guest ID: " . $guestId . "<br>";
         } else {
             echo "Error adding guest: " . $conn->error;
         }
     }
 }
 
-function addTasksToMeeting($tasks, $meeting_id, $conn) {
+function addTasksToMeeting($tasks, $meetingId, $conn) {
     foreach ($tasks as $task) {
-        $found_task_flag = FALSE;
-        $task_id = $task['id'];
+        $foundTaskFlag = FALSE;
+        $taskId = $task['id'];
 
         $sql_tasks = "SELECT id_task, task_name, standard_duration FROM t_task";
         $database_tasks = $conn->query($sql_tasks);
 
         if ($database_tasks->num_rows > 0) {
             while ($row = $database_tasks->fetch_assoc()) {
-                if ($row["id_task"] == $task_id) {
-                    $found_task_flag = TRUE;
+                if ($row["id_task"] == $taskId) {
+                    $foundTaskFlag = TRUE;
                     break;
                 }
             }
@@ -114,26 +114,26 @@ function addTasksToMeeting($tasks, $meeting_id, $conn) {
             echo "0 results from t_task table";
         }
 
-        if ($found_task_flag) {
-            $sql_meeting_tasks = "INSERT INTO t_meeting_tasks (fk_id_meeting, fk_id_task) 
-                            VALUES ('$meeting_id', '$task_id')";
+        if ($foundTaskFlag) {
+            $sqlInsertMeetingTasks = "INSERT INTO t_meeting_tasks (fk_id_meeting, fk_id_task) 
+                            VALUES ('$meetingId', '$taskId')";
         } else {
-            $sql_insert_task = "INSERT INTO t_task (task_name, standard_duration)
+            $sqlInsertTask = "INSERT INTO t_task (task_name, standard_duration)
                 VALUES ('" . $task['name'] . "', '60')";
-            if ($conn->query($sql_insert_task) === TRUE) {
-                $task_id = $conn->insert_id;
+            if ($conn->query($sqlInsertTask) === TRUE) {
+                $taskId = $conn->insert_id;
         
-                $sql_meeting_tasks = "INSERT INTO t_meeting_tasks (fk_id_meeting, fk_id_task) 
-                                VALUES ('$meeting_id', '$task_id')";
-                echo "New task created successfully. task ID: " . $task_id . "<br>";
+                $sqlInsertMeetingTasks = "INSERT INTO t_meeting_tasks (fk_id_meeting, fk_id_task) 
+                                VALUES ('$meetingId', '$taskId')";
+                echo "New task created successfully. task ID: " . $taskId . "<br>";
             } else {
-                echo "Error: " . $sql_insert_task . "<br>" . $conn->error;
+                echo "Error: " . $sqlInsertTask . "<br>" . $conn->error;
             }
         }
 
-        if ($conn->query($sql_meeting_tasks) === TRUE) {
-            $meeting_tasks_id = $conn->insert_id;
-            echo "Task " . $task_id . " added to meeting successfully. Meeting task ID: " . $meeting_tasks_id . "<br>";
+        if ($conn->query($sqlInsertMeetingTasks) === TRUE) {
+            $meetingTasksId = $conn->insert_id;
+            echo "Task " . $taskId . " added to meeting successfully. Meeting task ID: " . $meetingTasksId . "<br>";
         } else {
             echo "Error adding task: " . $conn->error;
         }
