@@ -52,8 +52,6 @@
     $password = "root";
     $dbname = "board_meetings";
 
-    // saveToDatabase($dataReceived, $servername, $username, $password, $dbname);
-
 
     $conn = new mysqli($servername, $username, $password, $dbname);
     if ($conn->connect_error) {
@@ -70,7 +68,6 @@
         echo "0 results";
     }
 
-    // Close connection
     $conn->close();
 
     ?>

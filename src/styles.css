@@ -13,8 +13,7 @@ body {
   gap: 10px;
 }
 
-
-div.main.calendar-container {
+.calendar-container {
   display: flex;
   align-items: center;
 }
@@ -120,8 +119,12 @@ ul {
   padding: 20px;
 }
 
+.padding-30px{
+  padding: 30px
+}
+
 .wider-element.wider-container.wider-box {
-  width: 75%;
+  width: 77%;
   min-width: 300px;
   max-width: 800px;
 }
@@ -134,7 +137,7 @@ ul {
   padding-top: 14px;
 }
 
-.flex-container {
+.main-container {
   display: flex;
 }
 
@@ -156,9 +159,6 @@ ul {
   align-items: center;
 }
 
-.mat-mdc-tab-header {
-  display: ruby !important;
-}
 
 .flex-box {
   display: flex;
@@ -208,7 +208,7 @@ app-tasks {
 }
 
 .separator-25rem-width {
-  width: 25.4rem;
+
   background-color: gainsboro;
   height: 2px;
   margin-left: -30px;
@@ -216,7 +216,7 @@ app-tasks {
 }
 
 .separator-forInvates {
-  width: 26rem;
+
   background-color: gainsboro;
   height: 3px;
   margin-top: -1px;
@@ -245,4 +245,49 @@ app-tasks {
 
 .wider-element.wider-container.wider-box.grey-box-shadow{
   box-shadow: 0px 0px 5px 1px #616161;
+}
+
+
+@media only screen and (max-width: 1000px) {
+  .main-container {
+    display: inline;
+  }
+  .side-menu{
+    margin-left: 100px;
+  }
+
+  .main-menu{
+    margin-left: 20px;
+  }
+  .side-menu{
+    margin-left: 20px;
+  }
+  .meeting-form{
+    margin-left: 0px;
+    
+  }
+  .calendar-container {
+    display: inline;
+  }
+  .wider-input{
+    width: 100%;
+    padding: 0%;
+  }
+}
+
+@media only screen and (min-width: 1300px) {
+  .main-menu{
+    margin-left: 10%;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .main-menu{
+    margin-left: 15%;
+  }
+}
+@media only screen and (min-width: 1700px) {
+  .main-menu{
+    margin-left: 20%;
+  }
 }
