@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Response from PHP XD</title>
+    <title>Response from PHP</title>
 </head>
 <body>
-    <p>XD</p>
+    <p>Base response</p>
     <?php
 function saveMeetingToDatabase($dataReceived, $servername, $username, $password, $dbname) {
     if (!empty($dataReceived)) {
