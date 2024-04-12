@@ -61,10 +61,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Board-Meetings:build:production"
+              "buildTarget": "Board-Meetings:build:production"
             },
             "development": {
-              "browserTarget": "Board-Meetings:build:development"
+              "buildTarget": "Board-Meetings:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +72,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Board-Meetings:build"
+            "buildTarget": "Board-Meetings:build"
           }
         },
         "test": {
