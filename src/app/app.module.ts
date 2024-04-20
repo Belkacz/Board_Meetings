@@ -18,17 +18,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { NewMeetingPageComponent } from './new-meeting-page/new-meeting-page.component';
 import { TasksComponent } from './new-meeting-page/tasks/tasks.component';
-import { InvitesComponent } from './new-meeting-page/invates/invites.component';
+import { InvitesComponent } from './new-meeting-page/invites/invites.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { BoardComponent } from './new-meeting-page/invates/board/board.component';
-import { GuestsComponent } from './new-meeting-page/invates/guests/guests.component';
+import { BoardComponent } from './new-meeting-page/invites/board/board.component';
+import { GuestsComponent } from './new-meeting-page/invites/guests/guests.component';
 import { AppRoutingModule } from './shared/app-routing.module';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { AboutComponent } from './about/about.component';
 import { DialogFormComponent } from './dialog-form/dialog-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { CreateAgendaComponent } from './create-agenda/create-agenda.component';
+import { DialogListComponent } from './dialog-list/dialog-list.component';
 
 
 @NgModule({
@@ -44,7 +44,7 @@ import { CreateAgendaComponent } from './create-agenda/create-agenda.component';
     MainMenuComponent,
     AboutComponent,
     DialogFormComponent,
-    CreateAgendaComponent
+    DialogListComponent
   ],
   imports: [
     ReactiveFormsModule,
