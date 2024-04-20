@@ -29,6 +29,7 @@ import { DialogFormComponent } from './dialog-form/dialog-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { DialogListComponent } from './dialog-list/dialog-list.component';
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -66,7 +67,9 @@ import { DialogListComponent } from './dialog-list/dialog-list.component';
     MatIconModule,
     MatIconModule,
     MatDialogModule,
-    HttpClientModule 
+    HttpClientModule,
+    CdkDropList,
+    CdkDrag
   ],
   providers: [],
   bootstrap: [AppComponent]

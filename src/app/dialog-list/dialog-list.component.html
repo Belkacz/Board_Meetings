@@ -1,19 +1,25 @@
 <div>
     <h1 mat-dialog-title>Create Agenda</h1>
-    <form class="flex-box" >
-
+    <form [formGroup]="form" style="display: flex; flex-direction: column; justify-content: center;">
         <div mat-dialog-content>
+            <mat-form-field style="display: flex; align-items: center; justify-content: center; padding: 10px;">
+                <input matInput formControlName="agendaName" placeholder="Agenda Name">
+            </mat-form-field>
+            <div *ngIf="list.length > 0" cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let item of list; index as i" cdkDrag>{{item}}</div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; padding: 10px;">
+                <label style="padding: 5px"></label>
+                <input style="padding: 5px" matInput type="text" formControlName="newElement">
+                <button (click)="addElement()">
+                    <mat-icon style="padding: 5px">playlist_add</mat-icon>
+                </button>
 
-            <div class="wider-element wider-container wider-box lower-input" >
-                <label class=""></label>
-                <input class="float-right" matInput type="text" >
             </div>
             <div class="flex-box">
-                <!-- <button class="select-buttons" mat-stroked-button [mat-dialog-close]="onSubmit()" type="submit">Submit</button> -->
-                <button mat-stroked-button class="main-container select-buttons"  type="submit">Submit</button>
-                <button mat-stroked-button class="main-container select-buttons" mat-dialog-close type="submit">Close</button>
+                <button mat-stroked-button class="main-container select-buttons" type="submit" (click)="saveDialog()">Submit</button>
+                <button mat-stroked-button class="main-container select-buttons" mat-dialog-close type="button">Close</button>
             </div>
-
         </div>
     </form>
 </div>

@@ -6,6 +6,8 @@ import { DownloadFile } from '../../shared/interfaces';
 import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogListComponent } from 'src/app/dialog-list/dialog-list.component';
 
 @Component({
   selector: 'app-new-meeting',
@@ -36,14 +38,18 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public addedDocumentFormArray!: FormArray;
   public pickedStartTimeString!: string | null;
   public pickedEndTimeString!: string | null;
+  public showCreateAgenda: boolean;
+  
 
   constructor(
     // private formBuilder: FormBuilder,
-    private fileDownloadService: FileDownloadService
+    private fileDownloadService: FileDownloadService,
+    public dialog: MatDialog
   ) {
     super();
     this.dateStart = new Date();
     this.dateEnd = new Date();
+    this.showCreateAgenda = false;
   }
 
   ngOnInit() {
@@ -52,6 +58,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.onlineAddress.disable();
     this.pickedStartTimeString = null;
     this.pickedEndTimeString = null;
+
     this.createFormControls();
   }
 
@@ -213,6 +220,29 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   deleteDocs(docIndex: number) {
     this.addedDocumentFormArray.removeAt(docIndex);
+  }
+
+  newAgenda(): void {
+    this.showCreateAgenda = !this.showCreateAgenda;
+    const dialogRef = this.dialog.open(DialogListComponent)
+    //const dialogRef = this.dialog.open(DialogFormComponent, { title: title })
+    //dialogRef.componentInstance.title = title
+    //dialogRef.componentInstance.fields = [title, 'priority', 'time']
+    // fields.forEach(field => {
+    //   dialogRef.componentInstance.fields = [field]
+    // });
+    // this.newTaskSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: any) => {
+    //   const lastTask = this.tasksList[this.tasksList.length - 1];
+    //   let newTask: Task = { id: 0, name: formValue.name };
+    //   if (lastTask != undefined) {
+    //     newTask.id = lastTask.id + 1;
+    //   } else {
+    //     newTask.id = 1;
+    //   }
+    //   this.tasksList.push(newTask)
+    //   // console.log(newTask.id)
+    //   this.sendTasksList();
+    // });
   }
 
   protected formValidators(): void {
