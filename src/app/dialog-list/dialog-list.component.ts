@@ -12,6 +12,9 @@ export class DialogListComponent {
   @Input() title: string;
   @Input() list: string[];
   private localList: string[];
+  public newElement: string;
+
+  public submitDisable = true;
 
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
@@ -22,8 +25,9 @@ export class DialogListComponent {
     this.localList = [];
     this.form = this.fb.group({
       agendaName: ['', Validators.required],
-      newElement: ['']
+      list: [this.list, Validators.required],
     });
+    this.newElement = '';
   }
 
   ngOnInit() {
@@ -34,20 +38,28 @@ export class DialogListComponent {
 
   saveDialog() {
     if (this.form.valid) {
+      console.log(this.form.value);
       this.formSubmit.emit(this.form.value);
       this.dialogRef.close();
     }
   }
 
   public drop(event: CdkDragDrop<string[]>) {
+    console.log(this.form)
     moveItemInArray(this.list, event.previousIndex, event.currentIndex);
   }
 
-  addElement() {
-    const newElementValue = this.form.get('newElement')?.value;
-    if (newElementValue && newElementValue.trim() !== '') {
-      this.list.push(newElementValue.trim());
-      this.form.get('newElement')?.setValue('');
+  addElement(newElement: string) {
+    console.log(this.form)
+    if (newElement && newElement.trim() !== '') {
+      this.list.push(newElement.trim());
+      this.form.get('list')?.setValue(this.list);
     }
+  }
+
+  removeElement(index: number) {
+    this.list.splice(index, 1);
+    this.form.get('list')?.setValue(this.list);
+    this.form.updateValueAndValidity();
   }
 }

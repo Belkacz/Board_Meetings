@@ -247,6 +247,10 @@ app-tasks {
   box-shadow: 0px 0px 5px 1px #616161;
 }
 
+.small-icon {
+  transform: scale(0.7);
+}
+
 
 @media only screen and (max-width: 1000px) {
   .main-container {
