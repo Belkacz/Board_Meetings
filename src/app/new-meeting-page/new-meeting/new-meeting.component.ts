@@ -189,10 +189,18 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   toggleHybrid() {
     this.isHybridChecked = !this.isHybridChecked;
-    this.isAddressChecked = false;
-    this.isOnlineChecked = false;
-    this.meetingAddress.enable();
-    this.onlineAddress.enable();
+    if(this.isHybridChecked){
+      this.isAddressChecked = true;
+      this.isOnlineChecked = true;
+      this.meetingAddress.enable();
+      this.onlineAddress.enable();
+    } else {
+      this.isAddressChecked = false;
+      this.isOnlineChecked = false;
+      this.meetingAddress.disable();
+      this.onlineAddress.disable();
+    }
+
     this.hybridType.setValue(this.isHybridChecked);
   }
 
