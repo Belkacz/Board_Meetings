@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DialogFormComponent } from 'src/app/dialog-form/dialog-form.component';
-import { Task } from 'src/app/shared/interfaces';
+import { Task, newTaskVale } from 'src/app/shared/interfaces';
 
 @Component({
   selector: 'app-tasks',
@@ -58,7 +58,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     fields.forEach(field => {
       dialogRef.componentInstance.fields = [field]
     });
-    this.newTaskSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: any) => {
+    this.newTaskSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: newTaskVale) => {
       const lastTask = this.tasksList[this.tasksList.length - 1];
       let newTask: Task = { id: 0, name: formValue.name };
       if (lastTask != undefined) {
@@ -79,17 +79,17 @@ export class TasksComponent implements OnInit, OnDestroy {
     fields.forEach(field => {
       dialogRef.componentInstance.fields = [field]
     });
-    this.dialogEditSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: any) => {
+    this.dialogEditSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: newTaskVale) => {
       task.name = formValue.name
     });
 
   }
 
   ngOnDestroy() {
-    if(this.newTaskSub){
+    if (this.newTaskSub) {
       this.newTaskSub.unsubscribe();
     }
-    if(this.dialogEditSub){
+    if (this.dialogEditSub) {
       this.dialogEditSub.unsubscribe();
     }
   }

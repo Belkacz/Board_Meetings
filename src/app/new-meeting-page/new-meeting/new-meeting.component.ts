@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType } from '../../shared/enums';
-import { DownloadFile } from '../../shared/interfaces';
+import { Agenda, DownloadFile } from '../../shared/interfaces';
 import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';
@@ -20,7 +20,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   public FileType = FileType;
 
-  public selectedMeetingType!: FormControl;
   public meetingName!: FormControl;
   private dateStart: Date;
   private dateEnd: Date;
@@ -38,8 +37,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public addedDocumentFormArray!: FormArray;
   public pickedStartTimeString!: string | null;
   public pickedEndTimeString!: string | null;
-  public showCreateAgenda: boolean;
-  
 
   constructor(
     // private formBuilder: FormBuilder,
@@ -49,7 +46,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     super();
     this.dateStart = new Date();
     this.dateEnd = new Date();
-    this.showCreateAgenda = false;
   }
 
   ngOnInit() {
@@ -63,7 +59,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   createFormControls(): void {
-    this.selectedMeetingType = new FormControl('', [Validators.required]);
+    const selectedMeetingType = new FormControl('', [Validators.required]);
     this.meetingName = new FormControl();
     this.meetingAddress = new FormControl({ value: '', disabled: true });
     this.dateSelected = new FormControl();
@@ -74,15 +70,21 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.hybridType = new FormControl();
     this.addedDocumentControl = new FormControl();
     this.addedDocumentFormArray = new FormArray<FormControl>([]);
+    const agenda = new FormGroup({
+      agendaName: new FormControl(),
+      list: new FormControl()
+    });
+
     this.form = new FormGroup({
-      selectedMeetingType: this.selectedMeetingType,
+      selectedMeetingType: selectedMeetingType,
       meetingName: this.meetingName,
       dateStart: this.dateStartControl,
       dateEnd: this.dateEndControl,
       meetingAddress: this.meetingAddress,
       onlineAddress: this.onlineAddress,
       addedDocuments: this.addedDocumentFormArray,
-      hybridType: this.hybridType
+      hybridType: this.hybridType,
+      agenda: agenda
     });
     this.formValidators();
   }
@@ -92,6 +94,22 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       selectedMeetingType: option
     });
     console.log(this.form);
+  }
+
+
+  newAgenda(): void {
+    const dialogRef = this.dialog.open(DialogListComponent)
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.form.patchValue({
+          agenda: {
+            agendaName: result.value.agendaName,
+            list: result.value.list
+          }
+        })
+      }
+    })
   }
 
   public handleDateSelected(selectedDate: Date) {
@@ -189,7 +207,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   toggleHybrid() {
     this.isHybridChecked = !this.isHybridChecked;
-    if(this.isHybridChecked){
+    if (this.isHybridChecked) {
       this.isAddressChecked = true;
       this.isOnlineChecked = true;
       this.meetingAddress.enable();
@@ -230,28 +248,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.addedDocumentFormArray.removeAt(docIndex);
   }
 
-  newAgenda(): void {
-    this.showCreateAgenda = !this.showCreateAgenda;
-    const dialogRef = this.dialog.open(DialogListComponent)
-    //const dialogRef = this.dialog.open(DialogFormComponent, { title: title })
-    //dialogRef.componentInstance.title = title
-    //dialogRef.componentInstance.fields = [title, 'priority', 'time']
-    // fields.forEach(field => {
-    //   dialogRef.componentInstance.fields = [field]
-    // });
-    // this.newTaskSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: any) => {
-    //   const lastTask = this.tasksList[this.tasksList.length - 1];
-    //   let newTask: Task = { id: 0, name: formValue.name };
-    //   if (lastTask != undefined) {
-    //     newTask.id = lastTask.id + 1;
-    //   } else {
-    //     newTask.id = 1;
-    //   }
-    //   this.tasksList.push(newTask)
-    //   // console.log(newTask.id)
-    //   this.sendTasksList();
-    // });
-  }
+
 
   protected formValidators(): void {
     this.meetingName.setValidators([

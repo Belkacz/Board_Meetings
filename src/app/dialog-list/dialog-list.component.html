@@ -10,7 +10,7 @@
                     <div class="example-box" *ngFor="let item of list; index as i" cdkDrag>
                         <span>{{ item }}</span>
                         <button mat-icon-button (click)="removeElement(i)">
-                          <mat-icon class="small-icon">delete</mat-icon>
+                            <mat-icon class="small-icon">delete</mat-icon>
                         </button>
                     </div>
                 </div>
@@ -27,9 +27,10 @@
 
             </div>
             <div class="flex-box">
-                <button mat-stroked-button class="main-container select-buttons" type="submit" (click)="saveDialog()"
-                [disabled]="form.invalid">Submit</button>
-                <button mat-stroked-button class="main-container select-buttons" mat-dialog-close type="button">Close</button>
+                <button mat-stroked-button class="main-container select-buttons" [mat-dialog-close]="form"
+                    [disabled]="form.invalid">Create</button>
+                <button mat-stroked-button class="main-container select-buttons" mat-dialog-close
+                    type="button">Close</button>
             </div>
         </div>
     </form>

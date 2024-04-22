@@ -10,7 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DialogFormComponent {
   @Input() title: string;
   @Input() fields: string[];
-  @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
+  @Output() formSubmit: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
   form: FormGroup;
 
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<DialogFormComponent>) {
@@ -33,5 +33,9 @@ export class DialogFormComponent {
       this.dialogRef.close()
       //this.dialogRef.close(this.form.value);
     }
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 }

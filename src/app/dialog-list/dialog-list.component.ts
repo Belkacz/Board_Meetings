@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -11,18 +11,17 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class DialogListComponent {
   @Input() title: string;
   @Input() list: string[];
-  private localList: string[];
   public newElement: string;
 
   public submitDisable = true;
 
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
-  form: FormGroup;
 
-  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<DialogListComponent>) {
+  constructor(private fb: FormBuilder,
+    public dialogRef: MatDialogRef<DialogListComponent>,
+    @Inject(MAT_DIALOG_DATA) public form: FormGroup) {
     this.title = 'title';
     this.list = [];
-    this.localList = [];
     this.form = this.fb.group({
       agendaName: ['', Validators.required],
       list: [this.list, Validators.required],
@@ -31,26 +30,21 @@ export class DialogListComponent {
   }
 
   ngOnInit() {
-    if (this.list.length > 0) {
-      this.localList = this.list;
-    }
   }
 
-  saveDialog() {
-    if (this.form.valid) {
-      console.log(this.form.value);
-      this.formSubmit.emit(this.form.value);
-      this.dialogRef.close();
-    }
-  }
+  // saveDialog() {
+  //   if (this.form.valid) {
+  //     console.log(this.form.value);
+  //     this.formSubmit.emit(this.form.value);
+  //     this.dialogRef.close();
+  //   }
+  // }
 
   public drop(event: CdkDragDrop<string[]>) {
-    console.log(this.form)
     moveItemInArray(this.list, event.previousIndex, event.currentIndex);
   }
 
   addElement(newElement: string) {
-    console.log(this.form)
     if (newElement && newElement.trim() !== '') {
       this.list.push(newElement.trim());
       this.form.get('list')?.setValue(this.list);

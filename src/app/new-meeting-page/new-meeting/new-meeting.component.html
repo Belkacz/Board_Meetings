@@ -6,13 +6,14 @@
         <h3>Meeting type</h3>
         <div example-button-row class="select-buttons-grup">
           <button mat-stroked-button class="margin-left-0px select-buttons"
-            [ngClass]="{'active': selectedMeetingType.value === 'boardMeeting'}"
+            [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'boardMeeting'}"
             (click)="selectType('boardMeeting')">Board Meeting</button>
           <button mat-stroked-button class="select-buttons"
-            [ngClass]="{'active': selectedMeetingType.value === 'generalAssembly'}"
+            [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'generalAssembly'}"
             (click)="selectType('generalAssembly')">General Assembly</button>
           <button mat-stroked-button class="select-buttons"
-            [ngClass]="{'active': selectedMeetingType.value === 'other'}" (click)="selectType('other')">Other</button>
+            [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'other'}"
+            (click)="selectType('other')">Other</button>
         </div>
       </div>
       <div>
@@ -40,10 +41,11 @@
         <mat-error *ngIf="(dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning'])
         && !dateStartControl.pristine && !dateEndControl.pristine">The start date cannot be earlier than the end
           date</mat-error>
-          <mat-error *ngIf="dateStartControl.hasError('noStartingTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
-            No starting meeting time
-          </mat-error>
-          <mat-error
+        <mat-error
+          *ngIf="dateStartControl.hasError('noStartingTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
+          No starting meeting time
+        </mat-error>
+        <mat-error
           *ngIf="dateEndControl.hasError('noEndTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
           No end meeting time</mat-error>
       </div>
@@ -85,7 +87,8 @@
         <div class="select-buttons-grup">
           <button mat-stroked-button class="select-buttons-agenda" (click)="newAgenda()">Create agenda</button>
           <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button class="select-buttons-agenda" (click)="openFilePicker(chooseFileInput)" disabled="true">Choose Agenda</button>
+          <button mat-stroked-button class="select-buttons-agenda" (click)="openFilePicker(chooseFileInput)"
+            disabled="true">Choose Agenda</button>
         </div>
       </mat-card>
       <div>

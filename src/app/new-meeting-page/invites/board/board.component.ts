@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { InviteService } from 'src/app/services/inviteService.service';
+import { InviteService } from 'src/app/services/dataService.service';
 import { workerList } from 'src/app/shared/enums';
 import { Guest } from 'src/app/shared/interfaces';
 

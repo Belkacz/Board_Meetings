@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
-import { BoardMeetingData, GestInvited, Task } from '../shared/interfaces';
-import { InviteService } from '../services/inviteService.service';
-import { DataService } from '../services/dataService.service';
+import { Agenda, BoardMeetingData, GestInvited, Task } from '../shared/interfaces';
+import { InviteService } from '../services/dataService.service';
+import { DataService } from '../services/restService.service';
 
 @Component({
   selector: 'app-new-meeting-page',
@@ -14,7 +14,8 @@ export class NewMeetingPageComponent implements OnInit {
   @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
 
   private guestsList: GestInvited[];
-  private tasksList: Task[]
+  private tasksList: Task[];
+  //private agenda: Agenda;
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
 
@@ -33,7 +34,8 @@ export class NewMeetingPageComponent implements OnInit {
       chooseFile: [],
       addedDocuments: [],
       guests: [],
-      tasksList: []
+      tasksList: [],
+      agenda: []
     }
     this.draft = this.combinedData;
   }
@@ -45,26 +47,27 @@ export class NewMeetingPageComponent implements OnInit {
   }
 
   public saveDraft(): void {
-    this.draft = this.combinedData;
-    alert('Save as Draft Placeholder');
-    console.log(this.draft)
-    console.log("draft Saved");
-    this.draft = {
-      meetingType:"boardMeeting",
-      meetingName:"spotkanie",
-      dateStart: new Date("2024-03-10T13:14:50.985Z"),
-      dateEnd: new Date("2024-03-10T15:16:50.985Z"),
-      meetingAddress:"park sledzia",
-      onlineAddress:null,
-      guests:[
-        {id:1,name :"Wade",surname:"Warner",jobPosition:"Cair of the board"},
-        {id:2,name:"Floyd",surname:"Miles",jobPosition:"Board memeber"},
-        {id:3,name:"Brooklyn",surname:"Simmons",jobPosition:"Board memeber"}],
-      tasksList: [{"id":1,"name":"New task name 1"},{"id":2,"name":"New task name 2"}],
-      chooseFile: null,
-      addedDocuments: null
-    }
-    this.dataService.sendDataToPHP(this.draft)
+    console.log(this.newMeetingComponent.form.value);
+    // this.draft = this.combinedData;
+    // alert('Save as Draft Placeholder');
+    // console.log(this.draft)
+    // console.log("draft Saved");
+    // this.draft = {
+    //   meetingType:"boardMeeting",
+    //   meetingName:"spotkanie",
+    //   dateStart: new Date("2024-03-10T13:14:50.985Z"),
+    //   dateEnd: new Date("2024-03-10T15:16:50.985Z"),
+    //   meetingAddress:"park sledzia",
+    //   onlineAddress:null,
+    //   guests:[
+    //     {id:1,name :"Wade",surname:"Warner",jobPosition:"Cair of the board"},
+    //     {id:2,name:"Floyd",surname:"Miles",jobPosition:"Board member"},
+    //     {id:3,name:"Brooklyn",surname:"Simmons",jobPosition:"Board member"}],
+    //   tasksList: [{"id":1,"name":"New task name 1"},{"id":2,"name":"New task name 2"}],
+    //   chooseFile: null,
+    //   addedDocuments: null
+    // }
+    // this.dataService.sendDataToPHP(this.draft)
   }
 
   public saveAndPublish(): void {

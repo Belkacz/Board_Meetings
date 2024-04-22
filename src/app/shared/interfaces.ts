@@ -1,5 +1,9 @@
 import { FileType } from "./enums";
 
+export type newTaskVale = {
+    name: string
+}
+
 export interface DownloadFile {
     fileUrl: string;
     name: string;
@@ -14,9 +18,9 @@ export interface Guest {
 
 export interface GestInvited extends Guest {
     invited: boolean;
-  }
+}
 
-export interface BoardMeetingData{
+export interface BoardMeetingData {
     meetingType: string;
     meetingName: string;
     meetingAddress: string | null;
@@ -30,9 +34,15 @@ export interface BoardMeetingData{
     [key: string]: any
 }
 
-export interface Task{
+export interface Task {
     id: number;
     name: string;
     description?: string;
     priority?: number;
+}
+
+export interface Agenda {
+    id: number;
+    name: string;
+    list: string[];
 }
