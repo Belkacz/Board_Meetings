@@ -5,15 +5,18 @@ import { AppComponent } from '../app.component';
 import { NewMeetingPageComponent } from '../new-meeting-page/new-meeting-page.component';
 import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { AboutComponent } from '../about/about.component';
+import { MeetingsListComponent } from '../meetings-list/meetings-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'new-meeting', component: NewMeetingPageComponent },
+  { path: 'meetings-list', component: MeetingsListComponent },
   {
     path: 'home',
     component: MainMenuComponent,
     children: [
-      { path: 'about', component: AboutComponent, outlet: 'bottomOutlet' }
+      { path: 'about', component: AboutComponent, outlet: 'bottomOutlet' },
+      // { path: 'meetings-list', component: MeetingsListComponent, outlet: 'bottomOutlet' }
     ]
   }
 ];

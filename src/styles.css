@@ -251,6 +251,14 @@ app-tasks {
   transform: scale(0.7);
 }
 
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
 
 @media only screen and (max-width: 1000px) {
   .main-container {

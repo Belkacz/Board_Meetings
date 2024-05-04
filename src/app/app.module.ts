@@ -30,6 +30,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { DialogListComponent } from './dialog-list/dialog-list.component';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { MeetingsListComponent } from './meetings-list/meetings-list.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTable, MatTableModule } from '@angular/material/table';
+
 
 
 @NgModule({
@@ -45,7 +49,8 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
     MainMenuComponent,
     AboutComponent,
     DialogFormComponent,
-    DialogListComponent
+    DialogListComponent,
+    MeetingsListComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -69,7 +74,9 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
     MatDialogModule,
     HttpClientModule,
     CdkDropList,
-    CdkDrag
+    CdkDrag,
+    MatProgressSpinnerModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,37 @@
+<div class="header">
+    <div class="padding-left-30px">
+        <button mat-icon-button matSuffix routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
+    </div>
+</div>
+<div class="separator-horizontal margin-top-10px" style></div>
+<div>
+    <div *ngIf="!meetingsNotEmpty">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="meetingsNotEmpty">
+        <table mat-table [dataSource]="meetingsList" class="mat-elevation-z8">
+            <ng-container matColumnDef="meetingName">
+              <th mat-header-cell *matHeaderCellDef> Meeting name </th>
+              <td mat-cell *matCellDef="let element"> {{element.meetingName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="meetingType">
+                <th mat-header-cell *matHeaderCellDef> Meeting type </th>
+                <td mat-cell *matCellDef="let element"> {{element.meetingType}} </td>
+            </ng-container>
+            <ng-container matColumnDef="dateStart">
+                <th mat-header-cell *matHeaderCellDef> Start date </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateStart | date:'dd.MM.yyyy HH:mm:ss' }} </td>
+            </ng-container>
+            <ng-container matColumnDef="dateEnd">
+                <th mat-header-cell *matHeaderCellDef> End date </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateEnd | date:'dd.MM.yyyy HH:mm:ss' }} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+      <div>
+        <mat-error>{{errorMessage}}</mat-error>
+      </div>
+</div>

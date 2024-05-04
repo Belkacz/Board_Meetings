@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
-import { Agenda, BoardMeetingData, GestInvited, Task } from '../shared/interfaces';
+import { BoardMeetingData, GestInvited, Task } from '../shared/interfaces';
 import { InviteService } from '../services/dataService.service';
-import { DataService } from '../services/restService.service';
+import { RestService } from '../services/restService.service';
 
 @Component({
   selector: 'app-new-meeting-page',
@@ -20,7 +20,7 @@ export class NewMeetingPageComponent implements OnInit {
   private draft: BoardMeetingData;
 
 
-  constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private dataService: DataService) {
+  constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService) {
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
@@ -91,8 +91,8 @@ export class NewMeetingPageComponent implements OnInit {
       alert("You need to provide a location or choose an online option")
     } else {
       alert('Save And Publish Placeholder, open console for more details')
-      // this.dataService.sendData(this.combinedData)
-      this.dataService.sendDataToPHP(this.combinedData);
+      // this.restService.sendData(this.combinedData)
+      this.restService.sendDataToPHP(this.combinedData);
     }
   }
 

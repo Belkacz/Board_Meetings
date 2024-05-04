@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { promiseData } from './promise';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/internal/Observable';
 import { BoardMeetingData } from '../shared/interfaces';
+import { urls } from '../shared/enums';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataService {
+export class RestService {
   constructor(private http: HttpClient, private router: Router) { }
 
   public sendData(data: any): Promise<any> {
@@ -37,11 +37,22 @@ export class DataService {
     this.http.post('http://localhost/meetings.php', packedText, { responseType: 'text' })
       .subscribe({
         next: response => {
-          console.log('Response from PHP:', response);
+          console.log("Response from PHP:", response);
         },
         error: error => {
-          console.error('Error:', error);
+          console.error("Error:", error);
         }
       });
+  }
+
+
+  receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null) {
+    let newUrl = protocol + baseUrl + endPoint;
+
+    if (param !== null) {
+        newUrl += param;
+    }
+
+    return this.http.get(newUrl);
   }
 }
