@@ -36,8 +36,7 @@ class Agenda(BaseModel):
     name: str
     order: List[str]
 
-class Meeting(BaseModel):
-    meeting_id: int
+class BaseMeeting(BaseModel):
     meeting_type: str
     meeting_name: str
     start_date: datetime
@@ -48,9 +47,12 @@ class Meeting(BaseModel):
     tasksList: List[Task] | None = None
     agenda: Agenda | None = None
 
+class ExistedMeeting(BaseMeeting):
+    meeting_id: int | None = None
+
 
 meetings = [
-    Meeting(
+    ExistedMeeting(
         meeting_id=1,
         meeting_type="boardMeeting",
         meeting_name="Meeting 1",
@@ -70,7 +72,7 @@ meetings = [
             order=["make 1", "to do2", "talk about 3"]
         )
     ),
-    Meeting(
+    ExistedMeeting(
         meeting_id=2,
         meeting_type="boardMeeting",
         meeting_name="Meeting 2",
@@ -90,7 +92,7 @@ meetings = [
             order=["make 1", "to do2", "talk about 3"]
         )
     ),
-    Meeting(
+    ExistedMeeting(
     meeting_id=3,
     meeting_type="boardMeeting",
     meeting_name="Meeting 3",
@@ -112,14 +114,30 @@ meetings = [
 )
 ]
 
-@app.get("/get-meetings", response_model=List[Meeting])
+@app.get("/get-meetings", response_model=List[ExistedMeeting])
 async def get_meetings_list():
     print("get_meetings_list")
     return meetings
 
 
 @app.post("/new-meeting")
-async def root():
+async def add_meeting(meeting: BaseMeeting):
+    last_meeting = meetings[-1]
+    new_meeting_id = last_meeting.meeting_id + 1
+    new_meeting = ExistedMeeting(
+        meeting_id=new_meeting_id,
+        meeting_type=meeting.meeting_type,
+        meeting_name=meeting.meeting_name,
+        start_date=meeting.start_date,
+        end_date=meeting.end_date,
+        meeting_address=meeting.meeting_address,
+        online_address=meeting.online_address,
+        guests=meeting.guests,
+        tasksList=meeting.tasksList,
+        agenda=meeting.agenda
+    )
+    meetings.append(new_meeting)
+    print(new_meeting)
     return {"message": "new-meeting"}
 
 @app.delete("/delete-meeting/{meeting_id}")

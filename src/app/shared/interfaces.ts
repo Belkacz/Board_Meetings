@@ -29,9 +29,9 @@ export interface BoardMeetingData {
     dateEnd: Date | null;
     chooseFile: Array<FileType> | null;
     addedDocuments: Array<FileType> | null;
-    guests: Array<Guest>;
-    tasksList: Array<Task>;
-    agenda: Agenda | null;
+    guests?: Array<Guest>;
+    tasksList?: Array<Task>;
+    agenda?: Agenda | null;
     [key: string]: any;
 }
 

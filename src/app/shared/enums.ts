@@ -22,5 +22,6 @@ export enum urls {
     protocolHttp = "http://",
     LOCALFASTAPI = "127.0.0.1:8000",
     GETMEETINGS = "get-meetings",
-    DELETEMEETING = "delete-meeting"
+    DELETEMEETING = "delete-meeting",
+    NEWMEETING = "new-meeting"
 }

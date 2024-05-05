@@ -46,33 +46,39 @@ export class MeetingsListComponent implements OnInit {
       response.forEach((meeting: any) => {
 
         const newGuests: Array<Guest> = []
-        meeting.guests.forEach((guest: Guest) => {
-          const newGuest: Guest = {
-            id: guest.id,
-            name: guest.name,
-            surname: guest.surname,
-            jobPosition: guest.jobPosition,
-          }
-          newGuests.push(newGuest);
-        })
-
-        const newTasks: Array<Task> = []
-        meeting.tasksList.forEach((task: Task) => {
-          const newTask: Task = {
-            id: task.id,
-            name: task.name,
-            description: task.description,
-            priority: task.priority,
-          }
-          newTasks.push(newTask);
-        })
-
-        const newAgenda: Agenda = {
-          id: meeting.agenda.id,
-          name: meeting.agenda.name,
-          list: meeting.agenda.list,
+        if(meeting.guests){
+          meeting.guests.forEach((guest: Guest) => {
+            const newGuest: Guest = {
+              id: guest.id,
+              name: guest.name,
+              surname: guest.surname,
+              jobPosition: guest.jobPosition,
+            }
+            newGuests.push(newGuest);
+          })
         }
 
+        const newTasks: Array<Task> = []
+        if(meeting.tasksList){
+          meeting.tasksList.forEach((task: Task) => {
+            const newTask: Task = {
+              id: task.id,
+              name: task.name,
+              description: task.description,
+              priority: task.priority,
+            }
+            newTasks.push(newTask);
+          })
+        }
+        const newAgenda = null;
+        if(meeting.agenda){
+          const newAgenda: Agenda = {
+            id: meeting.agenda.id,
+            name: meeting.agenda.name,
+            list: meeting.agenda.list,
+          }
+        }
+ 
         const newMeeting: ExistedBoardMeetings = {
           id: meeting.meeting_id,
           meetingType: meeting.meeting_type,

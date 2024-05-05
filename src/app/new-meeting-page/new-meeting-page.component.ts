@@ -48,26 +48,27 @@ export class NewMeetingPageComponent implements OnInit {
 
   public saveDraft(): void {
     console.log(this.newMeetingComponent.form.value);
-    // this.draft = this.combinedData;
-    // alert('Save as Draft Placeholder');
-    // console.log(this.draft)
-    // console.log("draft Saved");
-    // this.draft = {
-    //   meetingType:"boardMeeting",
-    //   meetingName:"spotkanie",
-    //   dateStart: new Date("2024-03-10T13:14:50.985Z"),
-    //   dateEnd: new Date("2024-03-10T15:16:50.985Z"),
-    //   meetingAddress:"park sledzia",
-    //   onlineAddress:null,
-    //   guests:[
-    //     {id:1,name :"Wade",surname:"Warner",jobPosition:"Cair of the board"},
-    //     {id:2,name:"Floyd",surname:"Miles",jobPosition:"Board member"},
-    //     {id:3,name:"Brooklyn",surname:"Simmons",jobPosition:"Board member"}],
-    //   tasksList: [{"id":1,"name":"New task name 1"},{"id":2,"name":"New task name 2"}],
-    //   chooseFile: null,
-    //   addedDocuments: null
-    // }
-    // this.dataService.sendDataToPHP(this.draft)
+    this.draft = this.combinedData;
+    alert('Save as Draft Placeholder');
+    console.log(this.draft)
+    console.log("draft Saved");
+    this.draft = {
+      meetingType:"boardMeeting",
+      meetingName:"spotkanie",
+      dateStart: new Date("2024-03-10T13:14:50.985Z"),
+      dateEnd: new Date("2024-03-10T15:16:50.985Z"),
+      meetingAddress:"park sledzia",
+      onlineAddress:null,
+      guests:[
+        {id:1,name :"Wade",surname:"Warner",jobPosition:"Cair of the board"},
+        {id:2,name:"Floyd",surname:"Miles",jobPosition:"Board member"},
+        {id:3,name:"Brooklyn",surname:"Simmons",jobPosition:"Board member"}],
+      tasksList: [{"id":1,"name":"New task name 1"},{"id":2,"name":"New task name 2"}],
+      chooseFile: null,
+      addedDocuments: null,
+      agenda: null
+    }
+    this.restService.sendDataToFastApi(this.draft)
   }
 
   public saveAndPublish(): void {
@@ -92,7 +93,7 @@ export class NewMeetingPageComponent implements OnInit {
     } else {
       alert('Save And Publish Placeholder, open console for more details')
       // this.restService.sendData(this.combinedData)
-      this.restService.sendDataToPHP(this.combinedData);
+      this.restService.sendDataToFastApi(this.combinedData);
     }
   }
 

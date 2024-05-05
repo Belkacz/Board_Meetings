@@ -47,6 +47,30 @@ export class RestService {
       });
   }
 
+  sendDataToFastApi(dataToSend: BoardMeetingData) {
+    console.log('Data to send:', dataToSend);
+    let packedText = {
+      meeting_type: dataToSend.meetingType,
+      meeting_name: dataToSend.meetingName,
+      start_date: dataToSend.dateStart,
+      end_date: dataToSend.dateEnd,
+      meeting_address: dataToSend.meetingAddress,
+      online_address: dataToSend.onlineAddress,
+      guests: dataToSend.guests,
+      tasks: dataToSend.tasksList
+    };
+    
+    this.http.post(`${urls.protocolBase}/${urls.LOCALFASTAPI}/${urls.NEWMEETING}`, packedText)
+      .subscribe({
+        next: response => {
+          console.log("Response from FastApi:", response);
+        },
+        error: error => {
+          console.error("Error:", error);
+        }
+      });
+  }
+
   private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null) {
     let newUrl = protocol + baseUrl + '/' + endPoint;
 
