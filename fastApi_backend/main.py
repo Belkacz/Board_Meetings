@@ -37,6 +37,7 @@ class Agenda(BaseModel):
     order: List[str]
 
 class Meeting(BaseModel):
+    meeting_id: int
     meeting_type: str
     meeting_name: str
     start_date: datetime
@@ -47,48 +48,73 @@ class Meeting(BaseModel):
     tasksList: List[Task] | None = None
     agenda: Agenda | None = None
 
+
+meetings = [
+    Meeting(
+        meeting_id=1,
+        meeting_type="boardMeeting",
+        meeting_name="Meeting 1",
+        start_date="2024-03-10T13:14:50.985Z",
+        end_date="2024-03-10T15:16:50.985Z",
+        meeting_address="park sledzia",
+        online_address=None,
+        guests=[
+            Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
+        ],
+        tasksList=[
+            Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
+        ],
+        agenda=Agenda(
+            id=1,
+            name="agenda1",
+            order=["make 1", "to do2", "talk about 3"]
+        )
+    ),
+    Meeting(
+        meeting_id=2,
+        meeting_type="boardMeeting",
+        meeting_name="Meeting 2",
+        start_date="2024-04-10T13:14:50.985Z",
+        end_date="2024-04-10T15:16:50.985Z",
+        meeting_address="park na jasienia",
+        online_address=None,
+        guests=[
+            Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
+        ],
+        tasksList=[
+            Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
+        ],
+        agenda=Agenda(
+            id=2,
+            name="agenda1",
+            order=["make 1", "to do2", "talk about 3"]
+        )
+    ),
+    Meeting(
+    meeting_id=3,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
+    ],
+    agenda=Agenda(
+        id=2,
+        name="agenda1",
+        order=["make 1", "to do2", "talk about 3"]
+    )
+)
+]
+
 @app.get("/get-meetings", response_model=List[Meeting])
 async def get_meetings_list():
-    meetings = [
-        Meeting(
-            meeting_type="boardMeeting",
-            meeting_name="Meeting 1",
-            start_date="2024-03-10T13:14:50.985Z",
-            end_date="2024-03-10T15:16:50.985Z",
-            meeting_address="park sledzia",
-            online_address=None,
-            guests=[
-                Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
-            ],
-            tasksList=[
-                Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
-            ],
-            agenda=Agenda(
-                id=1,
-                name="agenda1",
-                order=["make 1", "to do2", "talk about 3"]
-            )
-        ),
-        Meeting(
-            meeting_type="boardMeeting",
-            meeting_name="Meeting 2",
-            start_date="2024-04-10T13:14:50.985Z",
-            end_date="2024-04-10T15:16:50.985Z",
-            meeting_address="park na jasienia",
-            online_address=None,
-            guests=[
-                Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
-            ],
-            tasksList=[
-                Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
-            ],
-            agenda=Agenda(
-                id=1,
-                name="agenda1",
-                order=["make 1", "to do2", "talk about 3"]
-            )
-        )
-    ]
+    print("get_meetings_list")
     return meetings
 
 
@@ -96,24 +122,11 @@ async def get_meetings_list():
 async def root():
     return {"message": "new-meeting"}
 
-
-
-# class Item(BaseModel):
-#     name: str
-#     price: float
-#     is_offer: Union[bool, None] = None
-
-
-# @app.get("/")
-# def read_root():
-#     return {"Hello": "World"}
-
-
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Union[str, None] = None):
-#     return {"item_id": item_id, "q": q}
-
-
-# @app.put("/items/{item_id}")
-# def update_item(item_id: int, item: Item):
-#     return {"item_name": item.name, "item_id": item_id}
+@app.delete("/delete-meeting/{meeting_id}")
+async def delete_meetings(meeting_id: int):
+    print(meeting_id)
+    global meetings
+    tempMeetings =  meetings
+    for meeting in tempMeetings:
+        if meeting.meeting_id == meeting_id:
+            meetings.remove(meeting)

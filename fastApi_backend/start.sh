@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Naturally, the certificates and password would be outside the project, they are only included here as part of the example
+
 SSL_KEYFILE="./certs/key.key"
 SSL_CERTFILE="./certs/cert.crt"
 SSL_PASSWORD="test1"

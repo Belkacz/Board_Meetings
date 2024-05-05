@@ -17,8 +17,10 @@ export const workerList: Guest[] = [{ id: 1, name: "Wade", surname: "Warner", jo
 
 
 export enum urls {
+    protocolBase = "http://",
     protocolHttps = "https://",
     protocolHttp = "http://",
     LOCALFASTAPI = "127.0.0.1:8000",
-    GETMEETINGS = "/get-meetings"
+    GETMEETINGS = "get-meetings",
+    DELETEMEETING = "delete-meeting"
 }

@@ -35,7 +35,7 @@ export class NewMeetingPageComponent implements OnInit {
       addedDocuments: [],
       guests: [],
       tasksList: [],
-      agenda: []
+      agenda: null
     }
     this.draft = this.combinedData;
   }

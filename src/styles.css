@@ -258,7 +258,15 @@ app-tasks {
   margin-top: 20px;
 }
 
+.my-list-container{
+  display: grid;
+  place-items: center;
+  padding: 5px;
+}
 
+.my-list{
+  width: 80%;
+}
 
 @media only screen and (max-width: 1000px) {
   .main-container {
@@ -284,6 +292,9 @@ app-tasks {
   .wider-input{
     width: 100%;
     padding: 0%;
+  }
+  .my-list{
+    width: 100%;
   }
 }
 

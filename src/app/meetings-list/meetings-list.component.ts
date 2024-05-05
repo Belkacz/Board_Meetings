@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../services/restService.service';
 import { urls } from '../shared/enums';
-import { BoardMeetingData, Guest, Task, Agenda } from "../shared/interfaces"
+import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-meetings-list',
@@ -12,72 +14,107 @@ export class MeetingsListComponent implements OnInit {
 
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
-  public meetingsList: BoardMeetingData[] = [];
-  displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd'];
+  public meetingsList: ExistedBoardMeetings[] = [];
+  public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton'];
+  private subscription: Subscription | undefined;
 
-  constructor(private restService: RestService){
+  constructor(private restService: RestService, private _snackBar: MatSnackBar) {
     this.meetingsList = [];
   }
 
-
   ngOnInit(): void {
-    this.restService.receiveDataFromFastApi(urls.protocolHttps, urls.LOCALFASTAPI, urls.GETMEETINGS)
+    this.subscription = this.getMeetings();
+  }
+
+  private getMeetings(): Subscription {
+    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.LOCALFASTAPI, urls.GETMEETINGS)
       .subscribe({
         next: (response: any) => {
-          if(response.length > 0){
-            response.forEach((meeting: any) => {
-
-              const newGuests: Array<Guest> = []
-              meeting.guests.forEach((guest: Guest) => {
-                const newGuest: Guest = {
-                  id: guest.id,
-                  name: guest.name,
-                  surname: guest.surname,
-                  jobPosition: guest.jobPosition,
-                }
-                newGuests.push(newGuest);
-              })
-
-              const newTasks: Array<Task> = []
-              meeting.tasksList.forEach((task: Task) => {
-                const newTask: Task = {
-                  id: task.id,
-                  name: task.name,
-                  description: task.description,
-                  priority: task.priority,
-                }
-                newTasks.push(newTask);
-              })
-
-              const newAgenda: Agenda = {
-                  id: meeting.agenda.id,
-                  name: meeting.agenda.name,
-                  list: meeting.agenda.list,
-                }
-
-              const newMeeting: BoardMeetingData = {
-                meetingType: meeting.meeting_type,
-                meetingName: meeting.meeting_name,
-                meetingAddress: meeting.meeting_address,
-                onlineAddress: meeting.online_address,
-                dateStart: meeting.start_date,
-                dateEnd: meeting.end_date,
-                chooseFile: null,
-                addedDocuments: null,
-                guests: newGuests,
-                tasksList: newTasks,
-                agenda: newAgenda
-              }
-              this.meetingsList.push(newMeeting);
-            });
-          }
-
-          this.meetingsNotEmpty = true;
+          this.mapMeetings(response);
         },
         error: (error: any) => {
           console.error("Error:", error);
           this.errorMessage = "Server communication error";
         }
       });
+    return result;
+  }
+
+  private mapMeetings = (response: ExistedBoardMeetings[]) => {
+    this.meetingsList = [];
+    if (response.length > 0) {
+      response.forEach((meeting: any) => {
+
+        const newGuests: Array<Guest> = []
+        meeting.guests.forEach((guest: Guest) => {
+          const newGuest: Guest = {
+            id: guest.id,
+            name: guest.name,
+            surname: guest.surname,
+            jobPosition: guest.jobPosition,
+          }
+          newGuests.push(newGuest);
+        })
+
+        const newTasks: Array<Task> = []
+        meeting.tasksList.forEach((task: Task) => {
+          const newTask: Task = {
+            id: task.id,
+            name: task.name,
+            description: task.description,
+            priority: task.priority,
+          }
+          newTasks.push(newTask);
+        })
+
+        const newAgenda: Agenda = {
+          id: meeting.agenda.id,
+          name: meeting.agenda.name,
+          list: meeting.agenda.list,
+        }
+
+        const newMeeting: ExistedBoardMeetings = {
+          id: meeting.meeting_id,
+          meetingType: meeting.meeting_type,
+          meetingName: meeting.meeting_name,
+          meetingAddress: meeting.meeting_address,
+          onlineAddress: meeting.online_address,
+          dateStart: meeting.start_date,
+          dateEnd: meeting.end_date,
+          chooseFile: null,
+          addedDocuments: null,
+          guests: newGuests,
+          tasksList: newTasks,
+          agenda: newAgenda
+        }
+        this.meetingsList.push(newMeeting);
+      });
+    }
+    this.meetingsNotEmpty = true;
+  }
+
+  deleteMeeting(id: number) {
+    if (id === null) {
+      const returnMessage = "No object ID to delete";
+      this._snackBar.open(returnMessage, 'Close', { duration: 3000 });
+      throw new Error(returnMessage);
+    } else {
+      this.restService.deleteMeeting(id).subscribe({
+        next: () => {
+          this.subscription = this.getMeetings();
+          this._snackBar.open("Deleted object of id" + id, 'Close', { duration: 3000 });
+        },
+        error: (error: any) => {
+          console.error('Error: ', error);
+          this._snackBar.open("Cannot delete object, check console for more information", 'Close', { duration: 3000 });
+        }
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

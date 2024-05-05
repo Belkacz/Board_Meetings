@@ -93,7 +93,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.form.patchValue({
       selectedMeetingType: option
     });
-    console.log(this.form);
   }
 
 
