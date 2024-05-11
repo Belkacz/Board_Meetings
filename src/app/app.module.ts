@@ -33,6 +33,7 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTable, MatTableModule } from '@angular/material/table';
+import { meetingsListService } from './services/dataService.service';
 
 
 
@@ -78,7 +79,7 @@ import { MatTable, MatTableModule } from '@angular/material/table';
     MatProgressSpinnerModule,
     MatTableModule
   ],
-  providers: [],
+  providers: [ meetingsListService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

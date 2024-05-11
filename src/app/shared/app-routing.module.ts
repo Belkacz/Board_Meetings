@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'new-meeting', component: NewMeetingPageComponent },
   { path: 'meetings-list', component: MeetingsListComponent },
+  { path: 'edit-meeting/:id', component: NewMeetingPageComponent },
   {
     path: 'home',
     component: MainMenuComponent,

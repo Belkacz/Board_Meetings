@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
-import { BoardMeetingData, GestInvited, Task } from '../shared/interfaces';
-import { InviteService } from '../services/dataService.service';
+import { BoardMeetingData, ExistedBoardMeetings, GestInvited, Task } from '../shared/interfaces';
+import { InviteService,meetingsListService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
+import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-meeting-page',
@@ -11,6 +13,10 @@ import { RestService } from '../services/restService.service';
   providers: [NewMeetingComponent]
 })
 export class NewMeetingPageComponent implements OnInit {
+
+  editedMeetingId: number | null = null;
+  editedMeting: ExistedBoardMeetings | null = null;
+
   @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
 
   private guestsList: GestInvited[];
@@ -18,9 +24,22 @@ export class NewMeetingPageComponent implements OnInit {
   //private agenda: Agenda;
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
+  private editedMeeting: ExistedBoardMeetings | null = null;
 
 
-  constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService) {
+  constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
+    private route: ActivatedRoute, private meetingsListService: meetingsListService
+  ) {
+    let params = this.route.snapshot.params;
+    if(params['id']){
+      this.editedMeetingId = params['id'];
+    }
+    this.meetingsListService.actualList$.subscribe(meetings => {
+      const foundMeeting = meetings.find((meeting) => meeting.id === this.editedMeetingId);
+      if (foundMeeting) {
+        this.editedMeeting = foundMeeting;
+      }
+    });
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
@@ -46,6 +65,7 @@ export class NewMeetingPageComponent implements OnInit {
     })
   }
 
+
   public saveDraft(): void {
     console.log(this.newMeetingComponent.form.value);
     this.draft = this.combinedData;
@@ -53,17 +73,17 @@ export class NewMeetingPageComponent implements OnInit {
     console.log(this.draft)
     console.log("draft Saved");
     this.draft = {
-      meetingType:"boardMeeting",
-      meetingName:"spotkanie",
+      meetingType: "boardMeeting",
+      meetingName: "spotkanie",
       dateStart: new Date("2024-03-10T13:14:50.985Z"),
       dateEnd: new Date("2024-03-10T15:16:50.985Z"),
-      meetingAddress:"park sledzia",
-      onlineAddress:null,
-      guests:[
-        {id:1,name :"Wade",surname:"Warner",jobPosition:"Cair of the board"},
-        {id:2,name:"Floyd",surname:"Miles",jobPosition:"Board member"},
-        {id:3,name:"Brooklyn",surname:"Simmons",jobPosition:"Board member"}],
-      tasksList: [{"id":1,"name":"New task name 1"},{"id":2,"name":"New task name 2"}],
+      meetingAddress: "park sledzia",
+      onlineAddress: null,
+      guests: [
+        { id: 1, name: "Wade", surname: "Warner", jobPosition: "Cair of the board" },
+        { id: 2, name: "Floyd", surname: "Miles", jobPosition: "Board member" },
+        { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" }],
+      tasksList: [{ "id": 1, "name": "New task name 1" }, { "id": 2, "name": "New task name 2" }],
       chooseFile: null,
       addedDocuments: null,
       agenda: null

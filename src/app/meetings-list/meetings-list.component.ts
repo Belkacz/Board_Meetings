@@ -4,33 +4,40 @@ import { urls } from '../shared/enums';
 import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { meetingsListService } from '../services/dataService.service'
 
 @Component({
   selector: 'app-meetings-list',
   templateUrl: './meetings-list.component.html',
-  styleUrl: './meetings-list.component.css'
+  styleUrl: './meetings-list.component.css',
 })
 export class MeetingsListComponent implements OnInit {
 
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
   public meetingsList: ExistedBoardMeetings[] = [];
-  public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton'];
+  public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
 
-  constructor(private restService: RestService, private _snackBar: MatSnackBar) {
+  constructor(private restService: RestService, private meetingsListService: meetingsListService, private _snackBar: MatSnackBar) {
     this.meetingsList = [];
   }
 
   ngOnInit(): void {
     this.subscription = this.getMeetings();
+    // this.meetingsListService.actualList$.subscribe(meetings => {
+    //   console.log(meetings)
+    // })
   }
 
   private getMeetings(): Subscription {
     const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.LOCALFASTAPI, urls.GETMEETINGS)
       .subscribe({
         next: (response: any) => {
-          this.mapMeetings(response);
+          this.meetingsList = this.meetingsListService.mapMeetings(response);
+          if(this.meetingsList.length > 0){
+            this.meetingsNotEmpty =  true;
+          }
         },
         error: (error: any) => {
           console.error("Error:", error);
@@ -40,64 +47,65 @@ export class MeetingsListComponent implements OnInit {
     return result;
   }
 
-  private mapMeetings = (response: ExistedBoardMeetings[]) => {
-    this.meetingsList = [];
-    if (response.length > 0) {
-      response.forEach((meeting: any) => {
+  // private mapMeetings = (response: ExistedBoardMeetings[]) => {
+  //   this.meetingsList = [];
+  //   if (response.length > 0) {
+  //     response.forEach((meeting: any) => {
 
-        const newGuests: Array<Guest> = []
-        if(meeting.guests){
-          meeting.guests.forEach((guest: Guest) => {
-            const newGuest: Guest = {
-              id: guest.id,
-              name: guest.name,
-              surname: guest.surname,
-              jobPosition: guest.jobPosition,
-            }
-            newGuests.push(newGuest);
-          })
-        }
+  //       const newGuests: Array<Guest> = []
+  //       if(meeting.guests){
+  //         meeting.guests.forEach((guest: Guest) => {
+  //           const newGuest: Guest = {
+  //             id: guest.id,
+  //             name: guest.name,
+  //             surname: guest.surname,
+  //             jobPosition: guest.jobPosition,
+  //           }
+  //           newGuests.push(newGuest);
+  //         })
+  //       }
 
-        const newTasks: Array<Task> = []
-        if(meeting.tasksList){
-          meeting.tasksList.forEach((task: Task) => {
-            const newTask: Task = {
-              id: task.id,
-              name: task.name,
-              description: task.description,
-              priority: task.priority,
-            }
-            newTasks.push(newTask);
-          })
-        }
-        const newAgenda = null;
-        if(meeting.agenda){
-          const newAgenda: Agenda = {
-            id: meeting.agenda.id,
-            name: meeting.agenda.name,
-            list: meeting.agenda.list,
-          }
-        }
+  //       const newTasks: Array<Task> = []
+  //       if(meeting.tasksList){
+  //         meeting.tasksList.forEach((task: Task) => {
+  //           const newTask: Task = {
+  //             id: task.id,
+  //             name: task.name,
+  //             description: task.description,
+  //             priority: task.priority,
+  //           }
+  //           newTasks.push(newTask);
+  //         })
+  //       }
+  //       const newAgenda = null;
+  //       if(meeting.agenda){
+  //         const newAgenda: Agenda = {
+  //           id: meeting.agenda.id,
+  //           name: meeting.agenda.name,
+  //           list: meeting.agenda.list,
+  //         }
+  //       }
  
-        const newMeeting: ExistedBoardMeetings = {
-          id: meeting.meeting_id,
-          meetingType: meeting.meeting_type,
-          meetingName: meeting.meeting_name,
-          meetingAddress: meeting.meeting_address,
-          onlineAddress: meeting.online_address,
-          dateStart: meeting.start_date,
-          dateEnd: meeting.end_date,
-          chooseFile: null,
-          addedDocuments: null,
-          guests: newGuests,
-          tasksList: newTasks,
-          agenda: newAgenda
-        }
-        this.meetingsList.push(newMeeting);
-      });
-    }
-    this.meetingsNotEmpty = true;
-  }
+  //       const newMeeting: ExistedBoardMeetings = {
+  //         id: meeting.meeting_id,
+  //         meetingType: meeting.meeting_type,
+  //         meetingName: meeting.meeting_name,
+  //         meetingAddress: meeting.meeting_address,
+  //         onlineAddress: meeting.online_address,
+  //         dateStart: meeting.start_date,
+  //         dateEnd: meeting.end_date,
+  //         chooseFile: null,
+  //         addedDocuments: null,
+  //         guests: newGuests,
+  //         tasksList: newTasks,
+  //         agenda: newAgenda
+  //       }
+  //       this.meetingsList.push(newMeeting);
+  //     });
+  //   }
+  //   this.meetingsNotEmpty = true;
+  //   this.meetingsListService.setGlobalMeetingsList(this.meetingsList)
+  // }
 
   deleteMeeting(id: number) {
     if (id === null) {
@@ -118,7 +126,7 @@ export class MeetingsListComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
+  private ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
