@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType } from '../../shared/enums';
-import { Agenda, DownloadFile } from '../../shared/interfaces';
+import { Agenda, DownloadFile, ExistedBoardMeetings } from '../../shared/interfaces';
 import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import { DialogListComponent } from 'src/app/dialog-list/dialog-list.component';
   styleUrls: ['./new-meeting.component.css'],
 })
 export class NewMeetingComponent extends BaseFormComponent implements OnInit {
+  @Input() editedMeeting: ExistedBoardMeetings | null;
   @ViewChild('chooseFile') chooseFileInput!: ElementRef;
   @ViewChild('addDocument') addDocumentInput!: ElementRef;
 
@@ -38,30 +39,58 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public pickedStartTimeString!: string | null;
   public pickedEndTimeString!: string | null;
 
+  public defaultDate: Date | null;
+  public defaultTimeStart: string | null;
+  public defaultTimeEnd: string | null;
+
+  public title: string;
+
   constructor(
     // private formBuilder: FormBuilder,
     private fileDownloadService: FileDownloadService,
     public dialog: MatDialog
   ) {
     super();
+    this.editedMeeting = null;
     this.dateStart = new Date();
     this.dateEnd = new Date();
+
+    this.title = "Create new meeting"
+
+    this.defaultDate = null;
+    this.defaultTimeStart = null;
+    this.defaultTimeEnd = null;
   }
 
   ngOnInit() {
-    this.meetingAddress.setValue('online');
     this.meetingAddress.disable();
     this.onlineAddress.disable();
     this.pickedStartTimeString = null;
     this.pickedEndTimeString = null;
-
+    if(this.editedMeeting){
+      this.title = `Editing meeting # ${this.editedMeeting.id}`
+      if(this.editedMeeting.dateStart){
+        this.defaultDate = this.editedMeeting.dateStart
+      }
+      if(this.editedMeeting.dateStart){
+        const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
+        const tempMinutes = new Date(this.editedMeeting.dateStart).getMinutes().toString();
+        this.defaultTimeStart = `${tempHours}:${tempMinutes}`
+      }
+      if(this.editedMeeting.dateEnd){
+        const tempHours = new Date(this.editedMeeting.dateEnd).getHours().toString();
+        const tempMinutes = new Date(this.editedMeeting.dateEnd).getMinutes().toString();
+        this.defaultTimeEnd = `${tempHours}:${tempMinutes}`
+      }
+      console.log(this.defaultTimeStart)
+    }
     this.createFormControls();
+
   }
 
   createFormControls(): void {
     const selectedMeetingType = new FormControl('', [Validators.required]);
-    this.meetingName = new FormControl();
-    this.meetingAddress = new FormControl({ value: '', disabled: true });
+    this.meetingName = !this.editedMeeting ? new FormControl('') : new FormControl(this.editedMeeting.meetingName);
     this.dateSelected = new FormControl();
     this.dateStartControl = new FormControl('', [Validators.required]);
     this.dateEndControl = new FormControl('', [Validators.required]);

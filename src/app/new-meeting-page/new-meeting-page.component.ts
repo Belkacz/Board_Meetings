@@ -24,7 +24,7 @@ export class NewMeetingPageComponent implements OnInit {
   //private agenda: Agenda;
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
-  private editedMeeting: ExistedBoardMeetings | null = null;
+  public editedMeeting: ExistedBoardMeetings | null = null;
 
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
@@ -32,13 +32,14 @@ export class NewMeetingPageComponent implements OnInit {
   ) {
     let params = this.route.snapshot.params;
     if(params['id']){
-      this.editedMeetingId = params['id'];
+      this.editedMeetingId = parseInt(params['id'], 10);
     }
     this.meetingsListService.actualList$.subscribe(meetings => {
-      const foundMeeting = meetings.find((meeting) => meeting.id === this.editedMeetingId);
-      if (foundMeeting) {
-        this.editedMeeting = foundMeeting;
-      }
+      meetings.forEach(element => {
+        if(element.id === this.editedMeetingId){
+          this.editedMeeting = element;
+        }
+      });
     });
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]

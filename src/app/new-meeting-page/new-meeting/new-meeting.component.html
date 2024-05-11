@@ -1,7 +1,7 @@
 <div>
   <form [formGroup]="form" class="meeting-form">
     <div>
-      <h2>New meeting</h2>
+      <h2>{{title}}</h2>
       <div>
         <h3>Meeting type</h3>
         <div example-button-row class="select-buttons-grup">
@@ -19,7 +19,7 @@
       <div>
         <h3>Meeting name</h3>
         <mat-form-field class="wider-element wider-container wider-box lower-input">
-          <input class="wider-input" [formControl]="meetingName" matInput placeholder="CompanyName Board meeting No.12">
+          <input class="wider-input" [formControl]="meetingName" matInput>
           <button class="button-X" mat-icon-button matSuffix (click)="clearInput()">
             <mat-icon>clear</mat-icon>
           </button>
@@ -34,9 +34,9 @@
       <div>
         <h3>Date and time</h3>
         <div class="calendar-container">
-          <app-datepicker (dateSelected)="handleDateSelected($event)"></app-datepicker>
-          <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
-          <app-timepicker (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
+          <app-datepicker [defaultDate]="defaultDate" (dateSelected)="handleDateSelected($event)"></app-datepicker>
+          <app-timepicker [selectedTime]="defaultTimeStart" (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
+          <app-timepicker [selectedTime]="defaultTimeEnd" (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
         </div>
         <mat-error *ngIf="(dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning'])
         && !dateStartControl.pristine && !dateEndControl.pristine">The start date cannot be earlier than the end
