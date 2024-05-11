@@ -21,11 +21,9 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   public FileType = FileType;
 
-  public meetingName!: FormControl;
   private dateStart: Date;
   private dateEnd: Date;
   public TimeType = TimeType;
-  public dateSelected!: FormControl;
   public dateStartControl!: FormControl;
   public dateEndControl!: FormControl;
   public meetingAddress!: FormControl;
@@ -60,6 +58,9 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.defaultDate = null;
     this.defaultTimeStart = null;
     this.defaultTimeEnd = null;
+
+    this.createFormControls();
+
   }
 
   ngOnInit() {
@@ -67,31 +68,38 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.onlineAddress.disable();
     this.pickedStartTimeString = null;
     this.pickedEndTimeString = null;
-    if(this.editedMeeting){
+
+    if (this.editedMeeting) {
       this.title = `Editing meeting # ${this.editedMeeting.id}`
-      if(this.editedMeeting.dateStart){
+      if (this.editedMeeting) {
+        Object.keys(this.editedMeeting).forEach(formControlName => {
+          const editedMeetingField = this.editedMeeting?.[formControlName]
+          if (editedMeetingField && editedMeetingField !== undefined) {
+            this.form.get(formControlName)?.setValue(editedMeetingField);
+          }
+        });
+      }
+      console.log(this.form.value)
+      if (this.editedMeeting.dateStart) {
         this.defaultDate = this.editedMeeting.dateStart
       }
-      if(this.editedMeeting.dateStart){
+      if (this.editedMeeting.dateStart) {
         const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateStart).getMinutes().toString();
         this.defaultTimeStart = `${tempHours}:${tempMinutes}`
       }
-      if(this.editedMeeting.dateEnd){
+      if (this.editedMeeting.dateEnd) {
         const tempHours = new Date(this.editedMeeting.dateEnd).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateEnd).getMinutes().toString();
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`
       }
-      console.log(this.defaultTimeStart)
     }
-    this.createFormControls();
 
   }
 
   createFormControls(): void {
     const selectedMeetingType = new FormControl('', [Validators.required]);
-    this.meetingName = !this.editedMeeting ? new FormControl('') : new FormControl(this.editedMeeting.meetingName);
-    this.dateSelected = new FormControl();
+    const meetingName = !this.editedMeeting ? new FormControl('', FormValidators.notEmpty()) : new FormControl(this.editedMeeting.meetingName, FormValidators.notEmpty());
     this.dateStartControl = new FormControl('', [Validators.required]);
     this.dateEndControl = new FormControl('', [Validators.required]);
     this.meetingAddress = new FormControl();
@@ -106,7 +114,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
     this.form = new FormGroup({
       selectedMeetingType: selectedMeetingType,
-      meetingName: this.meetingName,
+      meetingName: meetingName,
       dateStart: this.dateStartControl,
       dateEnd: this.dateEndControl,
       meetingAddress: this.meetingAddress,
@@ -205,7 +213,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   public clearInput() {
-    this.meetingName.setValue('');
+    this.form.get('meetingName')?.reset('');
   }
 
   toggleAddress() {
@@ -279,10 +287,10 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
 
   protected formValidators(): void {
-    this.meetingName.setValidators([
-      Validators.required,
-      FormValidators.notEmpty()
-    ]);
+    // this.form.get('meetingName')?.value.setValidators([
+    //   Validators.required,
+    //   FormValidators.notEmpty()
+    // ]);
     this.dateStartControl.setAsyncValidators([
       FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl),
     ]);
