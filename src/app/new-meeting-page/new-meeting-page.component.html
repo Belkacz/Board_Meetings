@@ -14,7 +14,7 @@
     </div>
     <div class="separator-vertical"></div>
     <div class="side-menu">
-        <app-tasks (tasksListOutput)="saveTasksList($event)"></app-tasks>
-        <app-invites></app-invites>
+        <app-tasks [initialTasks]="editedTasks" (tasksListOutput)="saveTasksList($event)"></app-tasks>
+        <app-invites [invitedToEdited]="invitedToEdited"></app-invites>
     </div>
 </div>

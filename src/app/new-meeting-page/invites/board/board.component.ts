@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { InviteService } from 'src/app/services/dataService.service';
-import { workerList } from 'src/app/shared/enums';
 import { Guest } from 'src/app/shared/interfaces';
 
-interface GestInvited extends Guest {
+interface GuestInvited extends Guest {
   invited: boolean;
 }
 
@@ -14,20 +13,28 @@ interface GestInvited extends Guest {
 })
 
 export class BoardComponent {
-  public guestsList: GestInvited[];
+  @Input() initialPersonsList: Guest[] | null = null;
+  @Input() invitedToEdited: Guest[] | null = null;
+  public guestsList: GuestInvited[] = [];
   public wanted: string;
-  public searchedList: GestInvited[];
+  public searchedList: GuestInvited[];
   public allChecked: boolean;
 
   constructor(private inviteService: InviteService) {
     this.searchedList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.wanted = "";
     this.allChecked = false;
-    this.guestsList = workerList.map(guest => ({ ...guest, invited: false }));
   }
 
-  ngOnInit(): void {
-    this.searchedList = workerList.map(guest => ({ ...guest, invited: false }));;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.initialPersonsList) {
+      this.guestsList = this.initialPersonsList.map(guest => ({
+        ...guest,
+        invited: this.invitedToEdited ? this.invitedToEdited.some(person => person.id === guest.id) : false
+      }));
+      this.searchedList = [...this.guestsList];
+      this.inviteService.updateGuestsList(this.guestsList)
+    }
   }
 
   public search() {
@@ -39,15 +46,14 @@ export class BoardComponent {
   public handleCheckAll() {
     this.allChecked = !this.allChecked;
     this.searchedList.forEach(item => item.invited = this.allChecked);
-    this.searchedList.forEach(serchedPop => {
+    this.searchedList.forEach(searchedPop => {
       this.guestsList.forEach(guest => {
-        if (guest.id === serchedPop.id) {
+        if (guest.id === searchedPop.id) {
           guest.invited = this.allChecked
         }
       });
     });
     this.emitGestList();
-    //this.guestsList.forEach(item => item.invited = this.allChecked);
   }
 
   public checkPerson(i: number) {
@@ -58,13 +64,13 @@ export class BoardComponent {
       }
     });
     
-    let allSerchedCheck = true;
+    let allSearchedCheck = true;
     this.searchedList.forEach(pop => {
       if(pop.invited === false){
-        allSerchedCheck = false;
+        allSearchedCheck = false;
       }
     });
-    if(allSerchedCheck){
+    if(allSearchedCheck){
       this.allChecked = true;
     } else{
       this.allChecked = false;

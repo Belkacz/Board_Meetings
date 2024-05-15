@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
-import { BoardMeetingData, ExistedBoardMeetings, GestInvited, Task } from '../shared/interfaces';
+import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
 import { InviteService,meetingsListService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
@@ -19,17 +19,33 @@ export class NewMeetingPageComponent implements OnInit {
 
   @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
 
-  private guestsList: GestInvited[];
+  private guestsList: GuestInvited[];
   private tasksList: Task[];
   //private agenda: Agenda;
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
   public editedMeeting: ExistedBoardMeetings | null = null;
-
+  public editedTasks: Task[] | null = null;
+  public invitedToEdited: Guest[] | null = null;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private route: ActivatedRoute, private meetingsListService: meetingsListService
   ) {
+    if(this.editedMeeting && this.editedMeeting.guests)
+      {
+        const editedInvitedGuests: GuestInvited[] = [];
+        this.editedMeeting.guests.forEach(guest => {
+          const invitedGuest: GuestInvited = {
+            id: guest.id,
+            name: guest.name,
+            surname: guest.surname,
+            jobPosition: guest.jobPosition,
+            invited: true
+          }
+          editedInvitedGuests.push(invitedGuest);
+        });
+        this.inviteService.updateGuestsList(editedInvitedGuests)
+      }
     let params = this.route.snapshot.params;
     if(params['id']){
       this.editedMeetingId = parseInt(params['id'], 10);
@@ -61,9 +77,18 @@ export class NewMeetingPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.editedMeeting && this.editedMeeting.tasksList){
+      this.editedTasks = this.editedMeeting.tasksList
+    }
+    if(this.editedMeeting && this.editedMeeting.guests){
+      this.invitedToEdited = this.editedMeeting.guests
+    }
+
     this.inviteService.inviteList$.subscribe(invited => {
       this.guestsList = invited;
     })
+    
+    
   }
 
 
@@ -129,7 +154,6 @@ export class NewMeetingPageComponent implements OnInit {
     //   (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
     //   !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
     const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
-    // console.log(this.newMeetingComponent.form)
     return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
   }
 }

@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Agenda, ExistedBoardMeetings, GestInvited, Guest, Task } from '../shared/interfaces';
+import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task } from '../shared/interfaces';
 
 @Injectable({
     providedIn: 'root'
 })
 export class InviteService {
-    inviteList$ = new BehaviorSubject<GestInvited[]>([]);
+    inviteList$ = new BehaviorSubject<GuestInvited[]>([]);
     agenda$ = new Subject<Agenda>();
 
-    public updateGuestsList(guestsList: GestInvited[]) {
-        const invitedGuests: GestInvited[] = guestsList.filter(guest => guest.invited === true);
+    public updateGuestsList(guestsList: GuestInvited[]) {
+        const invitedGuests: GuestInvited[] = guestsList.filter(guest => guest.invited === true);
         this.inviteList$.next(invitedGuests);
+        console.log(this.inviteList$.value)
     }
 
     public updateAgenda(newAgenda: Agenda) {

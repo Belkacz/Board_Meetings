@@ -13,8 +13,6 @@ export class TimepickerComponent {
   public timeChange(event: Event) {
     if (event.target instanceof HTMLInputElement) {
       const time = event.target.value;
-      console.log(time)
-      console.log(typeof(time))
       this.timeSelected.emit(time);
     }
   }

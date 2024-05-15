@@ -32,6 +32,13 @@ class BaseMeeting(BaseModel):
 class ExistedMeeting(BaseMeeting):
     meeting_id: int | None = None
 
+guests = [
+    Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board"),
+    Guest(id=2, name="Floyd", surname="Miles", jobPosition="Board memeber"),
+    Guest(id=3, name="Guy", surname="Howkins", jobPosition="Board secretary"),
+    Guest(id=4, name="Darrell", surname="Steward", jobPosition="Board tresurer"),
+    Guest(id=5, name="Wade", surname="Warner2", jobPosition="dubler")
+]
 
 meetings = [
     ExistedMeeting(
@@ -43,7 +50,8 @@ meetings = [
         meeting_address="park sledzia",
         online_address=None,
         guests=[
-            Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
+            guests[0],
+            guests[1]
         ],
         tasksList=[
             Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
@@ -63,7 +71,9 @@ meetings = [
         meeting_address="park na jasienia",
         online_address=None,
         guests=[
-            Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
+            guests[1],
+            guests[2],
+            guests[3]
         ],
         tasksList=[
             Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
@@ -83,7 +93,9 @@ meetings = [
     meeting_address="uczelnia",
     online_address=None,
     guests=[
-        Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board")
+        guests[0],
+        guests[3],
+        guests[4]
     ],
     tasksList=[
         Task(id=1, name="task1", description="task1 desc", order="Cair of the board")

@@ -29,17 +29,6 @@ export class DialogListComponent {
     this.newElement = '';
   }
 
-  ngOnInit() {
-  }
-
-  // saveDialog() {
-  //   if (this.form.valid) {
-  //     console.log(this.form.value);
-  //     this.formSubmit.emit(this.form.value);
-  //     this.dialogRef.close();
-  //   }
-  // }
-
   public drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.list, event.previousIndex, event.currentIndex);
   }

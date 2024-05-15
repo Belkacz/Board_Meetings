@@ -16,7 +16,7 @@ export interface Guest {
     jobPosition: string | null;
 }
 
-export interface GestInvited extends Guest {
+export interface GuestInvited extends Guest {
     invited: boolean;
 }
 

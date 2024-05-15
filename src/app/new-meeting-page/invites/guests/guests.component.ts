@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InviteService } from 'src/app/services/dataService.service';
-import { GestInvited } from 'src/app/shared/interfaces';
+import { GuestInvited } from 'src/app/shared/interfaces';
 
 @Component({
   selector: 'app-guests',
@@ -9,7 +9,7 @@ import { GestInvited } from 'src/app/shared/interfaces';
 })
 export class GuestsComponent implements OnInit {
 
-  guestsList!: GestInvited[];
+  guestsList!: GuestInvited[];
 
   constructor(private inviteService: InviteService) {
   }

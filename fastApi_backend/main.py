@@ -4,7 +4,7 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 import ssl
 
-from meetings import meetings, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
+from meetings import meetings, guests, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
 
 app = FastAPI()
 
@@ -24,6 +24,11 @@ app.add_middleware(
 async def get_meetings_list():
     print("get_meetings_list")
     return meetings
+
+@app.get("/get-people", response_model=list[Guest])
+async def get_people_list():
+    print("people")
+    return guests
 
 
 @app.post("/new-meeting")

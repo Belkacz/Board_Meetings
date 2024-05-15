@@ -79,7 +79,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
           }
         });
       }
-      console.log(this.form.value)
+      if(this.editedMeeting.meetingType){
+        this.form.patchValue({
+          selectedMeetingType: this.editedMeeting.meetingType
+        })
+      }
       if (this.editedMeeting.dateStart) {
         this.defaultDate = this.editedMeeting.dateStart
       }

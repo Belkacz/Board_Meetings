@@ -60,7 +60,7 @@ export class RestService {
       tasks: dataToSend.tasksList
     };
     
-    this.http.post(`${urls.protocolBase}/${urls.LOCALFASTAPI}/${urls.NEWMEETING}`, packedText)
+    this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${urls.NEWMEETING}`, packedText)
       .subscribe({
         next: response => {
           console.log("Response from FastApi:", response);
@@ -87,28 +87,9 @@ export class RestService {
   }
 
   deleteMeeting(id: number): Observable<any> {
-    const deleteUrl = `${urls.protocolBase}/${urls.LOCALFASTAPI}/${urls.DELETEMEETING}/${id}`;
+    const deleteUrl = `${urls.protocolBase}/${urls.localFastApi}/${urls.DELETEMEETING}/${id}`;
     return this.http.delete(deleteUrl);
   }
 
-  deleteDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, id: number | null = null) {
-    if (id === null) {
-        const returnMessage = "No object ID to delete";
-        this._snackBar.open(returnMessage, 'Close', { duration: 3000 });
-        throw new Error(returnMessage);
-    } else {
-        const newUrl = this.combineUrl(protocol, baseUrl, endPoint, id);
-        this.http.delete(newUrl).subscribe({
-            next: () => {
-                const returnMessage = "Deleted object of id" + id;
-                this._snackBar.open(returnMessage, 'Close', { duration: 3000 });
-            },
-            error: (error) => {
-                const returnMessage = "Cannot delete object, check console for more information";
-                console.error("Error:", error);
-                this._snackBar.open(returnMessage, 'Close', { duration: 3000 });
-            }
-        });
-    }
-  }
+
 }

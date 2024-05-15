@@ -25,13 +25,10 @@ export class MeetingsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscription = this.getMeetings();
-    // this.meetingsListService.actualList$.subscribe(meetings => {
-    //   console.log(meetings)
-    // })
   }
 
   private getMeetings(): Subscription {
-    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.LOCALFASTAPI, urls.GETMEETINGS)
+    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
       .subscribe({
         next: (response: any) => {
           this.meetingsList = this.meetingsListService.mapMeetings(response);

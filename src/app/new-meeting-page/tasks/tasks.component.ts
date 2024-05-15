@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DialogFormComponent } from 'src/app/dialog-form/dialog-form.component';
@@ -11,6 +11,7 @@ import { Task, newTaskVale } from 'src/app/shared/interfaces';
 })
 
 export class TasksComponent implements OnInit, OnDestroy {
+  @Input() initialTasks: Task[] | null = null;
   @Output() tasksListOutput = new EventEmitter<Task[]>();
 
   public tasksList: Task[];
@@ -26,7 +27,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.tasksList = [{ id: 1, name: "New task name 1" }, { id: 2, name: "New task name 2" }]
+    if(!this.initialTasks){
+      this.tasksList = [{ id: 1, name: "New task name 1" }, { id: 2, name: "New task name 2" }]
+    } else {
+      this.tasksList = this.initialTasks
+    }
+    
     this.sendTasksList();
   }
 
@@ -67,7 +73,6 @@ export class TasksComponent implements OnInit, OnDestroy {
         newTask.id = 1;
       }
       this.tasksList.push(newTask)
-      // console.log(newTask.id)
       this.sendTasksList();
     });
   }
