@@ -4,7 +4,7 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 import ssl
 
-from meetings import meetings, guests, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
+from meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
 
 app = FastAPI()
 
@@ -30,13 +30,18 @@ async def get_people_list():
     print("people")
     return guests
 
+@app.get("/get-agendas", response_model=list[Guest])
+async def get_agendas_list():
+    print("agendas")
+    return agendas
+
 
 @app.post("/new-meeting")
 async def add_meeting(meeting: BaseMeeting):
     last_meeting = meetings[-1]
-    new_meeting_id = last_meeting.meeting_id + 1
+    new_meeting_id = last_meeting.id + 1
     new_meeting = ExistedMeeting(
-        meeting_id=new_meeting_id,
+        id=new_meeting_id,
         meeting_type=meeting.meeting_type,
         meeting_name=meeting.meeting_name,
         start_date=meeting.start_date,
@@ -50,6 +55,28 @@ async def add_meeting(meeting: BaseMeeting):
     meetings.append(new_meeting)
     print(new_meeting)
     return {"message": "new-meeting"}
+
+@app.put("/update-meeting")
+async def update_meeting(edited_meeting: ExistedMeeting):
+    updated_meeting = ExistedMeeting(
+        id=edited_meeting.id,
+        meeting_type=edited_meeting.meeting_type,
+        meeting_name=edited_meeting.meeting_name,
+        start_date=edited_meeting.start_date,
+        end_date=edited_meeting.end_date,
+        meeting_address=edited_meeting.meeting_address,
+        online_address=edited_meeting.online_address,
+        guests=edited_meeting.guests,
+        tasksList=edited_meeting.tasksList,
+        agenda=edited_meeting.agenda
+    )
+
+    for index, meeting in enumerate(meetings):
+        if(meeting.id == updated_meeting.id):
+            meetings[index] = updated_meeting
+
+    return {"edited meeting": "done"}
+
 
 @app.delete("/delete-meeting/{meeting_id}")
 async def delete_meetings(meeting_id: int):

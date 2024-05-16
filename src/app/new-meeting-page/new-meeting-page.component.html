@@ -4,7 +4,7 @@
     </div>
     <div class="near-button-container gap-20px">
         <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">Save as draft</button>
-        <button mat-stroked-button (click)="saveAndPublish()" [disabled]="!formNotReady()">Save & Publish</button>
+        <button mat-stroked-button (click)="saveAndPublish()" [disabled]="formDisabled">Save & Publish</button>
     </div>
 </div>
 <div class="separator-horizontal margin-top-10px" style></div>

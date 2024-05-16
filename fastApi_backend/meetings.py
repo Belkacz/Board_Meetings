@@ -11,7 +11,6 @@ class Task(BaseModel):
     id: int
     name: str
     description: str
-    order: str
 
 class Agenda(BaseModel):
     id: int
@@ -30,7 +29,7 @@ class BaseMeeting(BaseModel):
     agenda: Agenda | None = None
 
 class ExistedMeeting(BaseMeeting):
-    meeting_id: int | None = None
+    id: int | None = None
 
 guests = [
     Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board"),
@@ -40,9 +39,14 @@ guests = [
     Guest(id=5, name="Wade", surname="Warner2", jobPosition="dubler")
 ]
 
+agendas = [
+    Agenda(id=1, name="agenda1", order=["make 1", "to do2", "talk about 3"]),
+    Agenda(id=2, name="agenda1", order=["make 1", "to do2", "talk about 3"]),
+]
+
 meetings = [
     ExistedMeeting(
-        meeting_id=1,
+        id=1,
         meeting_type="boardMeeting",
         meeting_name="Meeting 1",
         start_date="2024-03-10T13:14:50.985Z",
@@ -56,14 +60,10 @@ meetings = [
         tasksList=[
             Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
         ],
-        agenda=Agenda(
-            id=1,
-            name="agenda1",
-            order=["make 1", "to do2", "talk about 3"]
-        )
+        agenda=agendas[1]
     ),
     ExistedMeeting(
-        meeting_id=2,
+        id=2,
         meeting_type="boardMeeting",
         meeting_name="Meeting 2",
         start_date="2024-04-10T13:14:50.985Z",
@@ -85,7 +85,7 @@ meetings = [
         )
     ),
     ExistedMeeting(
-    meeting_id=3,
+    id=3,
     meeting_type="boardMeeting",
     meeting_name="Meeting 3",
     start_date="2024-04-10T13:14:50.985Z",

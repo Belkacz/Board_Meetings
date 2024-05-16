@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
 import { InviteService,meetingsListService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { urls } from '../shared/enums';
 
 @Component({
   selector: 'app-new-meeting-page',
@@ -16,6 +18,8 @@ export class NewMeetingPageComponent implements OnInit {
 
   editedMeetingId: number | null = null;
   editedMeting: ExistedBoardMeetings | null = null;
+  public formDisabled: boolean;
+  private subscription: Subscription | undefined;
 
   @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
 
@@ -31,6 +35,19 @@ export class NewMeetingPageComponent implements OnInit {
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private route: ActivatedRoute, private meetingsListService: meetingsListService
   ) {
+
+    const params = this.route.snapshot.params;
+    if(params['id']){
+      this.editedMeetingId = parseInt(params['id'], 10);
+    }
+    this.meetingsListService.actualList$.subscribe(meetings => {
+      meetings.forEach(element => {
+        if(element.id === this.editedMeetingId){
+          this.editedMeeting = element;
+        }
+      });
+    });
+
     if(this.editedMeeting && this.editedMeeting.guests)
       {
         const editedInvitedGuests: GuestInvited[] = [];
@@ -46,17 +63,7 @@ export class NewMeetingPageComponent implements OnInit {
         });
         this.inviteService.updateGuestsList(editedInvitedGuests)
       }
-    let params = this.route.snapshot.params;
-    if(params['id']){
-      this.editedMeetingId = parseInt(params['id'], 10);
-    }
-    this.meetingsListService.actualList$.subscribe(meetings => {
-      meetings.forEach(element => {
-        if(element.id === this.editedMeetingId){
-          this.editedMeeting = element;
-        }
-      });
-    });
+
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
@@ -74,6 +81,8 @@ export class NewMeetingPageComponent implements OnInit {
       agenda: null
     }
     this.draft = this.combinedData;
+
+    this.formDisabled = this.editedMeeting ? false : true;
   }
 
   ngOnInit() {
@@ -87,17 +96,24 @@ export class NewMeetingPageComponent implements OnInit {
     this.inviteService.inviteList$.subscribe(invited => {
       this.guestsList = invited;
     })
-    
-    
+    this.newMeetingComponent.form.statusChanges.subscribe(status => {
+      this.formDisabled = status !== 'VALID';
+    });
+    this.newMeetingComponent.form.statusChanges.subscribe(status => {
+      this.formDisabled = status !== 'VALID';
+    });
+
   }
 
+  ngAfterViewInit() {
+    this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
+      this.formDisabled = status !== 'VALID';
+    });
+  }
 
   public saveDraft(): void {
-    console.log(this.newMeetingComponent.form.value);
     this.draft = this.combinedData;
     alert('Save as Draft Placeholder');
-    console.log(this.draft)
-    console.log("draft Saved");
     this.draft = {
       meetingType: "boardMeeting",
       meetingName: "spotkanie",
@@ -114,7 +130,6 @@ export class NewMeetingPageComponent implements OnInit {
       addedDocuments: null,
       agenda: null
     }
-    this.restService.sendDataToFastApi(this.draft)
   }
 
   public saveAndPublish(): void {
@@ -125,6 +140,8 @@ export class NewMeetingPageComponent implements OnInit {
       }
     }
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
+    // this.combinedData.meetingAddress = this.newMeetingComponent.form.controls['meetingAddress'].value;
+    // this.combinedData.onlineAddress = this.newMeetingComponent.form.controls['onlineAddress'].value;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
 
@@ -132,14 +149,21 @@ export class NewMeetingPageComponent implements OnInit {
       alert("meeting type cannot be empty")
     } else if (this.combinedData.meetingName === "") {
       alert("meeting name cannot be empty")
-    } else if ((this.newMeetingComponent.dateStartControl.pristine || this.newMeetingComponent.dateEndControl.pristine)) {
+    } else if ((!this.newMeetingComponent.dateStartControl || !this.newMeetingComponent.dateEndControl)) {
       alert("You need to chose date")
-    } else if (!this.combinedData.onlineAddress && !this.combinedData.meetingAddress) {
-      alert("You need to provide a location or choose an online option")
+    } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
+      alert("You need to provide a location or choose an online option");
     } else {
       alert('Save And Publish Placeholder, open console for more details')
-      // this.restService.sendData(this.combinedData)
-      this.restService.sendDataToFastApi(this.combinedData);
+
+      if(this.editedMeeting){
+        this.combinedData = {...this.combinedData , id: this.editedMeeting.id }
+        console.log(this.combinedData)
+        this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
+      } else {
+        this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
+      }
+
     }
   }
 
@@ -147,13 +171,9 @@ export class NewMeetingPageComponent implements OnInit {
     this.tasksList = tasksList;
   }
 
-  public formNotReady(): boolean {
-    // return this.newMeetingComponent.selectedMeetingType.value &&
-    //   this.newMeetingComponent.meetingName.value !== null &&
-    //   this.newMeetingComponent.selectedMeetingType.value !== null &&
-    //   (this.newMeetingComponent.meetingAddress.value || this.newMeetingComponent.onlineAddress.value) &&
-    //   !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine;
-    const formStatus = this.newMeetingComponent.form.status === 'VALID' ? true : false
-    return formStatus && !this.newMeetingComponent.dateStartControl.pristine && !this.newMeetingComponent.dateEndControl.pristine
+  private ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

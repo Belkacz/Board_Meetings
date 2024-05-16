@@ -84,6 +84,9 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
           selectedMeetingType: this.editedMeeting.meetingType
         })
       }
+      if(this.editedMeeting.meetingAddress){
+        this.meetingAddress.setValue(this.editedMeeting.meetingAddress)
+      }
       if (this.editedMeeting.dateStart) {
         this.defaultDate = this.editedMeeting.dateStart
       }
@@ -98,7 +101,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`
       }
     }
-
   }
 
   createFormControls(): void {
@@ -106,8 +108,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     const meetingName = !this.editedMeeting ? new FormControl('', FormValidators.notEmpty()) : new FormControl(this.editedMeeting.meetingName, FormValidators.notEmpty());
     this.dateStartControl = new FormControl('', [Validators.required]);
     this.dateEndControl = new FormControl('', [Validators.required]);
-    this.meetingAddress = new FormControl();
-    this.onlineAddress = new FormControl();
+    this.meetingAddress = !this.editedMeeting ? new FormControl() : new FormControl(this.editedMeeting.meetingAddress);
+    this.onlineAddress = !this.editedMeeting ? new FormControl() : new FormControl(this.editedMeeting.meetingAddress);
     this.hybridType = new FormControl();
     this.addedDocumentControl = new FormControl();
     this.addedDocumentFormArray = new FormArray<FormControl>([]);

@@ -12,7 +12,6 @@ export class InviteService {
     public updateGuestsList(guestsList: GuestInvited[]) {
         const invitedGuests: GuestInvited[] = guestsList.filter(guest => guest.invited === true);
         this.inviteList$.next(invitedGuests);
-        console.log(this.inviteList$.value)
     }
 
     public updateAgenda(newAgenda: Agenda) {
@@ -67,7 +66,7 @@ export class meetingsListService {
             }
      
             const newMeeting: ExistedBoardMeetings = {
-              id: meeting.meeting_id,
+              id: meeting.id,
               meetingType: meeting.meeting_type,
               meetingName: meeting.meeting_name,
               meetingAddress: meeting.meeting_address,

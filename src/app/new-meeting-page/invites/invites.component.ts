@@ -19,11 +19,11 @@ export class InvitesComponent {
   constructor(private restService: RestService){}
 
   ngOnInit() {
-    this.subscription = this.getPeople();
+    this.subscription = this.GETPEOPLE();
   }
 
-  private getPeople(): Subscription {
-    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.getPeople)
+  private GETPEOPLE(): Subscription {
+    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETPEOPLE)
       .subscribe({
         next: (response: any) => {
           const newPersonList: Guest[] = []

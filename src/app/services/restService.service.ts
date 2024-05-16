@@ -24,30 +24,30 @@ export class RestService {
   // }
 
 
-  sendDataToPHP(dataToSend: BoardMeetingData) {
-    console.log('Data to send:', dataToSend);
-    let packedText = {
-      meeting_type: dataToSend.meetingType,
-      meeting_name: dataToSend.meetingName,
-      start_date: dataToSend.dateStart,
-      end_date: dataToSend.dateEnd,
-      meeting_address: dataToSend.meetingAddress,
-      online_address: dataToSend.onlineAddress,
-      guests: dataToSend.guests,
-      tasks: dataToSend.tasksList
-    };
-    this.http.post('http://localhost/meetings.php', packedText, { responseType: 'text' })
-      .subscribe({
-        next: response => {
-          console.log("Response from PHP:", response);
-        },
-        error: error => {
-          console.error("Error:", error);
-        }
-      });
-  }
+  // sendDataToPHP(dataToSend: BoardMeetingData) {
+  //   console.log('Data to send:', dataToSend);
+  //   let packedText = {
+  //     meeting_type: dataToSend.meetingType,
+  //     meeting_name: dataToSend.meetingName,
+  //     start_date: dataToSend.dateStart,
+  //     end_date: dataToSend.dateEnd,
+  //     meeting_address: dataToSend.meetingAddress,
+  //     online_address: dataToSend.onlineAddress,
+  //     guests: dataToSend.guests,
+  //     tasks: dataToSend.tasksList
+  //   };
+  //   this.http.post('http://localhost/meetings.php', packedText, { responseType: 'text' })
+  //     .subscribe({
+  //       next: response => {
+  //         console.log("Response from PHP:", response);
+  //       },
+  //       error: error => {
+  //         console.error("Error:", error);
+  //       }
+  //     });
+  // }
 
-  sendDataToFastApi(dataToSend: BoardMeetingData) {
+  sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls ) {
     console.log('Data to send:', dataToSend);
     let packedText = {
       meeting_type: dataToSend.meetingType,
@@ -59,8 +59,9 @@ export class RestService {
       guests: dataToSend.guests,
       tasks: dataToSend.tasksList
     };
-    
-    this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${urls.NEWMEETING}`, packedText)
+    if(endpoint === urls.UPDATEMEETING){
+      let updatePack = {...packedText, id: dataToSend['id']}
+      this.http.put(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
       .subscribe({
         next: response => {
           console.log("Response from FastApi:", response);
@@ -69,6 +70,18 @@ export class RestService {
           console.error("Error:", error);
         }
       });
+    } else {
+      this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
+      .subscribe({
+        next: response => {
+          console.log("Response from FastApi:", response);
+        },
+        error: error => {
+          console.error("Error:", error);
+        }
+      });
+    }
+
   }
 
   private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null) {

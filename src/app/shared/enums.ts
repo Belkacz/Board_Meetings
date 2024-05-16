@@ -24,5 +24,6 @@ export enum urls {
     GETMEETINGS = "get-meetings",
     DELETEMEETING = "delete-meeting",
     NEWMEETING = "new-meeting",
-    getPeople = "get-people"
+    UPDATEMEETING = "update-meeting",
+    GETPEOPLE = "get-people"
 }
