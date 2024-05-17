@@ -33,7 +33,10 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { meetingsListService } from './services/dataService.service';
+import { MapListsService } from './services/dataService.service';
+import { DialogSelectComponent } from './dialog-select/dialog-select.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 
@@ -51,7 +54,8 @@ import { meetingsListService } from './services/dataService.service';
     AboutComponent,
     DialogFormComponent,
     DialogListComponent,
-    MeetingsListComponent
+    MeetingsListComponent,
+    DialogSelectComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -77,9 +81,12 @@ import { meetingsListService } from './services/dataService.service';
     CdkDropList,
     CdkDrag,
     MatProgressSpinnerModule,
-    MatTableModule
+    MatTableModule,
+    MatExpansionModule,
+    MatCardModule,
+    MatRadioModule
   ],
-  providers: [ meetingsListService ],
+  providers: [ MapListsService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestService } from '../services/restService.service';
 import { urls } from '../shared/enums';
 import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { meetingsListService } from '../services/dataService.service'
+import { MapListsService } from '../services/dataService.service'
 
 @Component({
   selector: 'app-meetings-list',
   templateUrl: './meetings-list.component.html',
   styleUrl: './meetings-list.component.css',
 })
-export class MeetingsListComponent implements OnInit {
+export class MeetingsListComponent implements OnInit, OnDestroy {
 
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
@@ -19,7 +19,7 @@ export class MeetingsListComponent implements OnInit {
   public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
 
-  constructor(private restService: RestService, private meetingsListService: meetingsListService, private _snackBar: MatSnackBar) {
+  constructor(private restService: RestService, private MapListsService: MapListsService, private _snackBar: MatSnackBar) {
     this.meetingsList = [];
   }
 
@@ -31,7 +31,7 @@ export class MeetingsListComponent implements OnInit {
     const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
       .subscribe({
         next: (response: any) => {
-          this.meetingsList = this.meetingsListService.mapMeetings(response);
+          this.meetingsList = this.MapListsService.mapMeetings(response);
           if(this.meetingsList.length > 0){
             this.meetingsNotEmpty =  true;
           }
@@ -101,7 +101,7 @@ export class MeetingsListComponent implements OnInit {
   //     });
   //   }
   //   this.meetingsNotEmpty = true;
-  //   this.meetingsListService.setGlobalMeetingsList(this.meetingsList)
+  //   this.MapListsService.setGlobalMeetingsList(this.meetingsList)
   // }
 
   deleteMeeting(id: number) {
@@ -123,7 +123,7 @@ export class MeetingsListComponent implements OnInit {
     }
   }
 
-  private ngOnDestroy(): void {
+  ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

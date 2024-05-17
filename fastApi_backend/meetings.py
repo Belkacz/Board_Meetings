@@ -41,7 +41,7 @@ guests = [
 
 agendas = [
     Agenda(id=1, name="agenda1", order=["make 1", "to do2", "talk about 3"]),
-    Agenda(id=2, name="agenda1", order=["make 1", "to do2", "talk about 3"]),
+    Agenda(id=2, name="agenda2", order=["make 1", "to do2", "talk about 3"]),
 ]
 
 meetings = [
@@ -58,9 +58,9 @@ meetings = [
             guests[1]
         ],
         tasksList=[
-            Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
+            Task(id=1, name="task1", description="task1 desc")
         ],
-        agenda=agendas[1]
+        agenda=agendas[0]
     ),
     ExistedMeeting(
         id=2,
@@ -76,13 +76,9 @@ meetings = [
             guests[3]
         ],
         tasksList=[
-            Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
+            Task(id=1, name="task1", description="task1 desc")
         ],
-        agenda=Agenda(
-            id=2,
-            name="agenda1",
-            order=["make 1", "to do2", "talk about 3"]
-        )
+        agenda=agendas[1]
     ),
     ExistedMeeting(
     id=3,
@@ -98,12 +94,8 @@ meetings = [
         guests[4]
     ],
     tasksList=[
-        Task(id=1, name="task1", description="task1 desc", order="Cair of the board")
+        Task(id=1, name="task1", description="task1 desc")
     ],
-    agenda=Agenda(
-        id=2,
-        name="agenda1",
-        order=["make 1", "to do2", "talk about 3"]
-    )
+    agenda=agendas[1]
 )
 ]

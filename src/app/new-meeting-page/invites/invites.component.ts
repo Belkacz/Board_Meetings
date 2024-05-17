@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RestService } from 'src/app/services/restService.service';
 import { urls } from 'src/app/shared/enums';
@@ -9,7 +9,7 @@ import { Guest, GuestInvited } from 'src/app/shared/interfaces';
   templateUrl: './invites.component.html',
   styleUrls: ['./invites.component.css'],
 })
-export class InvitesComponent {
+export class InvitesComponent implements OnInit, OnDestroy {
   @Input() invitedToEdited: Guest[] | null = null;
   public initialPersonsList: Guest[] | null = [];
 
@@ -49,7 +49,7 @@ export class InvitesComponent {
     return result;
   }
 
-  private ngOnDestroy(): void {
+  ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

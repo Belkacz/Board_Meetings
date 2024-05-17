@@ -91,8 +91,8 @@
         <div class="select-buttons-grup">
           <button mat-stroked-button class="select-buttons-agenda" (click)="newAgenda()">Create agenda</button>
           <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button class="select-buttons-agenda" (click)="openFilePicker(chooseFileInput)"
-            disabled="true">Choose Agenda</button>
+          <button mat-stroked-button class="select-buttons-agenda"
+            disabled="false" (click)="selectAgenda()">Choose Agenda</button>
         </div>
       </mat-card>
       <div>

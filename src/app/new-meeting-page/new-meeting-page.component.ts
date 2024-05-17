@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
-import { InviteService,meetingsListService } from '../services/dataService.service';
+import { InviteService,MapListsService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { urls } from '../shared/enums';
   styleUrls: ['./new-meeting-page.component.css'],
   providers: [NewMeetingComponent]
 })
-export class NewMeetingPageComponent implements OnInit {
+export class NewMeetingPageComponent implements OnInit, OnDestroy {
 
   editedMeetingId: number | null = null;
   editedMeting: ExistedBoardMeetings | null = null;
@@ -33,14 +33,14 @@ export class NewMeetingPageComponent implements OnInit {
   public invitedToEdited: Guest[] | null = null;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private meetingsListService: meetingsListService
+    private route: ActivatedRoute, private MapListsService: MapListsService
   ) {
 
     const params = this.route.snapshot.params;
     if(params['id']){
       this.editedMeetingId = parseInt(params['id'], 10);
     }
-    this.meetingsListService.actualList$.subscribe(meetings => {
+    this.MapListsService.actualList$.subscribe(meetings => {
       meetings.forEach(element => {
         if(element.id === this.editedMeetingId){
           this.editedMeeting = element;
@@ -171,7 +171,7 @@ export class NewMeetingPageComponent implements OnInit {
     this.tasksList = tasksList;
   }
 
-  private ngOnDestroy(): void {
+  ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

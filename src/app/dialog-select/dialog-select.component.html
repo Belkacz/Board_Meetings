@@ -1,0 +1,35 @@
+<mat-dialog-content>
+    <div>
+        <h3>Choose Agenda</h3>
+    </div>
+    <div>
+        <mat-radio-group [(ngModel)]="selectedAgenda">
+            <div class="flex-box" *ngFor="let agenda of agendaList">
+                <mat-accordion>
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{agenda.name}}
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                {{panelOpenState ? 'Close Details' : 'Open Details'}}
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <mat-list role="list">
+                            <mat-list-item role="listitem" *ngFor="let list of agenda.list; let idx = index">
+                                {{idx}} {{ list }}
+                            </mat-list-item>
+                        </mat-list>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-radio-button [value]="agenda"></mat-radio-button>
+            </div>
+        </mat-radio-group>
+    </div>
+    <div class="flex-box">
+        <button mat-stroked-button class="main-container select-buttons" [mat-dialog-close]="selectedAgenda"
+            [disabled]="!selectedAgenda">Select</button>
+        <button mat-stroked-button class="main-container select-buttons" mat-dialog-close
+            type="button">Close</button>
+    </div>
+</mat-dialog-content>

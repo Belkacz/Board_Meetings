@@ -19,11 +19,25 @@ export class InviteService {
     }
 }
 
-export class meetingsListService {
+export class MapListsService {
     actualList$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
+    // actulaAgenads$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
 
     public setGlobalMeetingsList(meetingsList: ExistedBoardMeetings[]){
         this.actualList$.next(meetingsList);
+    }
+
+    public mapAgendas = (response: Agenda[]): Agenda[] => {
+      const agendas: Agenda[] = [];
+      response.forEach((agenda: any) => {
+        const newAgenda: Agenda = {
+          id: agenda.id,
+          name: agenda.name,
+          list: agenda.order
+        }
+        agendas.push(newAgenda);
+      })
+      return agendas;
     }
 
     public mapMeetings = (response: ExistedBoardMeetings[]): ExistedBoardMeetings[] => {

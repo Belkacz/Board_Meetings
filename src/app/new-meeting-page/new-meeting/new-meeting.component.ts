@@ -1,13 +1,17 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
-import { TimeType, FileType } from '../../shared/enums';
+import { TimeType, FileType, urls } from '../../shared/enums';
 import { Agenda, DownloadFile, ExistedBoardMeetings } from '../../shared/interfaces';
 import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogListComponent } from 'src/app/dialog-list/dialog-list.component';
+import { DialogSelectComponent } from 'src/app/dialog-select/dialog-select.component';
+import { Subscription } from 'rxjs';
+import { RestService } from 'src/app/services/restService.service';
+import { MapListsService } from 'src/app/services/dataService.service';
 
 @Component({
   selector: 'app-new-meeting',
@@ -42,11 +46,16 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public defaultTimeEnd: string | null;
 
   public title: string;
+  public agendas: Agenda[];
+  public agendasErrorMessage : string
+  private agendaSubscription: Subscription | undefined;
 
   constructor(
     // private formBuilder: FormBuilder,
     private fileDownloadService: FileDownloadService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private restService: RestService,
+    private mapListsService: MapListsService
   ) {
     super();
     this.editedMeeting = null;
@@ -60,7 +69,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.defaultTimeEnd = null;
 
     this.createFormControls();
-
+    this.agendas = []
+    this.agendasErrorMessage = ""
   }
 
   ngOnInit() {
@@ -101,6 +111,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`
       }
     }
+    this.agendaSubscription = this.getAgendas();
   }
 
   createFormControls(): void {
@@ -132,6 +143,21 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.formValidators();
   }
 
+  private getAgendas(): Subscription {
+    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETAGENDAS)
+      .subscribe({
+        next: (response: any) => {
+          this.agendas = this.mapListsService.mapAgendas(response);
+          console.log(this.agendas)
+        },
+        error: (error: any) => {
+          console.error("Error:", error);
+          this.agendasErrorMessage = "Server communication error";
+        }
+      });
+    return result;
+  }
+
   public selectType(option: string) {
     this.form.patchValue({
       selectedMeetingType: option
@@ -151,6 +177,18 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
           }
         })
       }
+    })
+  }
+
+  selectAgenda(): void {
+    const dialogRef = this.dialog.open(DialogSelectComponent, {
+      data: this.agendas
+    })
+
+    dialogRef.afterClosed().subscribe(agenda => {
+      this.form.patchValue({
+        agenda: agenda
+      });
     })
   }
 
@@ -312,6 +350,13 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.form.setValidators([
       FormValidators.locationValidator(this.isHybridChecked, this.isAddressChecked, this.isOnlineChecked),
     ]);
+  }
+
+  
+  ngOnDestroy(): void {
+    if (this.agendaSubscription) {
+      this.agendaSubscription.unsubscribe();
+    }
   }
 
 }

@@ -30,7 +30,7 @@ async def get_people_list():
     print("people")
     return guests
 
-@app.get("/get-agendas", response_model=list[Guest])
+@app.get("/get-agendas", response_model=list[Agenda])
 async def get_agendas_list():
     print("agendas")
     return agendas
