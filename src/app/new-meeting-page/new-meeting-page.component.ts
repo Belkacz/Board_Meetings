@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { NewMeetingComponent } from './new-meeting/new-meeting.component';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
-import { InviteService,MapListsService } from '../services/dataService.service';
+import { InviteService, MapListsService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -37,32 +37,31 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   ) {
 
     const params = this.route.snapshot.params;
-    if(params['id']){
+    if (params['id']) {
       this.editedMeetingId = parseInt(params['id'], 10);
     }
     this.MapListsService.actualList$.subscribe(meetings => {
       meetings.forEach(element => {
-        if(element.id === this.editedMeetingId){
+        if (element.id === this.editedMeetingId) {
           this.editedMeeting = element;
         }
       });
     });
 
-    if(this.editedMeeting && this.editedMeeting.guests)
-      {
-        const editedInvitedGuests: GuestInvited[] = [];
-        this.editedMeeting.guests.forEach(guest => {
-          const invitedGuest: GuestInvited = {
-            id: guest.id,
-            name: guest.name,
-            surname: guest.surname,
-            jobPosition: guest.jobPosition,
-            invited: true
-          }
-          editedInvitedGuests.push(invitedGuest);
-        });
-        this.inviteService.updateGuestsList(editedInvitedGuests)
-      }
+    if (this.editedMeeting && this.editedMeeting.guests) {
+      const editedInvitedGuests: GuestInvited[] = [];
+      this.editedMeeting.guests.forEach(guest => {
+        const invitedGuest: GuestInvited = {
+          id: guest.id,
+          name: guest.name,
+          surname: guest.surname,
+          jobPosition: guest.jobPosition,
+          invited: true
+        }
+        editedInvitedGuests.push(invitedGuest);
+      });
+      this.inviteService.updateGuestsList(editedInvitedGuests)
+    }
 
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
@@ -86,10 +85,10 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if(this.editedMeeting && this.editedMeeting.tasksList){
+    if (this.editedMeeting && this.editedMeeting.tasksList) {
       this.editedTasks = this.editedMeeting.tasksList
     }
-    if(this.editedMeeting && this.editedMeeting.guests){
+    if (this.editedMeeting && this.editedMeeting.guests) {
       this.invitedToEdited = this.editedMeeting.guests
     }
 
@@ -130,6 +129,8 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       addedDocuments: null,
       agenda: null
     }
+    console.log(this.combinedData)
+    console.log(this.newMeetingComponent.form)
   }
 
   public saveAndPublish(): void {
@@ -140,8 +141,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       }
     }
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
-    // this.combinedData.meetingAddress = this.newMeetingComponent.form.controls['meetingAddress'].value;
-    // this.combinedData.onlineAddress = this.newMeetingComponent.form.controls['onlineAddress'].value;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
 
@@ -156,8 +155,8 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     } else {
       alert('Save And Publish Placeholder, open console for more details')
 
-      if(this.editedMeeting){
-        this.combinedData = {...this.combinedData , id: this.editedMeeting.id }
+      if (this.editedMeeting) {
+        this.combinedData = { ...this.combinedData, id: this.editedMeeting.id }
         console.log(this.combinedData)
         this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
       } else {

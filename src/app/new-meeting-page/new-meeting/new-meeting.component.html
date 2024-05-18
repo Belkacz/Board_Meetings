@@ -101,7 +101,7 @@
         <div class="select-buttons-grup">
           <div>
             <ul class="wider-element wider-container wider-box">
-              <li *ngFor="let doc of addedDocumentFormArray.value; let i = index" (click)="downloadFile(doc)">
+              <li *ngFor="let doc of addedDocuments.value; let i = index" (click)="downloadFile(doc)">
                 <div class="avatar-container text-listcontainter diplay-flex">
                   <mat-icon class=" elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
                   <p class=" elements-in-list margin-left">{{ doc.name }}</p>

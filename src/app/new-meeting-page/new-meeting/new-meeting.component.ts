@@ -36,8 +36,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public isHybridChecked!: boolean;
   public isAddressChecked!: boolean;
   public isOnlineChecked!: boolean;
-  private addedDocumentControl!: FormControl;
-  public addedDocumentFormArray!: FormArray;
+  public addedDocuments!: FormControl;
   public pickedStartTimeString!: string | null;
   public pickedEndTimeString!: string | null;
 
@@ -95,7 +94,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         })
       }
       if(this.editedMeeting.meetingAddress){
-        this.meetingAddress.setValue(this.editedMeeting.meetingAddress)
+        this.meetingAddress.setValue(this.editedMeeting.meetingAddress);
       }
       if (this.editedMeeting.dateStart) {
         this.defaultDate = this.editedMeeting.dateStart
@@ -103,12 +102,12 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       if (this.editedMeeting.dateStart) {
         const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateStart).getMinutes().toString();
-        this.defaultTimeStart = `${tempHours}:${tempMinutes}`
+        this.defaultTimeStart = `${tempHours}:${tempMinutes}`;
       }
       if (this.editedMeeting.dateEnd) {
         const tempHours = new Date(this.editedMeeting.dateEnd).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateEnd).getMinutes().toString();
-        this.defaultTimeEnd = `${tempHours}:${tempMinutes}`
+        this.defaultTimeEnd = `${tempHours}:${tempMinutes}`;
       }
     }
     this.agendaSubscription = this.getAgendas();
@@ -116,14 +115,18 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   createFormControls(): void {
     const selectedMeetingType = new FormControl('', [Validators.required]);
-    const meetingName = !this.editedMeeting ? new FormControl('', FormValidators.notEmpty()) : new FormControl(this.editedMeeting.meetingName, FormValidators.notEmpty());
+    const meetingName = !this.editedMeeting ?
+      new FormControl('', FormValidators.notEmpty()) : new FormControl(this.editedMeeting.meetingName, FormValidators.notEmpty());
     this.dateStartControl = new FormControl('', [Validators.required]);
     this.dateEndControl = new FormControl('', [Validators.required]);
     this.meetingAddress = !this.editedMeeting ? new FormControl() : new FormControl(this.editedMeeting.meetingAddress);
     this.onlineAddress = !this.editedMeeting ? new FormControl() : new FormControl(this.editedMeeting.meetingAddress);
     this.hybridType = new FormControl();
-    this.addedDocumentControl = new FormControl();
-    this.addedDocumentFormArray = new FormArray<FormControl>([]);
+    if (this.editedMeeting && this.editedMeeting.chooseFile) {
+      this.addedDocuments = new FormControl([this.editedMeeting.chooseFile]);
+    } else {
+      this.addedDocuments = new FormControl([]);
+    }
     const agenda = new FormGroup({
       agendaName: new FormControl(),
       list: new FormControl()
@@ -136,7 +139,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       dateEnd: this.dateEndControl,
       meetingAddress: this.meetingAddress,
       onlineAddress: this.onlineAddress,
-      addedDocuments: this.addedDocumentFormArray,
+      addedDocuments: this.addedDocuments,
       hybridType: this.hybridType,
       agenda: agenda
     });
@@ -266,7 +269,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.isOnlineChecked = false;
     this.isHybridChecked = false;
     this.isAddressChecked = !this.isAddressChecked;
-    if (this.isAddressChecked === true) {
+    if (this.isAddressChecked) {
       this.meetingAddress.enable();
     } else {
       this.meetingAddress.disable();
@@ -278,7 +281,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.isAddressChecked = false;
     this.isHybridChecked = false;
     this.isOnlineChecked = !this.isOnlineChecked;
-    if (this.isOnlineChecked === true) {
+    if (this.isOnlineChecked) {
       this.onlineAddress.enable();
     } else {
       this.onlineAddress.disable();
@@ -305,7 +308,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   openFilePicker(inputElement: ElementRef): void {
     inputElement.nativeElement.click();
   }
-
   onFileSelected(event: Event, type: FileType): void {
     const target = event.target as HTMLInputElement;
     if (target?.files !== null) {
@@ -314,8 +316,9 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         // this.chosenFileControl.setValue(selectedFile);
       }
       if (type === FileType.AddDocument) {
-        const addedDocumentControl = new FormControl(selectedFile);
-        this.addedDocumentFormArray.push(addedDocumentControl);
+        const filesControl = this.addedDocuments.value
+        const currentFiles = this.addedDocuments.value || [];
+        this.addedDocuments.patchValue([...currentFiles, selectedFile]);
       }
     }
   }
@@ -324,8 +327,10 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.fileDownloadService.downloadFile(doc);
   }
 
-  deleteDocs(docIndex: number) {
-    this.addedDocumentFormArray.removeAt(docIndex);
+  deleteDocs(docIndex: number): void {
+    const currentFiles = this.addedDocuments.value || [];
+    currentFiles.splice(docIndex, 1);
+    this.addedDocuments.setValue(currentFiles);
   }
 
 
