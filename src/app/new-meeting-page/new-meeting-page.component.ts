@@ -125,7 +125,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           console.log("Response from FastApi:", response);
           response.file_urls.forEach((url: string) => {
-            const fullUrl = `${url}}`;
+            const fullUrl = `${url}`;
             responseUrls.push(fullUrl);
           });
           this.combinedData['attachedDocuments'] = responseUrls;

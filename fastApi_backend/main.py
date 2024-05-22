@@ -105,8 +105,23 @@ async def update_meeting(edited_meeting: ExistedMeeting):
 
 @app.delete("/delete-meeting/{meeting_id}")
 async def delete_meetings(meeting_id: int):
-    print(meeting_id)
     tempMeetings = meetings
     for meeting in tempMeetings:
-        if meeting.meeting_id == meeting_id:
+        if meeting.id == meeting_id:
+            if(meeting.documents):
+                deleteFiles(meeting.documents)
             meetings.remove(meeting)
+
+def deleteFiles(files: list[str]):
+    print(files)
+    for url in files:
+        filename = url[7:]
+        file_path = os.path.join(UPLOAD_DIRECTORY, filename)
+        if file_path:
+            try:
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+            except Exception as exception:
+                print(f"Error when deleting: {file_path}: {exception}")
+        else:
+            print(f"File not found at: {file_path}")

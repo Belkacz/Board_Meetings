@@ -62,7 +62,7 @@ meetings = [
             Task(id=1, name="task1", description="task1 desc")
         ],
         agenda=agendas[0],
-        attachedDocuments = None
+        documents = None
     ),
     ExistedMeeting(
         id=2,
@@ -81,7 +81,7 @@ meetings = [
             Task(id=1, name="task1", description="task1 desc")
         ],
         agenda=agendas[1],
-        attachedDocuments = None
+        documents = None
     ),
     ExistedMeeting(
     id=3,
@@ -100,6 +100,6 @@ meetings = [
         Task(id=1, name="task1", description="task1 desc")
     ],
     agenda=agendas[1],
-    attachedDocuments = None
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
 )
 ]
