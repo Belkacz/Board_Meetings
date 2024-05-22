@@ -151,7 +151,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.agendas = this.mapListsService.mapAgendas(response);
-          console.log(this.agendas)
         },
         error: (error: any) => {
           console.error("Error:", error);
@@ -175,6 +174,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       if (result) {
         this.form.patchValue({
           agenda: {
+            id: null,
             agendaName: result.value.agendaName,
             list: result.value.list
           }
@@ -190,7 +190,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(agenda => {
       this.form.patchValue({
-        agenda: agenda
+        agenda: {
+          id: agenda.id,
+          agendaName: agenda.name,
+          list: agenda.list
+        }
       });
     })
   }

@@ -91,7 +91,8 @@ export class MapListsService {
               addedDocuments: null,
               guests: newGuests,
               tasksList: newTasks,
-              agenda: newAgenda
+              agenda: newAgenda,
+              attachedDocuments: meeting.documents
             }
             meetingsList.push(newMeeting);
           });

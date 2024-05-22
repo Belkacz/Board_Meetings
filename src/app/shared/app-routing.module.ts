@@ -6,12 +6,13 @@ import { NewMeetingPageComponent } from '../new-meeting-page/new-meeting-page.co
 import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { AboutComponent } from '../about/about.component';
 import { MeetingsListComponent } from '../meetings-list/meetings-list.component';
+import { EditMeetingPageComponent } from '../edit-meeting-page/edit-meeting-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'new-meeting', component: NewMeetingPageComponent },
   { path: 'meetings-list', component: MeetingsListComponent },
-  { path: 'edit-meeting/:id', component: NewMeetingPageComponent },
+  { path: 'edit-meeting/:id', component: EditMeetingPageComponent },
   {
     path: 'home',
     component: MainMenuComponent,

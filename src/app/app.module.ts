@@ -37,6 +37,7 @@ import { MapListsService } from './services/dataService.service';
 import { DialogSelectComponent } from './dialog-select/dialog-select.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
+import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.component';
 
 
 
@@ -55,7 +56,8 @@ import { MatRadioModule } from '@angular/material/radio';
     DialogFormComponent,
     DialogListComponent,
     MeetingsListComponent,
-    DialogSelectComponent
+    DialogSelectComponent,
+    EditMeetingPageComponent
   ],
   imports: [
     ReactiveFormsModule,

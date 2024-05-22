@@ -1,7 +1,11 @@
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, Form, File, UploadFile
 from pydantic import BaseModel
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List, Optional
+from fastapi.staticfiles import StaticFiles
+from uuid import uuid4
 import ssl
 
 from meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
@@ -35,6 +39,26 @@ async def get_agendas_list():
     print("agendas")
     return agendas
 
+UPLOAD_DIRECTORY = "meetings_docs"
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
+@app.post("/upload-files/")
+async def create_upload_files(files: List[UploadFile] = File(...)):
+
+    file_urls = []
+    for file in files:
+        
+        filename = f"{uuid4()}${file.filename}"
+        file_path = os.path.join(UPLOAD_DIRECTORY, filename)
+        
+        with open(file_path, "wb") as f:
+            content = await file.read()
+            f.write(content) 
+        
+        file_urls.append(f"/files/{filename}")
+    return {"file_urls": file_urls}
+
+app.mount("/files", StaticFiles(directory=UPLOAD_DIRECTORY), name="files")
 
 @app.post("/new-meeting")
 async def add_meeting(meeting: BaseMeeting):
@@ -50,7 +74,8 @@ async def add_meeting(meeting: BaseMeeting):
         online_address=meeting.online_address,
         guests=meeting.guests,
         tasksList=meeting.tasksList,
-        agenda=meeting.agenda
+        agenda=meeting.agenda,
+        documents=meeting.documents
     )
     meetings.append(new_meeting)
     print(new_meeting)

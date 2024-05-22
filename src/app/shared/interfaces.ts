@@ -28,10 +28,11 @@ export interface BoardMeetingData {
     dateStart: Date | null;
     dateEnd: Date | null;
     chooseFile: Array<FileType> | null;
-    addedDocuments: Array<FileType> | null;
     guests?: Array<Guest>;
     tasksList?: Array<Task>;
     agenda?: Agenda | null;
+    addedDocuments: Array<FileType> | null;
+    attachedDocuments: Array<string> | null;
     [key: string]: any;
 }
 

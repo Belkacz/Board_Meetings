@@ -13,9 +13,9 @@ class Task(BaseModel):
     description: str
 
 class Agenda(BaseModel):
-    id: int
-    name: str
-    order: list[str]
+    id: int | None = None
+    name: str | None = None
+    order: list[str] | None = None
 
 class BaseMeeting(BaseModel):
     meeting_type: str
@@ -27,6 +27,7 @@ class BaseMeeting(BaseModel):
     guests: list[Guest] | None = None
     tasksList: list[Task] | None = None
     agenda: Agenda | None = None
+    documents: list[str] | None = None
 
 class ExistedMeeting(BaseMeeting):
     id: int | None = None
@@ -60,7 +61,8 @@ meetings = [
         tasksList=[
             Task(id=1, name="task1", description="task1 desc")
         ],
-        agenda=agendas[0]
+        agenda=agendas[0],
+        attachedDocuments = None
     ),
     ExistedMeeting(
         id=2,
@@ -78,7 +80,8 @@ meetings = [
         tasksList=[
             Task(id=1, name="task1", description="task1 desc")
         ],
-        agenda=agendas[1]
+        agenda=agendas[1],
+        attachedDocuments = None
     ),
     ExistedMeeting(
     id=3,
@@ -96,6 +99,7 @@ meetings = [
     tasksList=[
         Task(id=1, name="task1", description="task1 desc")
     ],
-    agenda=agendas[1]
+    agenda=agendas[1],
+    attachedDocuments = None
 )
 ]

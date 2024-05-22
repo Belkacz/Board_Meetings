@@ -47,6 +47,16 @@ export class RestService {
   //     });
   // }
 
+  uploadFiles(files: File[], endpoint: string) {
+    const formData = new FormData();
+    
+    for (const file of files) {
+      formData.append('files', file, file.name);
+    }
+    
+    return this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData);
+  }
+
   sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls ) {
     console.log('Data to send:', dataToSend);
     let packedText = {
@@ -57,7 +67,9 @@ export class RestService {
       meeting_address: dataToSend.meetingAddress,
       online_address: dataToSend.onlineAddress,
       guests: dataToSend.guests,
-      tasks: dataToSend.tasksList
+      tasks: dataToSend.tasksList,
+      agenda: dataToSend.agenda,
+      documents: dataToSend.attachedDocuments
     };
     if(endpoint === urls.UPDATEMEETING){
       let updatePack = {...packedText, id: dataToSend['id']}
@@ -81,7 +93,6 @@ export class RestService {
         }
       });
     }
-
   }
 
   private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null) {
@@ -95,7 +106,6 @@ export class RestService {
 
 
   receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null) {
-
     return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param));
   }
 

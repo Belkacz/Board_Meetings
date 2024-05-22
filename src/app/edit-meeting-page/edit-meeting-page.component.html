@@ -2,11 +2,9 @@
     <div class="padding-left-30px">
         <button mat-icon-button matSuffix routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
     </div>
-    <h2>Create new meeting</h2>
     <div class="near-button-container gap-20px">
         <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">Save as draft</button>
-        <button mat-stroked-button (click)="saveAndPublish()"
-        [disabled]="formDisabled"
+        <button mat-stroked-button (click)="saveAndPublish()" 
         >Save & Publish</button>
     </div>
 </div>

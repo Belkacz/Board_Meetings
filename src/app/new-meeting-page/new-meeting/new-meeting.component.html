@@ -1,7 +1,7 @@
 <div>
   <form [formGroup]="form" class="meeting-form">
     <div>
-      <h2>{{title}}</h2>
+      <!-- <h2>{{title}}</h2> -->
       <div>
         <h3>Meeting type</h3>
         <div example-button-row class="select-buttons-grup">
@@ -87,7 +87,8 @@
         <mat-card-header>
           <mat-card-title>Agenda</mat-card-title>
         </mat-card-header>
-        <mat-card-content>agenda of the meeting</mat-card-content>
+        <mat-card-content *ngIf="!form.get('agenda')?.value['agendaName']">agenda of the meeting</mat-card-content>
+        <mat-card-content *ngIf="form.get('agenda')?.value['agendaName']">{{ form.get('agenda')?.value['agendaName'] }}</mat-card-content>
         <div class="select-buttons-grup">
           <button mat-stroked-button class="select-buttons-agenda" (click)="newAgenda()">Create agenda</button>
           <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />

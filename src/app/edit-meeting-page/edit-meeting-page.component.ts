@@ -1,20 +1,24 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NewMeetingComponent } from './new-meeting/new-meeting.component';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
 import { InviteService, MapListsService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
+import { NewMeetingComponent } from '../new-meeting-page/new-meeting/new-meeting.component';
 
 @Component({
-  selector: 'app-new-meeting-page',
-  templateUrl: './new-meeting-page.component.html',
-  styleUrls: ['./new-meeting-page.component.css'],
+  selector: 'app-edit-meeting-page',
+  templateUrl: './edit-meeting-page.component.html',
+  styleUrls: ['./edit-meeting-page.component.css'],
   providers: [NewMeetingComponent]
 })
-export class NewMeetingPageComponent implements OnInit, OnDestroy {
 
+export class EditMeetingPageComponent implements OnInit, OnDestroy {
+
+  editedMeetingId: number | null = null;
+  editedMeting: ExistedBoardMeetings | null = null;
   public formDisabled: boolean;
   private subscription: Subscription | undefined;
 
@@ -32,6 +36,35 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private route: ActivatedRoute, private MapListsService: MapListsService
   ) {
+
+    const params = this.route.snapshot.params;
+    if (params['id']) {
+      this.editedMeetingId = parseInt(params['id'], 10);
+    }
+
+    this.MapListsService.actualList$.subscribe(meetings => {
+      meetings.forEach(element => {
+        if (element.id === this.editedMeetingId) {
+          this.editedMeeting = element;
+        }
+      });
+    });
+
+    if (this.editedMeeting && this.editedMeeting.guests) {
+      const editedInvitedGuests: GuestInvited[] = [];
+      this.editedMeeting.guests.forEach(guest => {
+        const invitedGuest: GuestInvited = {
+          id: guest.id,
+          name: guest.name,
+          surname: guest.surname,
+          jobPosition: guest.jobPosition,
+          invited: true
+        }
+        editedInvitedGuests.push(invitedGuest);
+      });
+      this.inviteService.updateGuestsList(editedInvitedGuests)
+    }
+
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
@@ -55,9 +88,17 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.editedMeeting && this.editedMeeting.tasksList) {
+      this.editedTasks = this.editedMeeting.tasksList
+    }
+    if (this.editedMeeting && this.editedMeeting.guests) {
+      this.invitedToEdited = this.editedMeeting.guests
+    }
+
     this.inviteService.inviteList$.subscribe(invited => {
       this.guestsList = invited;
     })
+
   }
 
   ngAfterViewInit() {
@@ -100,24 +141,10 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
+    this.combinedData.addedDocuments = this.newMeetingComponent.addedDocuments.value;
 
     const files = this.newMeetingComponent.addedDocuments.value;
-
-    if(!this.combinedData.agenda?.name) {
-      this.combinedData.agenda = null;
-    }
-
-    if (this.combinedData.meetingType === "") {
-      alert("meeting type cannot be empty")
-    } else if (this.combinedData.meetingName === "") {
-      alert("meeting name cannot be empty")
-    } else if ((!this.newMeetingComponent.dateStartControl || !this.newMeetingComponent.dateEndControl)) {
-      alert("You need to chose date")
-    } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
-      alert("You need to provide a location or choose an online option");
-    } else {
-      alert('Save And Publish Placeholder, open console for more details')
-    }
+    console.log(files);
 
     if (files.length > 0) {
       const responseUrls: string[] = []
@@ -125,19 +152,40 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           console.log("Response from FastApi:", response);
           response.file_urls.forEach((url: string) => {
-            const fullUrl = `${url}}`;
+            const fullUrl = `${urls.protocolBase}${urls.localFastApi}${url}}`;
             responseUrls.push(fullUrl);
+            
           });
-          this.combinedData['attachedDocuments'] = responseUrls;
-          this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
+          // this.combinedData.addedDocuments = responseUrls;
         },
         error: error => {
           console.error("Error:", error);
         }
       });
+    }
+
+    if (this.editedMeeting) {
+      this.combinedData = { ...this.combinedData, id: this.editedMeeting.id }
+      this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
     } else {
       this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
     }
+
+    console.log(this.combinedData.addedDocuments)
+    // if (this.combinedData.meetingType === "") {
+    //   alert("meeting type cannot be empty")
+    // } else if (this.combinedData.meetingName === "") {
+    //   alert("meeting name cannot be empty")
+    // } else if ((!this.newMeetingComponent.dateStartControl || !this.newMeetingComponent.dateEndControl)) {
+    //   alert("You need to chose date")
+    // } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
+    //   alert("You need to provide a location or choose an online option");
+    // } else {
+    //   alert('Save And Publish Placeholder, open console for more details')
+    // }
+      // console.log(this.combinedData)
+
+    
   }
 
   public saveTasksList(tasksList: Task[]): void {
