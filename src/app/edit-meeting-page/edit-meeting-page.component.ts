@@ -144,7 +144,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.addedDocuments = this.newMeetingComponent.addedDocuments.value;
 
     const files = this.newMeetingComponent.addedDocuments.value;
-    console.log(files);
 
     if (files.length > 0) {
       const responseUrls: string[] = []

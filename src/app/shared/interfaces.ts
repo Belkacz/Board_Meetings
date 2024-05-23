@@ -20,6 +20,12 @@ export interface GuestInvited extends Guest {
     invited: boolean;
 }
 
+export interface AttachedDocument {
+    fileName: string;
+    originalUrl: string;
+    fullUrl: string;
+}
+
 export interface BoardMeetingData {
     meetingType: string;
     meetingName: string;
@@ -32,7 +38,7 @@ export interface BoardMeetingData {
     tasksList?: Array<Task>;
     agenda?: Agenda | null;
     addedDocuments: Array<FileType> | null;
-    attachedDocuments: Array<string> | null;
+    attachedDocuments: Array<AttachedDocument> | null;
     [key: string]: any;
 }
 

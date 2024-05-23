@@ -59,6 +59,13 @@ export class RestService {
 
   sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls ) {
     console.log('Data to send:', dataToSend);
+    const attachedDocumentsUrls: string[] = []
+    if(dataToSend.attachedDocuments){
+      dataToSend.attachedDocuments.forEach(docs => {
+        attachedDocumentsUrls.push(docs.originalUrl);
+      });
+    }
+
     let packedText = {
       meeting_type: dataToSend.meetingType,
       meeting_name: dataToSend.meetingName,
@@ -69,7 +76,7 @@ export class RestService {
       guests: dataToSend.guests,
       tasks: dataToSend.tasksList,
       agenda: dataToSend.agenda,
-      documents: dataToSend.attachedDocuments
+      documents: attachedDocumentsUrls ? attachedDocumentsUrls : null
     };
     if(endpoint === urls.UPDATEMEETING){
       let updatePack = {...packedText, id: dataToSend['id']}

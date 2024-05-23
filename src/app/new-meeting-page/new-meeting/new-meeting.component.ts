@@ -61,44 +61,32 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.dateStart = new Date();
     this.dateEnd = new Date();
 
-    this.title = "Create new meeting"
+    this.title = "Edit Meeting"
 
     this.defaultDate = null;
     this.defaultTimeStart = null;
     this.defaultTimeEnd = null;
 
-    this.createFormControls();
     this.agendas = []
     this.agendasErrorMessage = ""
+
+    this.createFormControls();
   }
 
   ngOnInit() {
-    this.meetingAddress.disable();
-    this.onlineAddress.disable();
-    this.pickedStartTimeString = null;
-    this.pickedEndTimeString = null;
-
     if (this.editedMeeting) {
-      this.title = `Editing meeting # ${this.editedMeeting.id}`
-      if (this.editedMeeting) {
-        Object.keys(this.editedMeeting).forEach(formControlName => {
-          const editedMeetingField = this.editedMeeting?.[formControlName]
-          if (editedMeetingField && editedMeetingField !== undefined) {
-            this.form.get(formControlName)?.setValue(editedMeetingField);
-          }
-        });
-      }
-      if(this.editedMeeting.meetingType){
-        this.form.patchValue({
-          selectedMeetingType: this.editedMeeting.meetingType
-        })
-      }
-      if(this.editedMeeting.meetingAddress){
-        this.meetingAddress.setValue(this.editedMeeting.meetingAddress);
-      }
-      if (this.editedMeeting.dateStart) {
-        this.defaultDate = this.editedMeeting.dateStart
-      }
+      this.title = `Editing meeting # ${this.editedMeeting.id}`;
+      this.form.patchValue({
+        selectedMeetingType: this.editedMeeting.meetingType || null,
+        meetingName: this.editedMeeting.meetingName || null,
+        dateStart: this.editedMeeting.dateStart || null,
+        dateEnd: this.editedMeeting.dateEnd || null,
+        meetingAddress: this.editedMeeting.meetingAddress || null,
+        onlineAddress: this.editedMeeting.onlineAddress || null,
+        attachedDocuments: this.editedMeeting.attachedDocuments || null,
+      });
+  
+      this.defaultDate = this.editedMeeting.dateStart || null;
       if (this.editedMeeting.dateStart) {
         const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateStart).getMinutes().toString();
@@ -110,28 +98,29 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`;
       }
     }
+  
+    this.meetingAddress.disable();
+    this.onlineAddress.disable();
+    this.pickedStartTimeString = null;
+    this.pickedEndTimeString = null;
+  
     this.agendaSubscription = this.getAgendas();
   }
 
   createFormControls(): void {
-    const selectedMeetingType = new FormControl('', [Validators.required]);
-    const meetingName = !this.editedMeeting ?
-      new FormControl('', FormValidators.notEmpty()) : new FormControl(this.editedMeeting.meetingName, FormValidators.notEmpty());
-    this.dateStartControl = new FormControl('', [Validators.required]);
-    this.dateEndControl = new FormControl('', [Validators.required]);
-    this.meetingAddress = !this.editedMeeting ? new FormControl() : new FormControl(this.editedMeeting.meetingAddress);
-    this.onlineAddress = !this.editedMeeting ? new FormControl() : new FormControl(this.editedMeeting.meetingAddress);
+    const selectedMeetingType = new FormControl([Validators.required]);
+    const meetingName = new FormControl(null, FormValidators.notEmpty());
+    this.dateStartControl = new FormControl([Validators.required]);
+    this.dateEndControl = new FormControl([Validators.required]);
+    this.meetingAddress = new FormControl();
+    this.onlineAddress = new FormControl();
     this.hybridType = new FormControl();
-    if (this.editedMeeting && this.editedMeeting.chooseFile) {
-      this.addedDocuments = new FormControl([this.editedMeeting.chooseFile]);
-    } else {
-      this.addedDocuments = new FormControl([]);
-    }
+    this.addedDocuments = new FormControl([]);
     const agenda = new FormGroup({
       agendaName: new FormControl(),
       list: new FormControl()
     });
-
+  
     this.form = new FormGroup({
       selectedMeetingType: selectedMeetingType,
       meetingName: meetingName,
@@ -141,8 +130,10 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       onlineAddress: this.onlineAddress,
       addedDocuments: this.addedDocuments,
       hybridType: this.hybridType,
-      agenda: agenda
+      agenda: agenda,
+      attachedDocuments: new FormControl()
     });
+    console.log(this.form)
     this.formValidators();
   }
 
@@ -331,10 +322,21 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.fileDownloadService.downloadFile(doc);
   }
 
+
+  downloadUrlFile(doc: DownloadFile): void {
+    this.fileDownloadService.downloadFile(doc);
+  }
+
   deleteDocs(docIndex: number): void {
     const currentFiles = this.addedDocuments.value || [];
     currentFiles.splice(docIndex, 1);
     this.addedDocuments.setValue(currentFiles);
+  }
+
+  deleteAttachedDocs(docIndex: number): void {
+    const currentFiles = this.form.get('attachedDocuments')?.value || [];
+    currentFiles.splice(docIndex, 1);
+    this.form.controls['attachedDocuments'].setValue(currentFiles);
   }
 
 

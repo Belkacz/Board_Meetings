@@ -30,7 +30,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   public invitedToEdited: Guest[] | null = null;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private MapListsService: MapListsService
+    private route: ActivatedRoute, private dataService: MapListsService
   ) {
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
@@ -128,7 +128,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
             const fullUrl = `${url}`;
             responseUrls.push(fullUrl);
           });
-          this.combinedData['attachedDocuments'] = responseUrls;
+          this.combinedData['attachedDocuments'] = this.dataService.createDocumentsData(responseUrls);
           this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
         },
         error: error => {

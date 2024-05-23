@@ -88,12 +88,13 @@
           <mat-card-title>Agenda</mat-card-title>
         </mat-card-header>
         <mat-card-content *ngIf="!form.get('agenda')?.value['agendaName']">agenda of the meeting</mat-card-content>
-        <mat-card-content *ngIf="form.get('agenda')?.value['agendaName']">{{ form.get('agenda')?.value['agendaName'] }}</mat-card-content>
+        <mat-card-content *ngIf="form.get('agenda')?.value['agendaName']">{{ form.get('agenda')?.value['agendaName']
+          }}</mat-card-content>
         <div class="select-buttons-grup">
           <button mat-stroked-button class="select-buttons-agenda" (click)="newAgenda()">Create agenda</button>
           <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button class="select-buttons-agenda"
-            disabled="false" (click)="selectAgenda()">Choose Agenda</button>
+          <button mat-stroked-button class="select-buttons-agenda" disabled="false" (click)="selectAgenda()">Choose
+            Agenda</button>
         </div>
       </mat-card>
       <div>
@@ -111,6 +112,21 @@
                   </button>
                 </div>
               </li>
+              <ng-container *ngIf="form.get('attachedDocuments')">
+                <li *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index"
+                  (click)="downloadFile(doc)">
+                  <div class="avatar-container text-listcontainter diplay-flex">
+                    <mat-icon class=" elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
+                    <p class=" elements-in-list margin-left">{{ doc.fileName }}</p>
+                    <button mat-icon-button matSuffix (click)="downloadFile(doc)">
+                      <mat-icon>download</mat-icon>
+                    </button>
+                    <button mat-icon-button matSuffix (click)="deleteDocs(i)">
+                      <mat-icon>clear</mat-icon>
+                    </button>
+                  </div>
+                </li>
+              </ng-container>
             </ul>
           </div>
           <input type="file" #addDocument style="display: none"
