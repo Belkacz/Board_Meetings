@@ -1,5 +1,5 @@
 <div class="" style="max-width: 500px;">
-  <div class="flex-box">
+  <div class="flex-box-space">
     <h2>
       Tasks
     </h2>
@@ -8,7 +8,7 @@
   <div class="div-list">
     <ul>
       <li *ngFor="let task of tasksList; let i = index" class="list-item margin-left-minus-40px">
-        <div class="flex-box">
+        <div class="flex-box-space">
           <span class="task-name">{{ task.name }}</span>
           <div class="near-button-container gap-0 margin-left-50prc">
             <button mat-icon-button matSuffix (click)="editTask('Edit Task', task , ['name'])">

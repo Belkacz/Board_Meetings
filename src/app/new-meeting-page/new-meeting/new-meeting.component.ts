@@ -37,8 +37,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public isAddressChecked!: boolean;
   public isOnlineChecked!: boolean;
   public addedDocuments!: FormControl;
-  public pickedStartTimeString!: string | null;
-  public pickedEndTimeString!: string | null;
+  private pickedStartTimeString!: string | null;
+  private pickedEndTimeString!: string | null;
 
   public defaultDate: Date | null;
   public defaultTimeStart: string | null;

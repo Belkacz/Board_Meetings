@@ -85,32 +85,12 @@ ul {
   margin-top: 4px;
 }
 
-
-.margin-left-20px{
-  margin-left: 20px;
-}
-.margin-left-minus-30px {
-  margin-left: -30px;
-}
-
 .margin-left-minus-40px {
   margin-left: -40px;
 }
 
-.margin-left-40prc {
-  margin-left: 40%;
-}
-
-.margin-left-70prc {
-  margin-left: 70%;
-}
-
 .margin-left-50prc {
   margin-left: 50%;
-}
-
-.margin-left-60prc {
-  margin-left: 60%;
 }
 
 .margin-top-10px {
@@ -125,12 +105,8 @@ ul {
   padding: 20px;
 }
 
-.padding-30px{
-  padding: 30px
-}
-
 .wider-element.wider-container.wider-box {
-  width: 77%;
+  width: 88%;
   min-width: 300px;
   max-width: 800px;
 }
@@ -166,7 +142,7 @@ ul {
 }
 
 
-.flex-box {
+.flex-box-space {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -194,10 +170,6 @@ ul {
 
 .gap-1rem {
   gap: 1rem;
-}
-
-.gap-20px {
-  gap: 20px;
 }
 
 app-new-meeting {
@@ -274,6 +246,11 @@ app-tasks {
   width: 80%;
 }
 
+.caption {
+  font-size: 0.875rem;
+  color: grey;
+}
+
 @media only screen and (max-width: 1000px) {
   .main-container {
     display: inline;
@@ -281,7 +258,6 @@ app-tasks {
   .side-menu{
     margin-left: 100px;
   }
-
   .main-menu{
     margin-left: 20px;
   }
@@ -301,6 +277,11 @@ app-tasks {
   }
   .my-list{
     width: 100%;
+  }
+  .top-items-grid{
+    display: grid;
+    grid-template-columns: auto;
+    align-items: center;
   }
 }
 

@@ -1,6 +1,6 @@
 <div>
     <h1 mat-dialog-title>{{ title }}</h1>
-    <form class="flex-box" [formGroup]="form">
+    <form class="flex-box-space" [formGroup]="form">
 
         <div mat-dialog-content>
 
@@ -8,7 +8,7 @@
                 <label class="">{{ field }} </label>
                 <input class="float-right" matInput type="text" [formControlName]="field">
             </div>
-            <div class="flex-box">
+            <div class="flex-box-space">
                 <!-- <button class="select-buttons" mat-stroked-button [mat-dialog-close]="onSubmit()" type="submit">Submit</button> -->
                 <button mat-stroked-button class="main-container select-buttons" (click)="SaveDialog()"
                     type="submit">Submit</button>

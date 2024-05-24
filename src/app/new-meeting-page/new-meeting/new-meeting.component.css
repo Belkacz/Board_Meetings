@@ -11,3 +11,13 @@
 .button-X{
     margin-top: -4px!important;
 }
+
+.list-header{
+    margin-bottom: 0px;
+}
+.list-container{
+    padding-left: 20px;
+}
+.file-icon {
+    padding-right: 15px;
+}

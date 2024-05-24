@@ -128,7 +128,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       attachedDocuments: null
     }
     console.log(this.combinedData)
-    console.log(this.newMeetingComponent.form)
   }
 
   public saveAndPublish(): void {

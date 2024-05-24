@@ -1,10 +1,10 @@
-<mat-dialog-content>
+<mat-dialog-content class="main-dialog">
     <div>
         <h3>Choose Agenda</h3>
     </div>
     <div>
-        <mat-radio-group [(ngModel)]="selectedAgenda">
-            <div class="flex-box" *ngFor="let agenda of agendaList">
+        <mat-radio-group class="padding-container" [(ngModel)]="selectedAgenda">
+            <div class="flex-box-space" *ngFor="let agenda of agendaList">
                 <mat-accordion>
                     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                         <mat-expansion-panel-header>
@@ -16,8 +16,9 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <mat-list role="list">
-                            <mat-list-item role="listitem" *ngFor="let list of agenda.list; let idx = index">
-                                {{idx}} {{ list }}
+                            <p class="list-title">Order:</p>
+                            <mat-list-item class="lower-list-items" role="listitem" *ngFor="let list of agenda.list; let idx = index">
+                                <span class="caption">{{idx + 1}}. {{ list }}</span>
                             </mat-list-item>
                         </mat-list>
                     </mat-expansion-panel>
@@ -26,7 +27,7 @@
             </div>
         </mat-radio-group>
     </div>
-    <div class="flex-box">
+    <div class="flex-box-space">
         <button mat-stroked-button class="main-container select-buttons" [mat-dialog-close]="selectedAgenda"
             [disabled]="!selectedAgenda">Select</button>
         <button mat-stroked-button class="main-container select-buttons" mat-dialog-close
