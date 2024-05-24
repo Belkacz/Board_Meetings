@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
-import { DownloadFile } from '../shared/interfaces';
+import { AttachedDocument, DownloadFile } from '../shared/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileDownloadService {
-  public downloadFile(doc: DownloadFile): void {
+  private downloadFile(url: string, name: string): void {
     const downloadLink = document.createElement('a');
-    downloadLink.href = doc.fileUrl;
-    downloadLink.download = doc.name;
+    downloadLink.setAttribute('target', '_blank');
+    downloadLink.setAttribute('href', url);
+    downloadLink.setAttribute('download', name);
     downloadLink.click();
+    downloadLink.remove();
+  }
+
+  public downloadAddedFile(doc: DownloadFile): void {
+    this.downloadFile(doc.fileUrl, doc.name);
+  }
+
+
+  public downloadFileFromUrl(doc: AttachedDocument): void {
+    this.downloadFile(doc.fullUrl, doc.fileName);
   }
 }

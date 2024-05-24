@@ -106,7 +106,7 @@ export class MapListsService {
     const attachedDocuments:Array<AttachedDocument> = [];
     filesUrls.forEach(url => {
       const newAttachedDocument: AttachedDocument = {
-        fileName: url.slice(6),
+        fileName: url.slice(7),
         originalUrl: url,
         fullUrl: `${urls.protocolBase}${urls.localFastApi}${url}`,
       }

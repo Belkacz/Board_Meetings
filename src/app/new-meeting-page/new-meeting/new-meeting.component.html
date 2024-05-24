@@ -102,23 +102,14 @@
         <p>Documents attached to the meeting</p>
         <div class="select-buttons-grup">
           <div>
-            <ul class="wider-element wider-container wider-box">
-              <li *ngFor="let doc of addedDocuments.value; let i = index" (click)="downloadFile(doc)">
-                <div class="avatar-container text-listcontainter diplay-flex">
-                  <mat-icon class=" elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
-                  <p class=" elements-in-list margin-left">{{ doc.name }}</p>
-                  <button mat-icon-button matSuffix (click)="deleteDocs(i)">
-                    <mat-icon>clear</mat-icon>
-                  </button>
-                </div>
-              </li>
-              <ng-container *ngIf="form.get('attachedDocuments')">
-                <li *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index"
-                  (click)="downloadFile(doc)">
+            <ng-container *ngIf="form.get('addedDocuments')?.value != null">
+              <h4>Added Files :</h4>
+              <ul class="wider-element wider-container wider-box">
+                <li *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
                   <div class="avatar-container text-listcontainter diplay-flex">
                     <mat-icon class=" elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
-                    <p class=" elements-in-list margin-left">{{ doc.fileName }}</p>
-                    <button mat-icon-button matSuffix (click)="downloadFile(doc)">
+                    <p class=" elements-in-list margin-left">{{ doc.name }}</p>
+                    <button mat-icon-button matSuffix (click)="fileDownloadService.downloadAddedFile(doc)">
                       <mat-icon>download</mat-icon>
                     </button>
                     <button mat-icon-button matSuffix (click)="deleteDocs(i)">
@@ -126,8 +117,26 @@
                     </button>
                   </div>
                 </li>
-              </ng-container>
-            </ul>
+              </ul>
+            </ng-container>
+            <ng-container *ngIf="form.get('attachedDocuments')?.value != null">
+              <h4>Attached Files :</h4>
+              <ul class="wider-element wider-container wider-box">
+                <li *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
+                  <div class="avatar-container text-listcontainter diplay-flex">
+                    <mat-icon class="elements-in-list margin-left" fontIcon="file_copy"></mat-icon>
+                    <p class=" elements-in-list margin-left">{{ doc.fileName }}</p>
+                    <button mat-icon-button matSuffix (click)="fileDownloadService.downloadFileFromUrl(doc)">
+                      <mat-icon>open_in_new</mat-icon>
+                    </button>
+                    <button mat-icon-button matSuffix (click)="deleteAttachedDocs(i)">
+                      <mat-icon>clear</mat-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </ng-container>
+
           </div>
           <input type="file" #addDocument style="display: none"
             (change)="onFileSelected($event, FileType.AddDocument)" />

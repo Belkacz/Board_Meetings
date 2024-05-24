@@ -1,8 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType, urls } from '../../shared/enums';
-import { Agenda, DownloadFile, ExistedBoardMeetings } from '../../shared/interfaces';
+import { Agenda, AttachedDocument, DownloadFile, ExistedBoardMeetings } from '../../shared/interfaces';
 import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';
@@ -51,10 +51,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   constructor(
     // private formBuilder: FormBuilder,
-    private fileDownloadService: FileDownloadService,
+    public fileDownloadService: FileDownloadService,
     public dialog: MatDialog,
     private restService: RestService,
-    private mapListsService: MapListsService
+    private mapListsService: MapListsService,
+    private renderer: Renderer2
   ) {
     super();
     this.editedMeeting = null;
@@ -98,7 +99,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`;
       }
     }
-  
     this.meetingAddress.disable();
     this.onlineAddress.disable();
     this.pickedStartTimeString = null;
@@ -115,7 +115,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.meetingAddress = new FormControl();
     this.onlineAddress = new FormControl();
     this.hybridType = new FormControl();
-    this.addedDocuments = new FormControl([]);
+    this.addedDocuments = new FormControl(null);
     const agenda = new FormGroup({
       agendaName: new FormControl(),
       list: new FormControl()
@@ -133,7 +133,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       agenda: agenda,
       attachedDocuments: new FormControl()
     });
-    console.log(this.form)
     this.formValidators();
   }
 
@@ -318,14 +317,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-  downloadFile(doc: DownloadFile): void {
-    this.fileDownloadService.downloadFile(doc);
-  }
-
-
-  downloadUrlFile(doc: DownloadFile): void {
-    this.fileDownloadService.downloadFile(doc);
-  }
 
   deleteDocs(docIndex: number): void {
     const currentFiles = this.addedDocuments.value || [];
