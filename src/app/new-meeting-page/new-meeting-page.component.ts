@@ -103,7 +103,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
 
     const files = this.newMeetingComponent.addedDocuments.value;
 
-    if(!this.combinedData.agenda?.name) {
+    if (!this.combinedData.agenda?.name) {
       this.combinedData.agenda = null;
     }
 
@@ -119,7 +119,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       alert('Save And Publish Placeholder, open console for more details')
     }
 
-    if (files.length > 0) {
+    if (files && files.length > 0) {
       const responseUrls: string[] = []
       this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
         next: (response: any) => {

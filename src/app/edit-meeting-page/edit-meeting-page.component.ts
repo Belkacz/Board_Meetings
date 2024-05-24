@@ -34,7 +34,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public invitedToEdited: Guest[] | null = null;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private MapListsService: MapListsService
+    private route: ActivatedRoute, private dataService: MapListsService
   ) {
 
     const params = this.route.snapshot.params;
@@ -42,7 +42,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       this.editedMeetingId = parseInt(params['id'], 10);
     }
 
-    this.MapListsService.actualList$.subscribe(meetings => {
+    this.dataService.actualList$.subscribe(meetings => {
       meetings.forEach(element => {
         if (element.id === this.editedMeetingId) {
           this.editedMeeting = element;
@@ -145,32 +145,72 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
     const files = this.newMeetingComponent.addedDocuments.value;
 
-    if (files.length > 0) {
-      const responseUrls: string[] = []
-      this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
-        next: (response: any) => {
-          console.log("Response from FastApi:", response);
-          response.file_urls.forEach((url: string) => {
-            const fullUrl = `${urls.protocolBase}${urls.localFastApi}${url}}`;
-            responseUrls.push(fullUrl);
-            
-          });
-          // this.combinedData.addedDocuments = responseUrls;
-        },
-        error: error => {
-          console.error("Error:", error);
-        }
-      });
+    if (!this.combinedData.agenda?.name) {
+      this.combinedData.agenda = null;
+    }
+
+    if (this.combinedData.meetingType === "") {
+      alert("meeting type cannot be empty")
+    } else if (this.combinedData.meetingName === "") {
+      alert("meeting name cannot be empty")
+    } else if ((!this.newMeetingComponent.dateStartControl || !this.newMeetingComponent.dateEndControl)) {
+      alert("You need to chose date")
+    } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
+      alert("You need to provide a location or choose an online option");
+    } else {
+      alert('Save And Publish Placeholder, open console for more details')
     }
 
     if (this.editedMeeting) {
       this.combinedData = { ...this.combinedData, id: this.editedMeeting.id }
-      this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
-    } else {
-      this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
+      if (files && files.length > 0) {
+        const responseUrls: string[] = []
+        this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
+          next: (response: any) => {
+            console.log("Response from FastApi:", response);
+            response.file_urls.forEach((url: string) => {
+              const fullUrl = `${url}`;
+              responseUrls.push(fullUrl);
+            });
+            this.combinedData['attachedDocuments'] = this.dataService.createDocumentsData(responseUrls);
+            this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
+          },
+          error: error => {
+            console.error("Error:", error);
+          }
+        });
+      } else {
+        this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
+      }
     }
+    // const files = this.newMeetingComponent.addedDocuments.value;
 
-    console.log(this.combinedData.addedDocuments)
+    // if (files.length > 0) {
+    //   const responseUrls: string[] = []
+    //   this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
+    //     next: (response: any) => {
+    //       console.log("Response from FastApi:", response);
+    //       response.file_urls.forEach((url: string) => {
+    //         const fullUrl = `${urls.protocolBase}${urls.localFastApi}${url}}`;
+    //         responseUrls.push(fullUrl);
+
+    //       });
+    //       // this.combinedData.addedDocuments = responseUrls;
+    //     },
+    //     error: error => {
+    //       console.error("Error:", error);
+    //     }
+    //   });
+    // }
+
+    // if (this.editedMeeting) {
+    //   this.combinedData = { ...this.combinedData, id: this.editedMeeting.id }
+    //   this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
+    // } else {
+    //   this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
+    // }
+
+    // console.log(this.combinedData.addedDocuments)
     // if (this.combinedData.meetingType === "") {
     //   alert("meeting type cannot be empty")
     // } else if (this.combinedData.meetingName === "") {
@@ -182,9 +222,9 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     // } else {
     //   alert('Save And Publish Placeholder, open console for more details')
     // }
-      // console.log(this.combinedData)
+    // console.log(this.combinedData)
 
-    
+
   }
 
   public saveTasksList(tasksList: Task[]): void {

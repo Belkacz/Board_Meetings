@@ -44,17 +44,13 @@ if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
 @app.post("/upload-files/")
 async def create_upload_files(files: List[UploadFile] = File(...)):
-
     file_urls = []
     for file in files:
-        
         filename = f"{uuid4()}${file.filename}"
         file_path = os.path.join(UPLOAD_DIRECTORY, filename)
-        
-        with open(file_path, "wb") as f:
+        with open(file_path, "wb") as newFile:
             content = await file.read()
-            f.write(content) 
-        
+            newFile.write(content) 
         file_urls.append(f"/files/{filename}")
     return {"file_urls": file_urls}
 
@@ -81,6 +77,13 @@ async def add_meeting(meeting: BaseMeeting):
     print(new_meeting)
     return {"message": "new-meeting"}
 
+def filesNotInOriginal(editedMeetingsDocs: list[str], originalDocs: list[str]) -> list[str]:
+    notInEditedMeeting: list[str] = []
+    for doc in originalDocs:
+        if doc not in editedMeetingsDocs:
+            notInEditedMeeting.append(doc)
+    return notInEditedMeeting
+
 @app.put("/update-meeting")
 async def update_meeting(edited_meeting: ExistedMeeting):
     updated_meeting = ExistedMeeting(
@@ -93,11 +96,13 @@ async def update_meeting(edited_meeting: ExistedMeeting):
         online_address=edited_meeting.online_address,
         guests=edited_meeting.guests,
         tasksList=edited_meeting.tasksList,
-        agenda=edited_meeting.agenda
+        agenda=edited_meeting.agenda,
+        documents=edited_meeting.documents
     )
 
     for index, meeting in enumerate(meetings):
         if(meeting.id == updated_meeting.id):
+            deleteFiles(filesNotInOriginal(updated_meeting.documents, meeting.documents))
             meetings[index] = updated_meeting
 
     return {"edited meeting": "done"}
