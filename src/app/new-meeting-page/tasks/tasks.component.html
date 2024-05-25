@@ -3,24 +3,29 @@
     <h2>
       Tasks
     </h2>
-    <button mat-stroked-button class="near-button-container gap-0" (click)="newTask('New Task', ['name'])">New Task</button>
+    <button mat-stroked-button class="near-button-container gap-0"
+      (click)="newTask('New Task', ['Name', 'Description'])">New Task</button>
   </div>
   <div class="div-list">
-    <ul>
-      <li *ngFor="let task of tasksList; let i = index" class="list-item margin-left-minus-40px">
-        <div class="flex-box-space">
-          <span class="task-name">{{ task.name }}</span>
-          <div class="near-button-container gap-0 margin-left-50prc">
-            <button mat-icon-button matSuffix (click)="editTask('Edit Task', task , ['name'])">
-              <mat-icon>edit_note</mat-icon>
-            </button>
-            <button mat-icon-button matSuffix (click)="clearInput(i)">
-              <mat-icon>clear</mat-icon>
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
+    <!-- <ul> -->
+    <mat-expansion-panel *ngFor="let task of tasksList; let i = index" (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title style="flex-grow: 2">
+          {{ task.name }}
+        </mat-panel-title>
+        <mat-panel-description>
+          Description: {{panelOpenState ? 'visible' : 'hidden'}}
+        </mat-panel-description>
+        <button mat-icon-button matSuffix (click)="editTask('Edit Task', task , ['Name', 'Description'])">
+          <mat-icon>edit_note</mat-icon>
+        </button>
+        <button mat-icon-button matSuffix (click)="clearInput(i)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-expansion-panel-header>
+      <p class="lower-list-items" *ngIf="task.description" class="caption"> {{ task.description }} </p>
+      <p class="lower-list-items" *ngIf="!task.description" class="caption"> No task description </p>
+    </mat-expansion-panel>
   </div>
-  <!-- <app-dialog-form *ngIf="showTaskMenu" [title]="dialogTitle" [fields]="['Task name: ']"></app-dialog-form> -->
 </div>

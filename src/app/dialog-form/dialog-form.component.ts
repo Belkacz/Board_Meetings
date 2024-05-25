@@ -8,15 +8,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-form.component.css']
 })
 export class DialogFormComponent {
-  @Input() title: string;
-  @Input() fields: string[];
   @Output() formSubmit: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<DialogFormComponent>) {
-    //@Inject(MAT_DIALOG_DATA) public title: string
-    this.title = 'title';
-    this.fields = [];
+  constructor(@Inject(MAT_DIALOG_DATA) public title: string, @Inject(MAT_DIALOG_DATA) public fields: string[],
+    private fb: FormBuilder) {
     this.form = new FormGroup({})
   }
 
@@ -27,15 +23,4 @@ export class DialogFormComponent {
     }
   }
 
-  SaveDialog() {
-    if (this.form.valid) {
-      this.formSubmit.emit(this.form.value);
-      this.dialogRef.close()
-      //this.dialogRef.close(this.form.value);
-    }
-  }
-
-  close(): void {
-    this.dialogRef.close();
-  }
 }

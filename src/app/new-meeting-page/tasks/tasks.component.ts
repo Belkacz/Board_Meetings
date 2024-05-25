@@ -18,7 +18,9 @@ export class TasksComponent implements OnInit, OnDestroy {
   public showTaskMenu: boolean;
   public dialogTitle: string;
   private dialogEditSub!: Subscription;
-  private newTaskSub!: Subscription
+  private newTaskSubscription!: Subscription
+
+  public panelOpenState = false;
 
   constructor(public dialog: MatDialog) {
     this.tasksList = [];
@@ -27,72 +29,55 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(!this.initialTasks){
+    if (!this.initialTasks) {
       this.tasksList = [{ id: 1, name: "New task name 1" }, { id: 2, name: "New task name 2" }]
     } else {
       this.tasksList = this.initialTasks
     }
-    
+
     this.sendTasksList();
   }
 
-  // addTask() {
-  //   const lastNumberRegex = /\d+$/;
-  //   let maxNumber = 0;
-  //   this.tasksList.forEach(task => {
-  //     if (task !== '' && task) {
-  //       const taskNumber = task.match(lastNumberRegex);
-  //       if (taskNumber && parseInt(taskNumber[0], 10) > maxNumber) {
-  //         maxNumber = (parseInt(taskNumber[0], 10));
-  //       }
-  //     }
-  //   });
-  //   maxNumber = maxNumber + 1;
-  //   this.tasksList.push("New task name " + maxNumber)
-  //   console.log('Add task placeholder')
-  //   alert("add task placeholder");
-  //   this.sendTasksList();
-  // }
-
-
   newTask(title: string, fields: string[]): void {
-    this.showTaskMenu = !this.showTaskMenu;
     const dialogRef = this.dialog.open(DialogFormComponent)
-    //const dialogRef = this.dialog.open(DialogFormComponent, { title: title })
     dialogRef.componentInstance.title = title
-    //dialogRef.componentInstance.fields = [title, 'priority', 'time']
-    fields.forEach(field => {
-      dialogRef.componentInstance.fields = [field]
-    });
-    this.newTaskSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: newTaskVale) => {
-      const lastTask = this.tasksList[this.tasksList.length - 1];
-      let newTask: Task = { id: 0, name: formValue.name };
-      if (lastTask != undefined) {
-        newTask.id = lastTask.id + 1;
-      } else {
-        newTask.id = 1;
+    dialogRef.componentInstance.fields = fields
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result)
+        const lastTask = this.tasksList[this.tasksList.length - 1];
+        let newTask: Task = { id: 0, name: result.Name};
+        if (lastTask != undefined) {
+          newTask.id = lastTask.id + 1;
+        } else {
+          newTask.id = 1;
+        }
+        if(result.Description){
+          newTask = { ...newTask , description: result.Description};
+        }
+        this.tasksList.push(newTask)
+        this.sendTasksList();
       }
-      this.tasksList.push(newTask)
-      this.sendTasksList();
-    });
+    })
   }
 
   editTask(title: string, task: Task, fields: string[]): void {
     this.showTaskMenu = !this.showTaskMenu;
-    const dialogRef = this.dialog.open(DialogFormComponent)
-    dialogRef.componentInstance.title = title
-    fields.forEach(field => {
-      dialogRef.componentInstance.fields = [field]
+    const dialogRef = this.dialog.open(DialogFormComponent);
+    dialogRef.componentInstance.title = title;
+    dialogRef.componentInstance.fields = fields;
+    this.dialogEditSub = dialogRef.afterClosed().subscribe(result => {
+      task.name = result.Name;
+      if (result.Description) {
+        task.description = result.Description;
+      }
     });
-    this.dialogEditSub = dialogRef.componentInstance.formSubmit.subscribe((formValue: newTaskVale) => {
-      task.name = formValue.name
-    });
-
   }
 
   ngOnDestroy() {
-    if (this.newTaskSub) {
-      this.newTaskSub.unsubscribe();
+    if (this.newTaskSubscription) {
+      this.newTaskSubscription.unsubscribe();
     }
     if (this.dialogEditSub) {
       this.dialogEditSub.unsubscribe();
