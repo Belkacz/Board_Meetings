@@ -1,9 +1,0 @@
-Lorem Ipsum
-"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
-"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar nisi vel leo varius, a rhoncus orci auctor. Vivamus tincidunt, erat imperdiet condimentum porta, massa justo accumsan nisl, tincidunt molestie lacus mi ut augue. Praesent condimentum commodo vulputate. Nullam nec eros purus. Vestibulum sagittis scelerisque ullamcorper. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus quis molestie arcu, congue aliquet elit. Donec eget iaculis ipsum. Integer sed lorem ornare justo pretium malesuada ut at nisi. Integer vitae lacinia tortor.
-
-Nulla interdum turpis in bibendum dignissim. Nunc sit amet nulla in neque lobortis consequat quis quis odio. Pellentesque rutrum eros dignissim dolor dapibus vulputate. Duis quis metus in odio porttitor blandit. Praesent vulputate convallis arcu id efficitur. Sed sit amet fringilla lectus. Vestibulum nec bibendum dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla lectus mi, faucibus ultrices justo vel, semper tempor nisl. Morbi vel quam faucibus, tincidunt lacus sed, ultrices mi. Nunc urna augue, sodales vel blandit eu, maximus ac eros. Sed quis orci eros. Morbi eu convallis erat. Morbi vehicula porta neque.
-
-Nullam et eros fermentum, mattis urna eget, blandit urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Quisque ullamcorper fermentum accumsan. Mauris faucibus ante nec ante fringilla sagittis. Maecenas euismod ligula purus, eget posuere tellus dictum vel. Maecenas vel eleifend neque, et pretium ex. Sed vel dui a arcu congue convallis. 
