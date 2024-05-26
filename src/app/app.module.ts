@@ -33,7 +33,7 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { MapListsService } from './services/dataService.service';
+import { dataMapService } from './services/dataService.service';
 import { DialogSelectComponent } from './dialog-select/dialog-select.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
@@ -88,7 +88,7 @@ import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.
     MatCardModule,
     MatRadioModule
   ],
-  providers: [ MapListsService ],
+  providers: [ dataMapService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

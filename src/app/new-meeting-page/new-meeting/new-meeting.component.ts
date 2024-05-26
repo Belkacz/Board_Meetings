@@ -11,7 +11,7 @@ import { DialogListComponent } from 'src/app/dialog-list/dialog-list.component';
 import { DialogSelectComponent } from 'src/app/dialog-select/dialog-select.component';
 import { Subscription } from 'rxjs';
 import { RestService } from 'src/app/services/restService.service';
-import { MapListsService } from 'src/app/services/dataService.service';
+import { dataMapService } from 'src/app/services/dataService.service';
 
 @Component({
   selector: 'app-new-meeting',
@@ -51,7 +51,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     public fileDownloadService: FileDownloadService,
     public dialog: MatDialog,
     private restService: RestService,
-    private mapListsService: MapListsService,
+    private dataMapService: dataMapService,
     private renderer: Renderer2
   ) {
     super();
@@ -129,7 +129,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETAGENDAS)
       .subscribe({
         next: (response: any) => {
-          this.agendas = this.mapListsService.mapAgendas(response);
+          this.agendas = this.dataMapService.mapAgendas(response);
         },
         error: (error: any) => {
           console.error("Error:", error);

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument } from '../shared/interfaces';
 import { urls } from '../shared/enums';
+import { RestService } from './restService.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +21,30 @@ export class InviteService {
   }
 }
 
-export class MapListsService {
-  actualList$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
-  // actulaAgenads$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
+@Injectable({
+  providedIn: 'root'
+})
+export class dataMapService {
+  constructor(private restService: RestService) { }
+  private actualMeetingsList$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
+  private meetingGetError: Error | null = null;
 
   public setGlobalMeetingsList(meetingsList: ExistedBoardMeetings[]) {
-    this.actualList$.next(meetingsList);
+    this.actualMeetingsList$.next(meetingsList);
   }
+
+  public getGlobalMeetingsList(): Observable<ExistedBoardMeetings[]> {
+    return this.actualMeetingsList$.asObservable();
+  }
+
+  public getGlobalMeetingsErrorMessage(): string | null {
+    if(this.meetingGetError){
+      return "Server communication error";
+    } else {
+      return null;
+    }
+  }
+
 
   public mapAgendas = (response: Agenda[]): Agenda[] => {
     const agendas: Agenda[] = [];
@@ -102,8 +120,22 @@ export class MapListsService {
     return meetingsList;
   }
 
+  public getMeetingsService(): Subscription {
+    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
+      .subscribe({
+        next: (response: any) => {
+          let meetingsList = this.mapMeetings(response);
+          this.setGlobalMeetingsList(meetingsList);
+        },
+        error: (error: any) => {
+          console.error("Error:", error);
+        }
+      });
+    return result;
+  }
+
   public createDocumentsData = (filesUrls: Array<string>): Array<AttachedDocument> => {
-    const attachedDocuments:Array<AttachedDocument> = [];
+    const attachedDocuments: Array<AttachedDocument> = [];
     filesUrls.forEach(url => {
       const newAttachedDocument: AttachedDocument = {
         fileName: url.slice(7),
@@ -112,6 +144,6 @@ export class MapListsService {
       }
       attachedDocuments.push(newAttachedDocument);
     });
-  return attachedDocuments;
+    return attachedDocuments;
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { dataMapService } from './services/dataService.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Board-Meetings';
+
+  constructor(private dataService: dataMapService){
+    this.dataService.getMeetingsService();
+  }
 }

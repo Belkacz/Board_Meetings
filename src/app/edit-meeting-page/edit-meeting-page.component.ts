@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
-import { InviteService, MapListsService } from '../services/dataService.service';
+import { InviteService, dataMapService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -34,7 +34,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public invitedToEdited: Guest[] | null = null;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private dataService: MapListsService
+    private route: ActivatedRoute, private dataService: dataMapService
   ) {
 
     const params = this.route.snapshot.params;
@@ -42,7 +42,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       this.editedMeetingId = parseInt(params['id'], 10);
     }
 
-    this.dataService.actualList$.subscribe(meetings => {
+    this.dataService.getGlobalMeetingsList().subscribe(meetings => {
       meetings.forEach(element => {
         if (element.id === this.editedMeetingId) {
           this.editedMeeting = element;

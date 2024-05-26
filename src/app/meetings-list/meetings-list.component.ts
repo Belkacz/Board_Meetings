@@ -4,7 +4,7 @@ import { urls } from '../shared/enums';
 import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { MapListsService } from '../services/dataService.service'
+import { dataMapService } from '../services/dataService.service'
 
 @Component({
   selector: 'app-meetings-list',
@@ -19,90 +19,21 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
 
-  constructor(private restService: RestService, private MapListsService: MapListsService, private _snackBar: MatSnackBar) {
+  constructor(private dataService: dataMapService, private restService: RestService, private _snackBar: MatSnackBar) {
     this.meetingsList = [];
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMeetings();
-  }
-
-  private getMeetings(): Subscription {
-    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
-      .subscribe({
-        next: (response: any) => {
-          this.meetingsList = this.MapListsService.mapMeetings(response);
+    this.subscription = this.dataService.getGlobalMeetingsList().subscribe(
+      (meetings: ExistedBoardMeetings[]) => {
+        this.meetingsList = meetings;
           if(this.meetingsList.length > 0){
             this.meetingsNotEmpty =  true;
           }
-        },
-        error: (error: any) => {
-          console.error("Error:", error);
-          this.errorMessage = "Server communication error";
-        }
-      });
-    return result;
+          this.errorMessage = this.dataService.getGlobalMeetingsErrorMessage();
+      })
+      this.dataService.getMeetingsService();
   }
-
-  // private mapMeetings = (response: ExistedBoardMeetings[]) => {
-  //   this.meetingsList = [];
-  //   if (response.length > 0) {
-  //     response.forEach((meeting: any) => {
-
-  //       const newGuests: Array<Guest> = []
-  //       if(meeting.guests){
-  //         meeting.guests.forEach((guest: Guest) => {
-  //           const newGuest: Guest = {
-  //             id: guest.id,
-  //             name: guest.name,
-  //             surname: guest.surname,
-  //             jobPosition: guest.jobPosition,
-  //           }
-  //           newGuests.push(newGuest);
-  //         })
-  //       }
-
-  //       const newTasks: Array<Task> = []
-  //       if(meeting.tasksList){
-  //         meeting.tasksList.forEach((task: Task) => {
-  //           const newTask: Task = {
-  //             id: task.id,
-  //             name: task.name,
-  //             description: task.description,
-  //             priority: task.priority,
-  //           }
-  //           newTasks.push(newTask);
-  //         })
-  //       }
-  //       const newAgenda = null;
-  //       if(meeting.agenda){
-  //         const newAgenda: Agenda = {
-  //           id: meeting.agenda.id,
-  //           name: meeting.agenda.name,
-  //           list: meeting.agenda.list,
-  //         }
-  //       }
- 
-  //       const newMeeting: ExistedBoardMeetings = {
-  //         id: meeting.meeting_id,
-  //         meetingType: meeting.meeting_type,
-  //         meetingName: meeting.meeting_name,
-  //         meetingAddress: meeting.meeting_address,
-  //         onlineAddress: meeting.online_address,
-  //         dateStart: meeting.start_date,
-  //         dateEnd: meeting.end_date,
-  //         chooseFile: null,
-  //         addedDocuments: null,
-  //         guests: newGuests,
-  //         tasksList: newTasks,
-  //         agenda: newAgenda
-  //       }
-  //       this.meetingsList.push(newMeeting);
-  //     });
-  //   }
-  //   this.meetingsNotEmpty = true;
-  //   this.MapListsService.setGlobalMeetingsList(this.meetingsList)
-  // }
 
   deleteMeeting(id: number) {
     if (id === null) {
@@ -112,7 +43,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
     } else {
       this.restService.deleteMeeting(id).subscribe({
         next: () => {
-          this.subscription = this.getMeetings();
+          this.dataService.getMeetingsService();
           this._snackBar.open("Deleted object of id" + id, 'Close', { duration: 3000 });
         },
         error: (error: any) => {
