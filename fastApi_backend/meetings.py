@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from enum import Enum
+from pydantic import BaseModel, constr
 from datetime import datetime
 
 class Guest(BaseModel):
@@ -17,9 +18,14 @@ class Agenda(BaseModel):
     name: str | None = None
     order: list[str] | None = None
 
+class MeetingType(Enum):
+    BOARDMEETINGS = "boardMeeting"
+    GENERALASSEMBLY = "generalAssembly"
+    OTHER = "other"
+
 class BaseMeeting(BaseModel):
-    meeting_type: str
-    meeting_name: str
+    meeting_type: MeetingType
+    meeting_name: constr(min_length=1)
     start_date: datetime
     end_date: datetime
     meeting_address: str | None = None

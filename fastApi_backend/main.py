@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Form, File, UploadFile
+from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,6 +42,7 @@ async def get_agendas_list():
 UPLOAD_DIRECTORY = "meetings_docs"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
+
 @app.post("/upload-files/")
 async def create_upload_files(files: List[UploadFile] = File(...)):
     file_urls = []
@@ -55,6 +56,13 @@ async def create_upload_files(files: List[UploadFile] = File(...)):
     return {"file_urls": file_urls}
 
 app.mount("/files", StaticFiles(directory=UPLOAD_DIRECTORY), name="files")
+
+
+def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
+    if (meeting_address and len(meeting_address) > 0) or (online_address and len(online_address) > 0):
+        return True
+    else:
+        return False
 
 @app.post("/new-meeting")
 async def add_meeting(meeting: BaseMeeting):
@@ -73,9 +81,10 @@ async def add_meeting(meeting: BaseMeeting):
         agenda=meeting.agenda,
         documents=meeting.documents
     )
+    if(not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address)):
+        raise HTTPException(status_code=404, detail="Meeting need at least one meeting address or online address")
     meetings.append(new_meeting)
-    print(new_meeting)
-    return {"message": "new-meeting"}
+    return {"message": f"Created new meeting with id# {new_meeting_id}"}
 
 def filesNotInOriginal(editedMeetingsDocs: list[str], originalDocs: list[str]) -> list[str]:
     notInEditedMeeting: list[str] = []
@@ -99,13 +108,20 @@ async def update_meeting(edited_meeting: ExistedMeeting):
         agenda=edited_meeting.agenda,
         documents=edited_meeting.documents
     )
-
+    if(not atLeastOneAddress(updated_meeting.meeting_address, updated_meeting.online_address)):
+        raise HTTPException(status_code=404, detail="Meeting need at least one meeting address or online address")
+    meetingUpdated = False
     for index, meeting in enumerate(meetings):
         if(meeting.id == updated_meeting.id):
             deleteFiles(filesNotInOriginal(updated_meeting.documents, meeting.documents))
             meetings[index] = updated_meeting
+            meetingUpdated = True
+    if(meetingUpdated == False):
+        print(edited_meeting.id)
+        raise HTTPException(status_code=404, detail=f"Meeting with id #{edited_meeting.id} not found")
 
-    return {"edited meeting": "done"}
+    return {"edited meeting": f"updated meeting with id #{updated_meeting.id}"}
+
 
 
 @app.delete("/delete-meeting/{meeting_id}")
@@ -118,7 +134,6 @@ async def delete_meetings(meeting_id: int):
             meetings.remove(meeting)
 
 def deleteFiles(files: list[str]):
-    print(files)
     for url in files:
         filename = url[7:]
         file_path = os.path.join(UPLOAD_DIRECTORY, filename)
