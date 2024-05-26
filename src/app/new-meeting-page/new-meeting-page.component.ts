@@ -101,7 +101,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
 
-    const files = this.newMeetingComponent.addedDocuments.value;
+    const files = this.newMeetingComponent.form.get('addedDocuments')?.value;
 
     if (!this.combinedData.agenda?.name) {
       this.combinedData.agenda = null;

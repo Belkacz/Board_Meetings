@@ -140,9 +140,9 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
-    this.combinedData.addedDocuments = this.newMeetingComponent.addedDocuments.value;
+    this.combinedData.addedDocuments = this.newMeetingComponent.form.get('addedDocuments')?.value;
 
-    const files = this.newMeetingComponent.addedDocuments.value;
+    const files = this.newMeetingComponent.form.get('addedDocuments')?.value;
 
     if (!this.combinedData.agenda?.name) {
       this.combinedData.agenda = null;

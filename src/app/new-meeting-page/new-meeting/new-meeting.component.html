@@ -60,7 +60,7 @@
             class="minus-10-margin">Location</mat-checkbox>
           <br>
           <mat-form-field class="wider-element wider-container wider-box lower-input">
-            <input matInput [formControl]="meetingAddress" placeholder="Address..." />
+            <input matInput formControlName="meetingAddress" placeholder="Address..." />
           </mat-form-field>
         </section>
         <h3>Online meeting</h3>
@@ -69,7 +69,7 @@
             meeting</mat-checkbox>
           <br>
           <mat-form-field class="wider-element wider-container wider-box lower-input">
-            <input matInput [formControl]="onlineAddress" placeholder="Paste meeting link ..." value="" />
+            <input matInput formControlName="onlineAddress" placeholder="Paste meeting link ..." value="" />
           </mat-form-field>
         </section>
         <h3>Hybrid: Online and stationary</h3>
