@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 import ssl
 
-from meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
+from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
 
 app = FastAPI()
 
