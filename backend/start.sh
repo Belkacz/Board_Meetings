@@ -8,13 +8,13 @@ SSL_PASSWORD="test1"
 
 if [ ! -f "$SSL_KEYFILE" ] || [ ! -f "$SSL_CERTFILE" ]; then
     echo "Uruchamianie w tybie HTTP"
-    uvicorn main:app
+    uvicorn fastApi_backend.main:app
     exit 1
 else
     echo "Uruchamianie w trybie HTTPS"
-    uvicorn main:app --ssl-keyfile "$SSL_KEYFILE" --ssl-certfile "$SSL_CERTFILE" --ssl-keyfile-password="$SSL_PASSWORD" || {
+    uvicorn fastApi_backend.main:app --ssl-keyfile "$SSL_KEYFILE" --ssl-certfile "$SSL_CERTFILE" --ssl-keyfile-password="$SSL_PASSWORD" || {
         echo -e "\n Niepoprawne hasło, wprowadź hasło ręcznie"
-        uvicorn main:app --ssl-keyfile "$SSL_KEYFILE" --ssl-certfile "$SSL_CERTFILE"
+        uvicorn fastApi_backend.main:app --ssl-keyfile "$SSL_KEYFILE" --ssl-certfile "$SSL_CERTFILE"
     }
 fi
 

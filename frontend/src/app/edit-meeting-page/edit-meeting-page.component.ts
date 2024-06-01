@@ -26,7 +26,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
   private guestsList: GuestInvited[];
   private tasksList: Task[];
-  //private agenda: Agenda;
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
   public editedMeeting: ExistedBoardMeetings | null = null;
@@ -36,35 +35,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private route: ActivatedRoute, private dataService: dataMapService
   ) {
-
-    const params = this.route.snapshot.params;
-    if (params['id']) {
-      this.editedMeetingId = parseInt(params['id'], 10);
-    }
-
-    this.dataService.getGlobalMeetingsList().subscribe(meetings => {
-      meetings.forEach(element => {
-        if (element.id === this.editedMeetingId) {
-          this.editedMeeting = element;
-        }
-      });
-    });
-
-    if (this.editedMeeting && this.editedMeeting.guests) {
-      const editedInvitedGuests: GuestInvited[] = [];
-      this.editedMeeting.guests.forEach(guest => {
-        const invitedGuest: GuestInvited = {
-          id: guest.id,
-          name: guest.name,
-          surname: guest.surname,
-          jobPosition: guest.jobPosition,
-          invited: true
-        }
-        editedInvitedGuests.push(invitedGuest);
-      });
-      this.inviteService.updateGuestsList(editedInvitedGuests)
-    }
-
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
@@ -85,26 +55,57 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.draft = this.combinedData;
 
     this.formDisabled = this.editedMeeting ? false : true;
+
   }
 
   ngOnInit() {
-    if (this.editedMeeting && this.editedMeeting.tasksList) {
-      this.editedTasks = this.editedMeeting.tasksList
-    }
-    if (this.editedMeeting && this.editedMeeting.guests) {
-      this.invitedToEdited = this.editedMeeting.guests
-    }
+    this.updateDataEditedMeeting();
+  }
 
-    this.inviteService.inviteList$.subscribe(invited => {
-      this.guestsList = invited;
-    })
+  private updateDataEditedMeeting(): void {
+    const params = this.route.snapshot.params;
+    if (params['id']) {
+      this.editedMeetingId = parseInt(params['id'], 10);
+    }
+    this.dataService.getGlobalMeetingsList().subscribe(meetings => {
+      meetings.forEach(element => {
+        if (element.id === this.editedMeetingId) {
+          this.editedMeeting = element;
+        }
+      });
+      if (this.editedMeeting && this.editedMeeting.guests) {
+        const editedInvitedGuests: GuestInvited[] = [];
+        this.editedMeeting.guests.forEach(guest => {
+          const invitedGuest: GuestInvited = {
+            id: guest.id,
+            name: guest.name,
+            surname: guest.surname,
+            jobPosition: guest.jobPosition,
+            invited: true
+          }
+          editedInvitedGuests.push(invitedGuest);
+        });
+        this.inviteService.updateGuestsList(editedInvitedGuests)
+      }
 
+      if (this.editedMeeting && this.editedMeeting.tasksList) {
+        this.editedTasks = this.editedMeeting.tasksList
+      }
+      if (this.editedMeeting && this.editedMeeting.guests) {
+        this.invitedToEdited = this.editedMeeting.guests
+      }
+
+      this.inviteService.inviteList$.subscribe(invited => {
+        this.guestsList = invited;
+      })
+    });
   }
 
   ngAfterViewInit() {
     this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
       this.formDisabled = status !== 'VALID';
     });
+
   }
 
   public saveDraft(): void {
