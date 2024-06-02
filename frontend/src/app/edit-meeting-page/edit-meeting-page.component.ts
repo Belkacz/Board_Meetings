@@ -31,6 +31,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public editedMeeting: ExistedBoardMeetings | null = null;
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
+  public foundMeeting = false;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private route: ActivatedRoute, private dataService: dataMapService
@@ -67,10 +68,12 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     if (params['id']) {
       this.editedMeetingId = parseInt(params['id'], 10);
     }
+    
     this.dataService.getGlobalMeetingsList().subscribe(meetings => {
       meetings.forEach(element => {
         if (element.id === this.editedMeetingId) {
           this.editedMeeting = element;
+          this.foundMeeting = true;
         }
       });
       if (this.editedMeeting && this.editedMeeting.guests) {
@@ -102,10 +105,11 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
-      this.formDisabled = status !== 'VALID';
-    });
-
+    if(this.newMeetingComponent){
+      this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
+        this.formDisabled = status !== 'VALID';
+      });
+    }
   }
 
   public saveDraft(): void {

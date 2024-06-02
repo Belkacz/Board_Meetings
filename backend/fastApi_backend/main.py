@@ -39,7 +39,7 @@ async def get_agendas_list():
     print("agendas")
     return agendas
 
-UPLOAD_DIRECTORY = "meetings_docs"
+UPLOAD_DIRECTORY = "fastApi_backend/meetings_docs"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
 

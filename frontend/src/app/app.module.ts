@@ -38,6 +38,8 @@ import { DialogSelectComponent } from './dialog-select/dialog-select.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
 import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 
@@ -57,7 +59,9 @@ import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.
     DialogListComponent,
     MeetingsListComponent,
     DialogSelectComponent,
-    EditMeetingPageComponent
+    EditMeetingPageComponent,
+    PageNotFoundComponent,
+    FooterComponent
   ],
   imports: [
     ReactiveFormsModule,

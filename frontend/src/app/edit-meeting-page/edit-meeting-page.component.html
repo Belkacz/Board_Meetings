@@ -2,14 +2,20 @@
     <div class="padding-left-30px">
         <button mat-icon-button matSuffix routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
     </div>
-    <h2>Edit Meeting № {{editedMeetingId}}</h2>
+    <h2 *ngIf="foundMeeting">Edit Meeting № {{editedMeetingId}}</h2>
+    <h2 *ngIf="!foundMeeting">Not found meeting with id №{{editedMeetingId}}</h2>
     <div class="near-button-container gap-20px">
         <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">Save as draft</button>
         <button mat-stroked-button (click)="saveAndPublish()">Save & Publish</button>
     </div>
 </div>
 <div class="separator-horizontal margin-top-10px" style></div>
-<div class="main-container">
+<div *ngIf="!foundMeeting" class="centered-top-container padding-20px">
+    <mat-icon>warning</mat-icon>
+    <h2>The meeting with the specified ID cannot be found</h2>
+</div>
+<div *ngIf="foundMeeting">
+    <div class="main-container">
     <div class="main-menu">
         <app-new-meeting [editedMeeting]="editedMeeting"></app-new-meeting>
     </div>
@@ -19,3 +25,5 @@
         <app-invites [invitedToEdited]="invitedToEdited"></app-invites>
     </div>
 </div>
+</div>
+

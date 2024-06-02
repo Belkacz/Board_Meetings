@@ -7,6 +7,7 @@ import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { AboutComponent } from '../about/about.component';
 import { MeetingsListComponent } from '../meetings-list/meetings-list.component';
 import { EditMeetingPageComponent } from '../edit-meeting-page/edit-meeting-page.component';
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -18,9 +19,9 @@ const routes: Routes = [
     component: MainMenuComponent,
     children: [
       { path: 'about', component: AboutComponent, outlet: 'bottomOutlet' },
-      // { path: 'meetings-list', component: MeetingsListComponent, outlet: 'bottomOutlet' }
     ]
-  }
+  },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 
