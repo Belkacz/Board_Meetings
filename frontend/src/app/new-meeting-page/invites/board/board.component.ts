@@ -78,10 +78,6 @@ export class BoardComponent {
     this.emitGestList();
   }
 
-  // resetList() {
-  //   this.searchedList = this.guestsList;
-  // }
-
   private emitGestList() {
     this.inviteService.updateGuestsList(this.guestsList)
   }

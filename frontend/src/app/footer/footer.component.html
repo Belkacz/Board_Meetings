@@ -1,8 +1,27 @@
 
 <div class="foot-container">
-    <div class="footer">
-        <p>Project: Board Meetings</p>
-        <p>Author: Łukasz Belka</p>
-        <p>Index Number: 156162</p>     
+    <div *ngIf="!projectInfoError">
+        <div class="footer">
+            <div class="grid-container">
+                <div class="grid-item-left">
+                    <p><strong>Application Info</strong></p>
+                    <p><strong>Project:</strong> {{ projectInfo?.projectName }}</p>
+                    <p><strong>Project Data:</strong> {{ projectInfo?.projectVersion }}</p>
+                </div>
+                <div class="grid-item-right">
+                    <p><strong>Author</strong></p>
+                    <p><strong>Name:</strong> {{ projectInfo?.name }}</p>
+                    <p><strong>Surname:</strong> {{ projectInfo?.surname }}</p>
+                    <p><strong>Index Number:</strong> {{ projectInfo?.indexNumber }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="projectInfoError">
+        <div class="error-footer">
+            <mat-icon>warning</mat-icon>
+            <p>Error: {{ projectInfoError }}</p>
+        </div>
     </div>
 </div>

@@ -16,6 +16,21 @@ export interface Guest {
     jobPosition: string | null;
 }
 
+export interface IncomingGuest {
+    id: number;
+    name: string;
+    surname: string;
+    job_position: string | null;
+}
+
+export interface ProjectData {
+    name: string;
+    surname: string;
+    projectName: string;
+    projectVersion: string;
+    indexNumber: number
+}
+
 export interface GuestInvited extends Guest {
     invited: boolean;
 }

@@ -6,7 +6,7 @@ class Guest(BaseModel):
     id: int
     name: str
     surname: str
-    jobPosition: str
+    job_position: str
 
 class Task(BaseModel):
     id: int
@@ -39,11 +39,11 @@ class ExistedMeeting(BaseMeeting):
     id: int | None = None
 
 guests = [
-    Guest(id=1, name="Wade", surname="Warner", jobPosition="Chair of the board"),
-    Guest(id=2, name="Floyd", surname="Miles", jobPosition="Board memeber"),
-    Guest(id=3, name="Guy", surname="Howkins", jobPosition="Board secretary"),
-    Guest(id=4, name="Darrell", surname="Steward", jobPosition="Board tresurer"),
-    Guest(id=5, name="Wade", surname="Warner2", jobPosition="dubler")
+    Guest(id=1, name="Wade", surname="Warner", job_position="Chair of the board"),
+    Guest(id=2, name="Floyd", surname="Miles", job_position="Board memeber"),
+    Guest(id=3, name="Guy", surname="Howkins", job_position="Board secretary"),
+    Guest(id=4, name="Darrell", surname="Steward", job_position="Board tresurer"),
+    Guest(id=5, name="Wade", surname="Warner2", job_position="dubler")
 ]
 
 agendas = [

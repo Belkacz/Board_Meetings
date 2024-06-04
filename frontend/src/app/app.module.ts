@@ -33,13 +33,14 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { dataMapService } from './services/dataService.service';
+import { dataService } from './services/dataService.service';
 import { DialogSelectComponent } from './dialog-select/dialog-select.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
 import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { FooterComponent } from './footer/footer.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 
@@ -90,9 +91,10 @@ import { FooterComponent } from './footer/footer.component';
     MatTableModule,
     MatExpansionModule,
     MatCardModule,
-    MatRadioModule
+    MatRadioModule,
+    MatGridListModule
   ],
-  providers: [ dataMapService ],
+  providers: [ dataService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

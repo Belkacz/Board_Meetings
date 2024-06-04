@@ -9,6 +9,7 @@ from uuid import uuid4
 import ssl
 
 from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
+from .projectInformation import projectInfo1, ProjectData, ProjectDataExternal
 
 app = FastAPI()
 
@@ -145,3 +146,15 @@ def deleteFiles(files: list[str]):
                 print(f"Error when deleting: {file_path}: {exception}")
         else:
             print(f"File not found at: {file_path}")
+
+
+@app.get("/get-project-info", response_model=ProjectDataExternal)
+async def get_project_info():
+    projectInfo = {
+        "name": projectInfo1.name,
+        "surname": projectInfo1.surname,
+        "projectName": projectInfo1.project_name,
+        "projectVersion": projectInfo1.project_version,
+        "indexNumber": projectInfo1.index_number
+    }
+    return projectInfo

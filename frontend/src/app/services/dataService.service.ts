@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument } from '../shared/interfaces';
+import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { RestService } from './restService.service';
 
@@ -24,7 +24,7 @@ export class InviteService {
 @Injectable({
   providedIn: 'root'
 })
-export class dataMapService {
+export class dataService {
   constructor(private restService: RestService) { }
   private actualMeetingsList$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
   private meetingGetError: Error | null = null;
@@ -43,6 +43,17 @@ export class dataMapService {
     } else {
       return null;
     }
+  }
+
+  public mapProjectData = (response: ProjectData): ProjectData => {
+    let projectData: ProjectData = {
+      name: response.name,
+      surname: response.surname,
+      projectName: response.projectName,
+      projectVersion: response.projectVersion,
+      indexNumber: response.indexNumber
+    };
+    return projectData;
   }
 
 
@@ -66,12 +77,12 @@ export class dataMapService {
 
         const newGuests: Array<Guest> = []
         if (meeting.guests) {
-          meeting.guests.forEach((guest: Guest) => {
+          meeting.guests.forEach((guest: IncomingGuest) => {
             const newGuest: Guest = {
               id: guest.id,
               name: guest.name,
               surname: guest.surname,
-              jobPosition: guest.jobPosition,
+              jobPosition: guest.job_position,
             }
             newGuests.push(newGuest);
           })

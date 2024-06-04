@@ -4,7 +4,7 @@ import { urls } from '../shared/enums';
 import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { dataMapService } from '../services/dataService.service'
+import { dataService } from '../services/dataService.service'
 
 @Component({
   selector: 'app-meetings-list',
@@ -19,7 +19,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
 
-  constructor(private dataService: dataMapService, private restService: RestService, private _snackBar: MatSnackBar) {
+  constructor(private dataService: dataService, private restService: RestService, private _snackBar: MatSnackBar) {
     this.meetingsList = [];
   }
 

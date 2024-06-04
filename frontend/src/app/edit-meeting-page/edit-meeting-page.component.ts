@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
-import { InviteService, dataMapService } from '../services/dataService.service';
+import { InviteService, dataService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -34,7 +34,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public foundMeeting = false;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private dataService: dataMapService
+    private route: ActivatedRoute, private dataService: dataService
   ) {
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]

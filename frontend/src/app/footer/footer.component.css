@@ -2,11 +2,47 @@
     position: fixed;
     bottom: 0;
     width: 100%;
+    z-index: 99;
+    font-size: 13px;
+    padding: 0px;
   }
 
   .footer {
     background-color: #333;
     color: #fff;
+    padding: 0px 20px;
+    text-align: center;
+  }:hover{
+    background-color: #141414;
+}
+
+  .error-footer {
+    background-color: #72682f;
+    color: #000000;
     padding: 10px 20px;
     text-align: center;
   }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.grid-item-left {
+    text-align: left;
+}
+
+.grid-item-right {
+    text-align: right;
+}
+
+@media screen and (max-width: 250px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+  .grid-item-right {
+    text-align: left;
+}
+}
+
