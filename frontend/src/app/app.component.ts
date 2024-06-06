@@ -9,7 +9,4 @@ import { dataService } from './services/dataService.service';
 export class AppComponent {
   title = 'Board-Meetings';
 
-  constructor(private dataService: dataService){
-    this.dataService.getMeetingsService();
-  }
 }

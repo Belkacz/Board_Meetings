@@ -10,20 +10,26 @@
     </div>
 </div>
 <div class="separator-horizontal margin-top-10px" style></div>
-<div *ngIf="!foundMeeting" class="centered-top-container padding-20px">
+<div *ngIf="!foundMeeting && !getMeetingError" class="centered-top-container padding-20px">
     <mat-icon>warning</mat-icon>
     <h2>The meeting with the specified ID cannot be found</h2>
 </div>
-<div *ngIf="foundMeeting">
+<div *ngIf="getMeetingError" class="centered-top-container padding-20px">
+    <mat-icon>warning</mat-icon>
+    <h2>{{getMeetingError}}</h2>
+</div>
+<div *ngIf="loadingMeeting" class="centered-top-container padding-20px">
+    <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="foundMeeting && !getMeetingError && !loadingMeeting">
     <div class="main-container">
-    <div class="main-menu">
-        <app-new-meeting [editedMeeting]="editedMeeting"></app-new-meeting>
-    </div>
-    <div class="separator-vertical"></div>
-    <div class="side-menu">
-        <app-tasks [initialTasks]="editedTasks" (tasksListOutput)="saveTasksList($event)"></app-tasks>
-        <app-invites [invitedToEdited]="invitedToEdited"></app-invites>
+        <div class="main-menu">
+            <app-new-meeting [editedMeeting]="editedMeeting"></app-new-meeting>
+        </div>
+        <div class="separator-vertical"></div>
+        <div class="side-menu">
+            <app-tasks [initialTasks]="editedTasks" (tasksListOutput)="saveTasksList($event)"></app-tasks>
+            <app-invites [invitedToEdited]="invitedToEdited"></app-invites>
+        </div>
     </div>
 </div>
-</div>
-

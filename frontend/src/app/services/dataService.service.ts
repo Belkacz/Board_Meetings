@@ -38,7 +38,7 @@ export class dataService {
   }
 
   public getGlobalMeetingsErrorMessage(): string | null {
-    if(this.meetingGetError){
+    if (this.meetingGetError) {
       return "Server communication error";
     } else {
       return null;
@@ -131,18 +131,22 @@ export class dataService {
     return meetingsList;
   }
 
-  public getMeetingsService(): Subscription {
-    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
-      .subscribe({
-        next: (response: any) => {
-          let meetingsList = this.mapMeetings(response);
-          this.setGlobalMeetingsList(meetingsList);
-        },
-        error: (error: any) => {
-          console.error("Error:", error);
-        }
-      });
-    return result;
+  public getMeetingsService(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
+        .subscribe({
+          next: (response: any) => {
+            let meetingsList = this.mapMeetings(response);
+            this.setGlobalMeetingsList(meetingsList);
+            resolve(true);
+          },
+          error: (error: any) => {
+            this.meetingGetError = error;
+            console.error("Error:", error);
+            resolve(false);
+          }
+        });
+    });
   }
 
   public createDocumentsData = (filesUrls: Array<string>): Array<AttachedDocument> => {

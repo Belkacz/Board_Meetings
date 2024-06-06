@@ -24,15 +24,24 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.dataService.getGlobalMeetingsList().subscribe(
-      (meetings: ExistedBoardMeetings[]) => {
-        this.meetingsList = meetings;
-          if(this.meetingsList.length > 0){
-            this.meetingsNotEmpty =  true;
-          }
-          this.errorMessage = this.dataService.getGlobalMeetingsErrorMessage();
-      })
-      this.dataService.getMeetingsService();
+    this.fetchMeetings();
+  }
+
+  private fetchMeetings(): void {
+    this.dataService.getMeetingsService().then((success) => {
+      if (success) {
+        this.subscription = this.dataService.getGlobalMeetingsList().subscribe(
+          (meetings: ExistedBoardMeetings[]) => {
+            this.meetingsList = meetings;
+            if (this.meetingsList.length > 0) {
+              this.meetingsNotEmpty = true;
+            }
+            this.errorMessage = this.dataService.getGlobalMeetingsErrorMessage();
+          })
+      } else {
+        this.errorMessage = this.dataService.getGlobalMeetingsErrorMessage();
+      }
+    });
   }
 
   deleteMeeting(id: number) {
@@ -43,7 +52,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
     } else {
       this.restService.deleteMeeting(id).subscribe({
         next: () => {
-          this.dataService.getMeetingsService();
+          this.fetchMeetings();
           this._snackBar.open("Deleted object of id" + id, 'Close', { duration: 3000 });
         },
         error: (error: any) => {
