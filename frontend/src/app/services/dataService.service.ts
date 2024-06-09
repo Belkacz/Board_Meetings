@@ -100,15 +100,14 @@ export class dataService {
             newTasks.push(newTask);
           })
         }
-        const newAgenda = null;
+        let newAgenda = null;
         if (meeting.agenda) {
-          const newAgenda: Agenda = {
+          newAgenda = {
             id: meeting.agenda.id,
             name: meeting.agenda.name,
-            list: meeting.agenda.list,
+            list: meeting.agenda.order,
           }
         }
-
         const newMeeting: ExistedBoardMeetings = {
           id: meeting.id,
           meetingType: meeting.meeting_type,
