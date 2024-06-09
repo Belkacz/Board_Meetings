@@ -150,7 +150,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
   public saveDraft(): void {
     this.draft = this.combinedData;
-    alert('Save as Draft Placeholder');
+    alert('Element currently not working');
     this.draft = {
       meetingType: "boardMeeting",
       meetingName: "spotkanie",
@@ -223,48 +223,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
         this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
       }
     }
-    // const files = this.newMeetingComponent.addedDocuments.value;
-
-    // if (files.length > 0) {
-    //   const responseUrls: string[] = []
-    //   this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
-    //     next: (response: any) => {
-    //       console.log("Response from FastApi:", response);
-    //       response.file_urls.forEach((url: string) => {
-    //         const fullUrl = `${urls.protocolBase}${urls.localFastApi}${url}}`;
-    //         responseUrls.push(fullUrl);
-
-    //       });
-    //       // this.combinedData.addedDocuments = responseUrls;
-    //     },
-    //     error: error => {
-    //       console.error("Error:", error);
-    //     }
-    //   });
-    // }
-
-    // if (this.editedMeeting) {
-    //   this.combinedData = { ...this.combinedData, id: this.editedMeeting.id }
-    //   this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
-    // } else {
-    //   this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
-    // }
-
-    // console.log(this.combinedData.addedDocuments)
-    // if (this.combinedData.meetingType === "") {
-    //   alert("meeting type cannot be empty")
-    // } else if (this.combinedData.meetingName === "") {
-    //   alert("meeting name cannot be empty")
-    // } else if ((!this.newMeetingComponent.dateStartControl || !this.newMeetingComponent.dateEndControl)) {
-    //   alert("You need to chose date")
-    // } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
-    //   alert("You need to provide a location or choose an online option");
-    // } else {
-    //   alert('Save And Publish Placeholder, open console for more details')
-    // }
-    // console.log(this.combinedData)
-
-
   }
 
   public saveTasksList(tasksList: Task[]): void {

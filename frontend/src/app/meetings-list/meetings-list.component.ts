@@ -5,6 +5,8 @@ import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { dataService } from '../services/dataService.service'
+import { MatDialog } from '@angular/material/dialog';
+import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
 
 @Component({
   selector: 'app-meetings-list',
@@ -16,10 +18,12 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
   public meetingsList: ExistedBoardMeetings[] = [];
-  public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'deleteButton', 'editButton'];
+  public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'infoButton', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
 
-  constructor(private dataService: dataService, private restService: RestService, private _snackBar: MatSnackBar) {
+  constructor(private dataService: dataService, private restService: RestService, private _snackBar: MatSnackBar,
+    public dialog: MatDialog,
+  ) {
     this.meetingsList = [];
   }
 
@@ -61,6 +65,18 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  meetingInfo(meetingId: number): void {
+    let foundMeeting: ExistedBoardMeetings | null = null;
+    this.meetingsList.forEach(meeting => {
+      if(meeting.id == meetingId) {
+        foundMeeting = meeting;
+      }
+    });
+    const dialogRef = this.dialog.open(DialogInfoComponent, {
+      data: foundMeeting
+    });
   }
 
   ngOnDestroy(): void {

@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnInit, Renderer2, SimpleChanges, ViewChi
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType, urls } from '../../shared/enums';
-import { Agenda, AttachedDocument, DownloadFile, ExistedBoardMeetings } from '../../shared/interfaces';
+import { Agenda, ExistedBoardMeetings } from '../../shared/interfaces';
 import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';

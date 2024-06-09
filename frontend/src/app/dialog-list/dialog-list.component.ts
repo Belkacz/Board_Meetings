@@ -9,8 +9,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   styleUrls: ['./dialog-list.component.css']
 })
 export class DialogListComponent {
-  @Input() title: string;
-  @Input() list: string[];
+  public title: string;
+  public list: string[];
   public newElement: string;
 
   public submitDisable = true;

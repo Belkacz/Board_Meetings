@@ -41,6 +41,7 @@ import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { FooterComponent } from './footer/footer.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { DialogInfoComponent } from './dialog-info/dialog-info.component';
 
 
 
@@ -63,6 +64,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     EditMeetingPageComponent,
     PageNotFoundComponent,
     FooterComponent
+    // ,DialogInfoComponent
   ],
   imports: [
     ReactiveFormsModule,

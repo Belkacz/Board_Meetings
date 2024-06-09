@@ -103,7 +103,8 @@ meetings = [
         guests[4]
     ],
     tasksList=[
-        Task(id=1, name="task1", description="task1 desc")
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
     documents = ["/files/testFile1.txt", "/files/testFile2.txt"]

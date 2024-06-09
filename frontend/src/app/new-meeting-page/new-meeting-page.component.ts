@@ -22,7 +22,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
 
   private guestsList: GuestInvited[];
   private tasksList: Task[];
-  //private agenda: Agenda;
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
   public editedMeeting: ExistedBoardMeetings | null = null;
@@ -68,7 +67,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
 
   public saveDraft(): void {
     this.draft = this.combinedData;
-    alert('Save as Draft Placeholder');
+    alert('Element currently not working');
     this.draft = {
       meetingType: "boardMeeting",
       meetingName: "spotkanie",
