@@ -44,6 +44,9 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public agendasErrorMessage: string;
   private agendaSubscription: Subscription | undefined;
 
+  private selectedDate = false;
+  public noDatePicked = false;
+
   constructor(
     public fileDownloadService: FileDownloadService,
     public dialog: MatDialog,
@@ -65,9 +68,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.createFormControls();
   }
 
-  override ngOnInit() {
-
-
+  ngOnInit() {
     this.form.get('meetingAddress')?.disable();
     this.form.get('onlineAddress')?.disable();
     this.pickedStartTimeString = null;
@@ -122,8 +123,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       }),
       attachedDocuments: [null]
     });
-  
-    // Dodatkowa logika walidacji na końcu
     this.form.get('dateStart')?.setValidators([
       Validators.required,
     ]);
@@ -197,6 +196,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.form.get('dateEnd')?.setValue(this.dateEnd);
       this.form.get('dateStart')?.markAsDirty();
       this.form.get('dateEnd')?.markAsDirty();
+      this.selectedDate = true;
+      this.noDatePicked = false;
       this.confirmTheExistenceOfTime();
     }
   }
@@ -220,6 +221,15 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.form.get('dateEnd')?.markAsDirty();
     this.confirmTheExistenceOfTime();
     this.form.updateValueAndValidity();
+    this.checkDateExistence();
+  }
+
+  private checkDateExistence() {
+    if ((this.form.get('dateStart')?.dirty || this.form.get('dateEnd')?.dirty) && !this.selectedDate) {
+      this.noDatePicked = true;
+    } else {
+      this.noDatePicked = false;
+    }
   }
 
   private confirmTheExistenceOfTime(): void {

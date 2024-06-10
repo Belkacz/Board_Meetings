@@ -54,7 +54,9 @@
           *ngIf="form.get('dateEnd')?.hasError('noEndTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
           No end meeting time
         </mat-error>
-
+        <mat-error *ngIf="noDatePicked">
+          The date need to be chosen
+        </mat-error>
       </div>
       <div>
         <h3>Location</h3>
