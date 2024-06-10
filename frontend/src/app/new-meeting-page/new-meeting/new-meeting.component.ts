@@ -73,8 +73,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.form.get('onlineAddress')?.disable();
     this.pickedStartTimeString = null;
     this.pickedEndTimeString = null;
-
-    this.agendaSubscription = this.getAgendas();
   }
 
   private updateControlsWithEditMeeting(): void {
@@ -131,18 +129,21 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     ]);
   }
 
-  private getAgendas(): Subscription {
-    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETAGENDAS)
-      .subscribe({
-        next: (response: any) => {
-          this.agendas = this.dataService.mapAgendas(response);
-        },
-        error: (error: any) => {
-          console.error("Error:", error);
-          this.agendasErrorMessage = "Server communication error";
-        }
-      });
-    return result;
+  private getAgendas(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETAGENDAS)
+        .subscribe({
+          next: (response: any) => {
+            this.agendas = this.dataService.mapAgendas(response);
+            resolve();
+          },
+          error: (error: any) => {
+            console.error("Error:", error);
+            this.agendasErrorMessage = "Server communication error";
+            reject(error);
+          }
+        });
+    });
   }
 
   public selectType(option: string) {
@@ -168,19 +169,25 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   selectAgenda(): void {
-    const dialogRef = this.dialog.open(DialogSelectComponent, {
-      data: this.agendas
-    })
-
-    dialogRef.afterClosed().subscribe(agenda => {
-      this.form.patchValue({
-        agenda: {
-          id: agenda.id,
-          agendaName: agenda.name,
-          list: agenda.list
+    this.getAgendas().then(() => {
+      const dialogRef = this.dialog.open(DialogSelectComponent, {
+        data: this.agendas
+      });
+  
+      dialogRef.afterClosed().subscribe(agenda => {
+        if (agenda) {
+          this.form.patchValue({
+            agenda: {
+              id: agenda.id,
+              agendaName: agenda.name,
+              list: agenda.list
+            }
+          });
         }
       });
-    })
+    }).catch(error => {
+      console.error("Error:", error);
+    });
   }
 
   public handleDateSelected(selectedDate: Date) {
