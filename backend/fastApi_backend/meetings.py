@@ -2,6 +2,8 @@ from enum import Enum
 from pydantic import BaseModel, constr
 from datetime import datetime
 
+class ErrorResponse(BaseModel):
+    detail: str
 class Guest(BaseModel):
     id: int
     name: str
@@ -32,7 +34,7 @@ class ShortMeeting(BaseModel):
 
 class PagedListMeetings(BaseModel):
     meetings: list[ShortMeeting]
-    total_lenght: int
+    total_length: int
 
 class BaseMeeting(BaseModel):
     meeting_type: MeetingType

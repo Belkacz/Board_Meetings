@@ -8,8 +8,8 @@ from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 import ssl
 
-from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting, ShortMeeting, PagedListMeetings
-from .projectInformation import projectInfo1, ProjectData, ProjectDataExternal
+from .meetings import meetings, guests, agendas, Guest, Agenda, BaseMeeting, ExistedMeeting, ShortMeeting, PagedListMeetings, ErrorResponse
+from .projectInformation import projectInfo1, ProjectDataExternal
 
 app = FastAPI()
 
@@ -25,32 +25,45 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/get-meetings/{page}/{pagesize}", response_model=PagedListMeetings)
+@app.get("/get-meetings/{page}/{pagesize}", response_model=PagedListMeetings, responses={
+    404: {"description": "No meetings found", "model": ErrorResponse},
+    400: {"description": "Invalid pagination parameters", "model": ErrorResponse}
+})
 async def get_meetings_list(page: int, pagesize: int):
-    start_index = ((page * pagesize) - pagesize)
-    end_index = start_index + pagesize -1
-    if(end_index > len(meetings)):
+    if page <= 0 or pagesize <= 0:
+        raise HTTPException(status_code=400, detail="Invalid pagination parameters")
+
+    start_index = (page - 1) * pagesize
+    end_index = start_index + pagesize
+    if end_index > len(meetings):
         end_index = len(meetings)
 
-    meetings_list: list[ShortMeeting] = []
+    meetings_list: List[ShortMeeting] = []
     for i in range(start_index, end_index):
         short_meeting = ShortMeeting(
-            id = meetings[i].id,
-            meeting_type = meetings[i].meeting_type,
-            meeting_name = meetings[i].meeting_name,
-            start_date = meetings[i].start_date,
-            end_date = meetings[i].end_date
+            id=meetings[i].id,
+            meeting_type=meetings[i].meeting_type,
+            meeting_name=meetings[i].meeting_name,
+            start_date=meetings[i].start_date,
+            end_date=meetings[i].end_date
         )
         meetings_list.append(short_meeting)
-    total_lenght = len(meetings) + 1
+
+    total_length = len(meetings)
     response_data = {
         "meetings": meetings_list,
-        "total_lenght": total_lenght
+        "total_length": total_length
     }
+
+    if total_length <= 0:
+        raise HTTPException(status_code=404, detail="No meetings found")
+
     print("get_meetings_list")
     return response_data
 
-@app.get("/meeting-details/{meeting_id}", response_model=ExistedMeeting)
+@app.get("/meeting-details/{meeting_id}", response_model=ExistedMeeting, responses={
+    404: {"description": "Meeting not found", "model": ErrorResponse},
+})
 async def get_meeting_detials(meeting_id: int):
     result_meeting:ExistedMeeting = None
     if(meeting_id-1 >= 0 and meeting_id-1 < len(meetings) and meetings[meeting_id-1].id == meeting_id):
@@ -62,7 +75,7 @@ async def get_meeting_detials(meeting_id: int):
                 break
     if result_meeting is None:
         raise HTTPException(status_code=404, detail="Meeting not found")
-    print("get_meetings_list")
+    print("get_meetings_details")
     return result_meeting
 
 @app.get("/get-people", response_model=list[Guest])
@@ -100,7 +113,9 @@ def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
     else:
         return False
 
-@app.post("/new-meeting")
+@app.post("/new-meeting", responses={
+    403: {"description": "Meeting need at least one meeting address or online address", "model": ErrorResponse},
+})
 async def add_meeting(meeting: BaseMeeting):
     if(len(meetings) > 0):
         last_meeting = meetings[-1]
@@ -122,7 +137,7 @@ async def add_meeting(meeting: BaseMeeting):
         documents=meeting.documents
     )
     if(not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address)):
-        raise HTTPException(status_code=404, detail="Meeting need at least one meeting address or online address")
+        raise HTTPException(status_code=403, detail="Meeting need at least one meeting address or online address")
     meetings.append(new_meeting)
     return {"message": f"Created new meeting with id# {new_meeting_id}"}
 
@@ -133,7 +148,10 @@ def filesNotInOriginal(editedMeetingsDocs: list[str], originalDocs: list[str]) -
             notInEditedMeeting.append(doc)
     return notInEditedMeeting
 
-@app.put("/update-meeting")
+@app.put("/update-meeting", responses={
+    403: {"description": "Meeting need at least one meeting address or online address", "model": ErrorResponse},
+    403: {"description": "Meeting with id #{edited_meeting.id} not found", "model": ErrorResponse},
+})
 async def update_meeting(edited_meeting: ExistedMeeting):
     updated_meeting = ExistedMeeting(
         id=edited_meeting.id,
@@ -149,7 +167,7 @@ async def update_meeting(edited_meeting: ExistedMeeting):
         documents=edited_meeting.documents
     )
     if(not atLeastOneAddress(updated_meeting.meeting_address, updated_meeting.online_address)):
-        raise HTTPException(status_code=404, detail="Meeting need at least one meeting address or online address")
+        raise HTTPException(status_code=403, detail="Meeting need at least one meeting address or online address")
     meetingUpdated = False
     for index, meeting in enumerate(meetings):
         if(meeting.id == updated_meeting.id):

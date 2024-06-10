@@ -151,7 +151,7 @@ export class dataService {
           next: (response: any) => {
             let meetingsList = this.mapMeetings(response.meetings);
             this.setGlobalMeetingsList(meetingsList);
-            resolve({ result: true, length: response.total_lenght });
+            resolve({ result: true, length: response.total_length });
           },
           error: (error: any) => {
             this.meetingGetError = error;
