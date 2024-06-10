@@ -86,7 +86,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       attachedDocuments: null
     }
     console.log(this.combinedData)
-    console.log(this.newMeetingComponent.form)
   }
 
   public saveAndPublish(): void {
@@ -122,7 +121,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       const responseUrls: string[] = []
       this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
         next: (response: any) => {
-          console.log("Response from FastApi:", response);
           response.file_urls.forEach((url: string) => {
             const fullUrl = `${url}`;
             responseUrls.push(fullUrl);

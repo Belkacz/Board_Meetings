@@ -31,6 +31,5 @@ export class DialogInfoComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ExistedBoardMeetings, public fileDownloadService: FileDownloadService) {
     this.meeting = data;
-    console.log(this.meeting)
   }
 }

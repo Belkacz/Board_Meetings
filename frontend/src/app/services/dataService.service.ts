@@ -70,26 +70,9 @@ export class dataService {
     return agendas;
   }
 
-  public mapShortMeeting = (response: ShortMetting[]): ShortMetting[] => {  
-    const meetingsList: ShortMetting[] = [];
-    if (response.length > 0) {
-      response.forEach((meeting: any) => {
-        const newMeeting: ShortMetting = {
-          id: meeting.id,
-          meetingType: meeting.meeting_type,
-          meetingName: meeting.meeting_name,
-          dateStart: meeting.start_date,
-          dateEnd: meeting.end_date,
-        }
-        meetingsList.push(newMeeting);
-      })
-    }
-    return meetingsList;
-  }
-
   public mapMeetingDetails = (meeting: any): ExistedBoardMeetings | null => {
-  let restultMeeting: ExistedBoardMeetings | null = null;
-  if (meeting) {
+    let restultMeeting: ExistedBoardMeetings | null = null;
+    if (meeting) {
       const newGuests: Array<Guest> = []
       if (meeting.guests) {
         meeting.guests.forEach((guest: IncomingGuest) => {
@@ -139,8 +122,8 @@ export class dataService {
         attachedDocuments: meeting.documents ? this.createDocumentsData(meeting.documents) : null
       }
       restultMeeting = newMeeting;
-  }
-  return restultMeeting;
+    }
+    return restultMeeting;
   }
 
   public mapMeetings = (response: ExistedBoardMeetings[]): ShortMetting[] => {
@@ -161,19 +144,19 @@ export class dataService {
     return meetingsList;
   }
 
-  public getMeetingsService(): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS)
+  public getMeetingsService(page: number = 0, pageSize = 10): Promise<{ result: boolean, length: number } | { result: boolean, error: string }> {
+    return new Promise<{ result: boolean, length: number } | { result: boolean, error: string }>((resolve) => {
+      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS, null, page, pageSize)
         .subscribe({
           next: (response: any) => {
-            let meetingsList = this.mapMeetings(response);
+            let meetingsList = this.mapMeetings(response.meetings);
             this.setGlobalMeetingsList(meetingsList);
-            resolve(true);
+            resolve({ result: true, length: response.total_lenght });
           },
           error: (error: any) => {
             this.meetingGetError = error;
             console.error("Error:", error);
-            resolve(false);
+            resolve({ result: false, error: "Server communication error" });
           }
         });
     });
@@ -186,7 +169,7 @@ export class dataService {
         .subscribe({
           next: (response: any) => {
             let metting = this.mapMeetingDetails(response);
-            if(!metting){
+            if (!metting) {
               resolve(null);
             } else {
               resolve(metting);

@@ -1,5 +1,6 @@
 .scrollable-content {
     max-height: 750px;
+    box-shadow: none;
     /* overflow: auto; */
 }
 
@@ -8,34 +9,35 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-
-  .mat-mdc-list-item{
-    height: 25px!important;
 }
-h4{
+
+.mat-mdc-list-item {
+    height: 25px !important;
+}
+
+h4 {
     margin: 2px;
 }
 
 .link {
-    color:cornflowerblue;
+    color: cornflowerblue;
     text-decoration: none;
     cursor: pointer;
 }
 
-.mat-expansion-panel-body{
-    padding: 0 24px 0px!important;
+.mat-expansion-panel-body {
+    padding: 0 24px 0px !important;
 }
 
 .element-container {
     padding: 5px;
 }
 
-.mat-expansion-panel-header{
-    height: 35px!important;
+.mat-expansion-panel-header {
+    height: 35px !important;
 }
 
-.file-list-element{
+.file-list-element {
     padding: 5px 0px 5px 15px;
 }
 
@@ -58,10 +60,12 @@ h4{
     .scrollable-content {
         max-height: 500px;
     }
+
     @media only screen and (max-height: 500px) {
         .scrollable-content {
             max-height: 250px;
         }
+
         @media only screen and (max-height: 250px) {
             .scrollable-content {
                 max-height: 100px;

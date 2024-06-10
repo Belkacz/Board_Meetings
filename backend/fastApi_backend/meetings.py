@@ -30,6 +30,10 @@ class ShortMeeting(BaseModel):
     start_date: datetime
     end_date: datetime
 
+class PagedListMeetings(BaseModel):
+    meetings: list[ShortMeeting]
+    total_lenght: int
+
 class BaseMeeting(BaseModel):
     meeting_type: MeetingType
     meeting_name: constr(min_length=1)
@@ -97,7 +101,7 @@ meetings = [
         documents = None
     ),
     ExistedMeeting(
-    id=3,
+    id=4,
     meeting_type="boardMeeting",
     meeting_name="Meeting 3",
     start_date="2024-04-10T13:14:50.985Z",
@@ -115,5 +119,186 @@ meetings = [
     ],
     agenda=agendas[1],
     documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
-)
+    ),
+        ExistedMeeting(
+    id=5,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=6,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=7,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=8,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=9,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    )
+    ,
+    ExistedMeeting(
+    id=10,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=11,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=12,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    ),
+    ExistedMeeting(
+    id=13,
+    meeting_type="boardMeeting",
+    meeting_name="Meeting 3",
+    start_date="2024-04-10T13:14:50.985Z",
+    end_date="2024-04-10T15:16:50.985Z",
+    meeting_address="uczelnia",
+    online_address=None,
+    guests=[
+        guests[0],
+        guests[3],
+        guests[4]
+    ],
+    tasksList=[
+        Task(id=1, name="task1", description="task1 desc"),
+        Task(id=2, name="task2", description="task2 desc")
+    ],
+    agenda=agendas[1],
+    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    )
 ]

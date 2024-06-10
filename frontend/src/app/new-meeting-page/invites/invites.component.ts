@@ -16,27 +16,27 @@ export class InvitesComponent implements OnInit, OnDestroy {
   public errorMessage: null | string = null;
   private subscription: Subscription | undefined;
 
-  constructor(private restService: RestService){}
+  constructor(private restService: RestService) { }
 
   ngOnInit() {
-    this.subscription = this.GETPEOPLE();
+    this.subscription = this.getPeople();
   }
 
-  private GETPEOPLE(): Subscription {
+  private getPeople(): Subscription {
     const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETPEOPLE)
       .subscribe({
         next: (response: any) => {
           const newPersonList: Guest[] = []
-          response.forEach((person: Guest) => {
+          response.forEach((person: any) => {
             const newPerson: Guest = {
               id: person.id,
               name: person.name,
               surname: person.surname,
-              jobPosition: person.jobPosition
+              jobPosition: person.job_position
             };
             newPersonList.push(newPerson);
           });
-          if(newPersonList.length > 0){
+          if (newPersonList.length > 0) {
             this.initialPersonsList = newPersonList;
           }
 

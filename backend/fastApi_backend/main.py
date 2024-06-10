@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 import ssl
 
-from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting, ShortMeeting
+from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting, ShortMeeting, PagedListMeetings
 from .projectInformation import projectInfo1, ProjectData, ProjectDataExternal
 
 app = FastAPI()
@@ -25,20 +25,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/get-meetings", response_model=list[ShortMeeting])
-async def get_meetings_list():
+@app.get("/get-meetings/{page}/{pagesize}", response_model=PagedListMeetings)
+async def get_meetings_list(page: int, pagesize: int):
+    start_index = ((page * pagesize) - pagesize)
+    end_index = start_index + pagesize -1
+    if(end_index > len(meetings)):
+        end_index = len(meetings)
+
     meetings_list: list[ShortMeeting] = []
-    for meeting in meetings:
+    for i in range(start_index, end_index):
         short_meeting = ShortMeeting(
-            id = meeting.id,
-            meeting_type = meeting.meeting_type,
-            meeting_name = meeting.meeting_name,
-            start_date = meeting.start_date,
-            end_date = meeting.end_date
+            id = meetings[i].id,
+            meeting_type = meetings[i].meeting_type,
+            meeting_name = meetings[i].meeting_name,
+            start_date = meetings[i].start_date,
+            end_date = meetings[i].end_date
         )
         meetings_list.append(short_meeting)
+    total_lenght = len(meetings) + 1
+    response_data = {
+        "meetings": meetings_list,
+        "total_lenght": total_lenght
+    }
     print("get_meetings_list")
-    return meetings_list
+    return response_data
 
 @app.get("/meeting-details/{meeting_id}", response_model=ExistedMeeting)
 async def get_meeting_detials(meeting_id: int):
@@ -147,7 +157,6 @@ async def update_meeting(edited_meeting: ExistedMeeting):
             meetings[index] = updated_meeting
             meetingUpdated = True
     if(meetingUpdated == False):
-        print(edited_meeting.id)
         raise HTTPException(status_code=404, detail=f"Meeting with id #{edited_meeting.id} not found")
 
     return {"edited meeting": f"updated meeting with id #{updated_meeting.id}"}

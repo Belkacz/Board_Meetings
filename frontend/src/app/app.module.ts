@@ -35,12 +35,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { dataService } from './services/dataService.service';
 import { DialogSelectComponent } from './dialog-select/dialog-select.component';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
 import { EditMeetingPageComponent } from './edit-meeting-page/edit-meeting-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { FooterComponent } from './footer/footer.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
@@ -92,9 +93,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatExpansionModule,
     MatCardModule,
     MatRadioModule,
-    MatGridListModule
+    MatGridListModule,
+    MatPaginatorModule
   ],
-  providers: [ dataService ],
+  providers: [dataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

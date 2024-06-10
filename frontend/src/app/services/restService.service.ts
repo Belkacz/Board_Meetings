@@ -15,27 +15,27 @@ export class RestService {
 
   uploadFiles(files: File[], endpoint: string) {
     const formData = new FormData();
-    
+
     for (const file of files) {
       formData.append('files', file, file.name);
     }
-    
+
     return this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData);
   }
 
-  sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls ) {
+  sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls) {
     const attachedDocumentsUrls: string[] = []
-    if(dataToSend.attachedDocuments){
+    if (dataToSend.attachedDocuments) {
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
       });
     }
     const newGuests: backendGuest[] = [];
-    if(dataToSend.guests != undefined) {
+    if (dataToSend.guests != undefined) {
       dataToSend.guests.forEach(guest => {
         const newGuest = {
           id: guest.id,
-          name : guest.name,
+          name: guest.name,
           surname: guest.surname,
           job_position: guest.jobPosition
         }
@@ -55,27 +55,27 @@ export class RestService {
       agenda: dataToSend.agenda,
       documents: attachedDocumentsUrls ? attachedDocumentsUrls : null
     };
-    if(endpoint === urls.UPDATEMEETING){
-      let updatePack = {...packedText, id: dataToSend['id']}
+    if (endpoint === urls.UPDATEMEETING) {
+      let updatePack = { ...packedText, id: dataToSend['id'] }
       this.http.put(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
-      .subscribe({
-        next: response => {
-          console.log("Response from FastApi:", response);
-        },
-        error: error => {
-          console.error("Error:", error);
-        }
-      });
+        .subscribe({
+          next: response => {
+            console.log("Response from FastApi:", response);
+          },
+          error: error => {
+            console.error("Error:", error);
+          }
+        });
     } else {
       this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
-      .subscribe({
-        next: response => {
-          console.log("Response from FastApi:", response);
-        },
-        error: error => {
-          console.error("Error:", error);
-        }
-      });
+        .subscribe({
+          next: response => {
+            console.log("Response from FastApi:", response);
+          },
+          error: error => {
+            console.error("Error:", error);
+          }
+        });
     }
   }
 
@@ -85,10 +85,10 @@ export class RestService {
     if (param !== null) {
       newUrl += param;
     }
-    if(number1 !== null){
+    if (number1 !== null) {
       newUrl += `/${number1}`
     }
-    if(number2 !== null){
+    if (number2 !== null) {
       newUrl += `/${number2}`
     }
     return newUrl;
@@ -104,5 +104,5 @@ export class RestService {
     return this.http.delete(deleteUrl);
   }
 
-  
+
 }
