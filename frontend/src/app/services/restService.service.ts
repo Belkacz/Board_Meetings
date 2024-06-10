@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { promiseData } from './promise';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BoardMeetingData } from '../shared/interfaces';
+import { BoardMeetingData, backendGuest } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -12,40 +12,6 @@ import { Observable } from 'rxjs';
 })
 export class RestService {
   constructor(private http: HttpClient, private router: Router, private _snackBar: MatSnackBar) { }
-
-  // public sendData(data: any): Promise<any> {
-  //   return promiseData(data)
-  //     .then(() => {
-  //       console.log('Wysyłanie danych zakończone sukcesem');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Wystąpił błąd podczas wywyłania danych:', error);
-  //     });
-  // }
-
-
-  // sendDataToPHP(dataToSend: BoardMeetingData) {
-  //   console.log('Data to send:', dataToSend);
-  //   let packedText = {
-  //     meeting_type: dataToSend.meetingType,
-  //     meeting_name: dataToSend.meetingName,
-  //     start_date: dataToSend.dateStart,
-  //     end_date: dataToSend.dateEnd,
-  //     meeting_address: dataToSend.meetingAddress,
-  //     online_address: dataToSend.onlineAddress,
-  //     guests: dataToSend.guests,
-  //     tasks: dataToSend.tasksList
-  //   };
-  //   this.http.post('http://localhost/meetings.php', packedText, { responseType: 'text' })
-  //     .subscribe({
-  //       next: response => {
-  //         console.log("Response from PHP:", response);
-  //       },
-  //       error: error => {
-  //         console.error("Error:", error);
-  //       }
-  //     });
-  // }
 
   uploadFiles(files: File[], endpoint: string) {
     const formData = new FormData();
@@ -58,11 +24,22 @@ export class RestService {
   }
 
   sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls ) {
-    console.log('Data to send:', dataToSend);
     const attachedDocumentsUrls: string[] = []
     if(dataToSend.attachedDocuments){
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
+      });
+    }
+    const newGuests: backendGuest[] = [];
+    if(dataToSend.guests != undefined) {
+      dataToSend.guests.forEach(guest => {
+        const newGuest = {
+          id: guest.id,
+          name : guest.name,
+          surname: guest.surname,
+          job_position: guest.jobPosition
+        }
+        newGuests.push(newGuest);
       });
     }
 
@@ -73,7 +50,7 @@ export class RestService {
       end_date: dataToSend.dateEnd,
       meeting_address: dataToSend.meetingAddress,
       online_address: dataToSend.onlineAddress,
-      guests: dataToSend.guests,
+      guests: newGuests,
       tasks: dataToSend.tasksList,
       agenda: dataToSend.agenda,
       documents: attachedDocumentsUrls ? attachedDocumentsUrls : null
@@ -102,21 +79,24 @@ export class RestService {
     }
   }
 
-  private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, itemNumber: number | null = null) {
+  private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {
     let newUrl = protocol + baseUrl + '/' + endPoint;
 
     if (param !== null) {
       newUrl += param;
     }
-    if(itemNumber !== null){
-      newUrl += `/${itemNumber}`
+    if(number1 !== null){
+      newUrl += `/${number1}`
+    }
+    if(number2 !== null){
+      newUrl += `/${number2}`
     }
     return newUrl;
   }
 
 
-  receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null, itemNumber: number | null = null) {
-    return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param, itemNumber));
+  receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null, number1: number | null = null, number2: number | null = null) {
+    return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param, number1, number2));
   }
 
   deleteMeeting(id: number): Observable<any> {

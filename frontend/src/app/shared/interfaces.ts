@@ -15,6 +15,12 @@ export interface Guest {
     surname: string;
     jobPosition: string | null;
 }
+export interface backendGuest {
+    id: number;
+    name: string;
+    surname: string;
+    job_position: string | null;
+}
 
 export interface IncomingGuest {
     id: number;
@@ -34,13 +40,11 @@ export interface ProjectData {
 export interface GuestInvited extends Guest {
     invited: boolean;
 }
-
 export interface AttachedDocument {
     fileName: string;
     originalUrl: string;
     fullUrl: string;
 }
-
 export interface BoardMeetingData {
     meetingType: string;
     meetingName: string;
@@ -60,7 +64,6 @@ export interface BoardMeetingData {
 export interface ExistedBoardMeetings extends BoardMeetingData {
     id: number;
 }
-
 export interface ShortMetting {
     id: number;
     meetingType: string;
