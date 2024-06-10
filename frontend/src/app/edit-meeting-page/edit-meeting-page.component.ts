@@ -66,15 +66,14 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.updateDataEditedMeeting();
-    console.log(this.editedMeeting)
   }
 
   private updateDataEditedMeeting(): void {
     const params = this.route.snapshot.params;
     if (params['id']) {
       this.editedMeetingId = parseInt(params['id'], 10);
+      this.loadMeetingData(this.editedMeetingId);
     }
-    this.loadMeetingData();
   }
 
   ngAfterViewInit() {
@@ -85,39 +84,21 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadMeetingData(): void {
-    this.dataService.getGlobalMeetingsList().subscribe(meetings => {
-      meetings.forEach(element => {
-        if (element.id === this.editedMeetingId) {
-          this.editedMeeting = element;
-          this.foundMeeting = true;
-          this.loadingMeeting = false;
-        }
-      });
-      if (this.foundMeeting == false) {
-        this.getMeetingFromBackend();
-      }
-      this.mapMeetingData();
-    });
-  }
-
-  private getMeetingFromBackend(): void {
-    this.dataService.getMeetingsService().then((success) => {
-      if (success) {
-        this.dataService.getGlobalMeetingsList().subscribe(meetings => {
-          meetings.forEach(element => {
-            if (element.id === this.editedMeetingId) {
-              this.editedMeeting = element;
-              this.foundMeeting = true;
-              this.loadingMeeting = false;
-            }
-          });
-        });
+  private loadMeetingData(id: number): void {
+    this.loadingMeeting = true;
+    this.dataService.getMeetingDetailService(id)
+    .then((resolve) => {
+      if (resolve instanceof Error) {
+        console.error("Error occurred:", resolve);
+        this.loadingMeeting = false;
+        this.getMeetingError = "Server communication error";
       } else {
-        this.getMeetingError = this.dataService.getGlobalMeetingsErrorMessage();
+        this.editedMeeting = resolve
+        this.foundMeeting = true;
+        this.loadingMeeting = false;
+        this.mapMeetingData();
       }
-      this.loadingMeeting = false;
-    });
+    })
   }
 
   private mapMeetingData(): void {

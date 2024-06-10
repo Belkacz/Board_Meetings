@@ -49,7 +49,6 @@ export class TasksComponent implements OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
         const lastTask = this.tasksList[this.tasksList.length - 1];
         let newTask: Task = { id: 0, name: result.Name };
         if (lastTask != undefined) {

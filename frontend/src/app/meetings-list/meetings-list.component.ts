@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestService } from '../services/restService.service';
 import { urls } from '../shared/enums';
-import { Guest, Task, Agenda, ExistedBoardMeetings } from "../shared/interfaces"
+import { Guest, Task, Agenda, ExistedBoardMeetings, ShortMetting } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { dataService } from '../services/dataService.service'
@@ -17,7 +17,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
 
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
-  public meetingsList: ExistedBoardMeetings[] = [];
+  public meetingsList: ShortMetting[] = [];
   public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'infoButton', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
 
@@ -35,7 +35,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
     this.dataService.getMeetingsService().then((success) => {
       if (success) {
         this.subscription = this.dataService.getGlobalMeetingsList().subscribe(
-          (meetings: ExistedBoardMeetings[]) => {
+          (meetings: ShortMetting[]) => {
             this.meetingsList = meetings;
             if (this.meetingsList.length > 0) {
               this.meetingsNotEmpty = true;
@@ -68,15 +68,20 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   }
 
   meetingInfo(meetingId: number): void {
-    let foundMeeting: ExistedBoardMeetings | null = null;
-    this.meetingsList.forEach(meeting => {
-      if(meeting.id == meetingId) {
-        foundMeeting = meeting;
-      }
-    });
-    const dialogRef = this.dialog.open(DialogInfoComponent, {
-      data: foundMeeting
-    });
+    this.dataService.getMeetingDetailService(meetingId)
+      .then((resolve) => {
+        if (resolve instanceof Error) {
+          console.error("Error occurred:", resolve);
+        } else {
+          console.log("Meeting details:", resolve);
+          const dialogRef = this.dialog.open(DialogInfoComponent, {
+            data: resolve
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Promise rejected:", error);
+      });
   }
 
   ngOnDestroy(): void {

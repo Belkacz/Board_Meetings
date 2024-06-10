@@ -29,7 +29,7 @@ export class DialogInfoComponent {
   meeting: ExistedBoardMeetings;
   panelOpenState = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ExistedBoardMeetings, public fileDownloadService: FileDownloadService,) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ExistedBoardMeetings, public fileDownloadService: FileDownloadService) {
     this.meeting = data;
     console.log(this.meeting)
   }

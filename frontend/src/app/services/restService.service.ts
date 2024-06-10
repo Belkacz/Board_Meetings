@@ -102,18 +102,21 @@ export class RestService {
     }
   }
 
-  private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null) {
+  private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, itemNumber: number | null = null) {
     let newUrl = protocol + baseUrl + '/' + endPoint;
 
     if (param !== null) {
       newUrl += param;
     }
+    if(itemNumber !== null){
+      newUrl += `/${itemNumber}`
+    }
     return newUrl;
   }
 
 
-  receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null) {
-    return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param));
+  receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null, itemNumber: number | null = null) {
+    return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param, itemNumber));
   }
 
   deleteMeeting(id: number): Observable<any> {

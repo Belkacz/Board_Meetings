@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 import ssl
 
-from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting
+from .meetings import meetings, guests, agendas, Guest, Task, Agenda, BaseMeeting, ExistedMeeting, ShortMeeting
 from .projectInformation import projectInfo1, ProjectData, ProjectDataExternal
 
 app = FastAPI()
@@ -25,10 +25,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/get-meetings", response_model=list[ExistedMeeting])
+@app.get("/get-meetings", response_model=list[ShortMeeting])
 async def get_meetings_list():
+    meetings_list: list[ShortMeeting] = []
+    for meeting in meetings:
+        short_meeting = ShortMeeting(
+            id = meeting.id,
+            meeting_type = meeting.meeting_type,
+            meeting_name = meeting.meeting_name,
+            start_date = meeting.start_date,
+            end_date = meeting.end_date
+        )
+        meetings_list.append(short_meeting)
     print("get_meetings_list")
-    return meetings
+    return meetings_list
+
+@app.get("/meeting-details/{meeting_id}", response_model=ExistedMeeting)
+async def get_meeting_detials(meeting_id: int):
+    result_meeting:ExistedMeeting = None
+    if(meeting_id-1 >= 0 and meeting_id-1 < len(meetings) and meetings[meeting_id-1].id == meeting_id):
+        meeting = meetings[meeting_id-1]
+    if(not result_meeting):
+        for meeting in meetings:
+            if(meeting_id == meeting.id):
+                result_meeting = meeting
+                break
+    if result_meeting is None:
+        raise HTTPException(status_code=404, detail="Meeting not found")
+    print("get_meetings_list")
+    return result_meeting
 
 @app.get("/get-people", response_model=list[Guest])
 async def get_people_list():
@@ -67,7 +92,11 @@ def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
 
 @app.post("/new-meeting")
 async def add_meeting(meeting: BaseMeeting):
-    last_meeting = meetings[-1]
+    if(len(meetings) > 0):
+        last_meeting = meetings[-1]
+    else:
+        last_meeting = 1
+
     new_meeting_id = last_meeting.id + 1
     new_meeting = ExistedMeeting(
         id=new_meeting_id,

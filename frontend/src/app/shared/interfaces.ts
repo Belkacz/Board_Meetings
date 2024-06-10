@@ -44,10 +44,10 @@ export interface AttachedDocument {
 export interface BoardMeetingData {
     meetingType: string;
     meetingName: string;
-    meetingAddress: string | null;
-    onlineAddress: string | null;
     dateStart: Date | null;
     dateEnd: Date | null;
+    meetingAddress: string | null;
+    onlineAddress: string | null;
     chooseFile: Array<FileType> | null;
     guests?: Array<Guest>;
     tasksList?: Array<Task>;
@@ -59,6 +59,14 @@ export interface BoardMeetingData {
 
 export interface ExistedBoardMeetings extends BoardMeetingData {
     id: number;
+}
+
+export interface ShortMetting {
+    id: number;
+    meetingType: string;
+    meetingName: string;
+    dateStart: Date | null;
+    dateEnd: Date | null;
 }
 
 export interface Task {

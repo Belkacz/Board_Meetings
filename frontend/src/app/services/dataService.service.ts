@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData } from '../shared/interfaces';
+import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMetting } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { RestService } from './restService.service';
 
@@ -26,14 +26,15 @@ export class InviteService {
 })
 export class dataService {
   constructor(private restService: RestService) { }
-  private actualMeetingsList$ = new BehaviorSubject<ExistedBoardMeetings[]>([]);
+  private actualMeetingsList$ = new BehaviorSubject<ShortMetting[]>([]);
+  private actualShortMeetingsList$ = new BehaviorSubject<ShortMetting[]>([]);
   private meetingGetError: Error | null = null;
 
-  public setGlobalMeetingsList(meetingsList: ExistedBoardMeetings[]) {
+  public setGlobalMeetingsList(meetingsList: ShortMetting[]) {
     this.actualMeetingsList$.next(meetingsList);
   }
 
-  public getGlobalMeetingsList(): Observable<ExistedBoardMeetings[]> {
+  public getGlobalMeetingsList(): Observable<ShortMetting[]> {
     return this.actualMeetingsList$.asObservable();
   }
 
@@ -56,7 +57,6 @@ export class dataService {
     return projectData;
   }
 
-
   public mapAgendas = (response: Agenda[]): Agenda[] => {
     const agendas: Agenda[] = [];
     response.forEach((agenda: any) => {
@@ -70,63 +70,94 @@ export class dataService {
     return agendas;
   }
 
-  public mapMeetings = (response: ExistedBoardMeetings[]): ExistedBoardMeetings[] => {
-    const meetingsList: ExistedBoardMeetings[] = [];
+  public mapShortMeeting = (response: ShortMetting[]): ShortMetting[] => {  
+    const meetingsList: ShortMetting[] = [];
     if (response.length > 0) {
       response.forEach((meeting: any) => {
-
-        const newGuests: Array<Guest> = []
-        if (meeting.guests) {
-          meeting.guests.forEach((guest: IncomingGuest) => {
-            const newGuest: Guest = {
-              id: guest.id,
-              name: guest.name,
-              surname: guest.surname,
-              jobPosition: guest.job_position,
-            }
-            newGuests.push(newGuest);
-          })
-        }
-
-        const newTasks: Array<Task> = []
-        if (meeting.tasksList) {
-          meeting.tasksList.forEach((task: Task) => {
-            const newTask: Task = {
-              id: task.id,
-              name: task.name,
-              description: task.description,
-              priority: task.priority,
-            }
-            newTasks.push(newTask);
-          })
-        }
-        let newAgenda = null;
-        if (meeting.agenda) {
-          newAgenda = {
-            id: meeting.agenda.id,
-            name: meeting.agenda.name,
-            list: meeting.agenda.order,
-          }
-        }
-        const newMeeting: ExistedBoardMeetings = {
+        const newMeeting: ShortMetting = {
           id: meeting.id,
           meetingType: meeting.meeting_type,
           meetingName: meeting.meeting_name,
-          meetingAddress: meeting.meeting_address,
-          onlineAddress: meeting.online_address,
           dateStart: meeting.start_date,
           dateEnd: meeting.end_date,
-          chooseFile: null,
-          addedDocuments: null,
-          guests: newGuests,
-          tasksList: newTasks,
-          agenda: newAgenda,
-          attachedDocuments: meeting.documents ? this.createDocumentsData(meeting.documents) : null
+        }
+        meetingsList.push(newMeeting);
+      })
+    }
+    return meetingsList;
+  }
+
+  public mapMeetingDetails = (meeting: any): ExistedBoardMeetings | null => {
+  let restultMeeting: ExistedBoardMeetings | null = null;
+  if (meeting) {
+      const newGuests: Array<Guest> = []
+      if (meeting.guests) {
+        meeting.guests.forEach((guest: IncomingGuest) => {
+          const newGuest: Guest = {
+            id: guest.id,
+            name: guest.name,
+            surname: guest.surname,
+            jobPosition: guest.job_position,
+          }
+          newGuests.push(newGuest);
+        })
+      }
+
+      const newTasks: Array<Task> = []
+      if (meeting.tasksList) {
+        meeting.tasksList.forEach((task: Task) => {
+          const newTask: Task = {
+            id: task.id,
+            name: task.name,
+            description: task.description,
+            priority: task.priority,
+          }
+          newTasks.push(newTask);
+        })
+      }
+      let newAgenda = null;
+      if (meeting.agenda) {
+        newAgenda = {
+          id: meeting.agenda.id,
+          name: meeting.agenda.name,
+          list: meeting.agenda.order,
+        }
+      }
+      const newMeeting: ExistedBoardMeetings = {
+        id: meeting.id,
+        meetingType: meeting.meeting_type,
+        meetingName: meeting.meeting_name,
+        dateStart: meeting.start_date,
+        dateEnd: meeting.end_date,
+        meetingAddress: meeting.meeting_address,
+        onlineAddress: meeting.online_address,
+        chooseFile: null,
+        addedDocuments: null,
+        guests: newGuests,
+        tasksList: newTasks,
+        agenda: newAgenda,
+        attachedDocuments: meeting.documents ? this.createDocumentsData(meeting.documents) : null
+      }
+      restultMeeting = newMeeting;
+  }
+  return restultMeeting;
+  }
+
+  public mapMeetings = (response: ExistedBoardMeetings[]): ShortMetting[] => {
+    const meetingsList: ShortMetting[] = [];
+    if (response.length > 0) {
+      response.forEach((meeting: any) => {
+        const newMeeting: ShortMetting = {
+          id: meeting.id,
+          meetingType: meeting.meeting_type,
+          meetingName: meeting.meeting_name,
+          dateStart: meeting.start_date,
+          dateEnd: meeting.end_date,
+
         }
         meetingsList.push(newMeeting);
       });
     }
-    this.setGlobalMeetingsList(meetingsList);
     return meetingsList;
   }
 
@@ -143,6 +174,28 @@ export class dataService {
             this.meetingGetError = error;
             console.error("Error:", error);
             resolve(false);
+          }
+        });
+    });
+  }
+
+
+  public getMeetingDetailService(id: number): Promise<ExistedBoardMeetings | Error | null> {
+    return new Promise<ExistedBoardMeetings | Error | null>((resolve) => {
+      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGDETAILS, null, id)
+        .subscribe({
+          next: (response: any) => {
+            let metting = this.mapMeetingDetails(response);
+            if(!metting){
+              resolve(null);
+            } else {
+              resolve(metting);
+            }
+
+          },
+          error: (error: any) => {
+            console.error("Error:", error);
+            resolve(error);
           }
         });
     });

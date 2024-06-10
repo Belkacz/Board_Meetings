@@ -23,6 +23,13 @@ class MeetingType(Enum):
     GENERALASSEMBLY = "generalAssembly"
     OTHER = "other"
 
+class ShortMeeting(BaseModel):
+    id: int | None = None
+    meeting_type: MeetingType
+    meeting_name: constr(min_length=1)
+    start_date: datetime
+    end_date: datetime
+
 class BaseMeeting(BaseModel):
     meeting_type: MeetingType
     meeting_name: constr(min_length=1)

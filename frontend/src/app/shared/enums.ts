@@ -22,5 +22,6 @@ export enum urls {
     GETPEOPLE = "get-people",
     GETAGENDAS = "get-agendas",
     UPLOADFILES = "upload-files",
-    GETPROJECTINFO = "get-project-info"
+    GETPROJECTINFO = "get-project-info",
+    GETMEETINGDETAILS = "meeting-details"
 }
