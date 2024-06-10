@@ -109,7 +109,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       alert("meeting type cannot be empty")
     } else if (this.combinedData.meetingName === "") {
       alert("meeting name cannot be empty")
-    } else if ((!this.newMeetingComponent.dateStartControl || !this.newMeetingComponent.dateEndControl)) {
+    } else if ((!this.newMeetingComponent.form.get('dateStart') || !this.newMeetingComponent.form.get('dateEnd'))) {
       alert("You need to chose date")
     } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
       alert("You need to provide a location or choose an online option");

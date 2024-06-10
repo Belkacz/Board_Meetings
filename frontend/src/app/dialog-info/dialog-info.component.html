@@ -1,11 +1,17 @@
+
 <div>
-    <mat-card class="scrollable-content">
+    <div>
+        <div *ngIf="!meeting" class="centered-top-container padding-20px">
+            <mat-spinner></mat-spinner>
+        </div>
+    </div>
+    <mat-card *ngIf="meeting" class="scrollable-content">
         <mat-card-content>
             <h1 mat-dialog-title>Meeting Infomation</h1>
             <mat-tab-group>
                 <mat-tab label="Base Infomation">
                     <div>
-                        <div>
+                        <div class="centered-container">
                             <mat-list class="segemnt">
                                 <mat-list-item role="listitem">
                                     meeting name: {{ meeting.meetingName }}
@@ -14,10 +20,10 @@
                                     Meeting type: {{ meeting.meetingType }}
                                 </mat-list-item>
                                 <mat-list-item role="listitem">
-                                    Date start: {{ meeting.dateStart }}
+                                    Date start: {{ meeting.dateStart | date: 'dd-MM-yyyy, HH:mm' }}
                                 </mat-list-item>
                                 <mat-list-item role="listitem">
-                                    Date end: {{ meeting.dateEnd }}
+                                    Date end: {{ meeting.dateEnd | date: 'dd-MM-yyyy, HH:mm' }}
                                 </mat-list-item>
                                 <mat-list-item *ngIf="meeting.meetingAddress " role="listitem">
                                     Location: {{ meeting.meetingAddress }}
@@ -66,14 +72,6 @@
                                     </mat-list>
                                 </mat-expansion-panel>
                             </mat-accordion>
-                            <!-- <mat-card-header>
-                                Attached documents:
-                            </mat-card-header>
-                            <mat-card-content *ngFor="let doc of meeting.attachedDocuments">
-                                <div class="file-list-element">
-                                    <a class="link" (click)="fileDownloadService.downloadFileFromUrl(doc)" >{{ doc.fileName }}</a><br>
-                                </div>
-                            </mat-card-content> -->
                         </mat-card>
                     </div>
                 </mat-tab>
@@ -112,10 +110,9 @@
                     </div>
                 </mat-tab>
             </mat-tab-group>
-
-            <div class="centered-container">
-                <button mat-stroked-button mat-dialog-close type="button">Close</button>
-            </div>
         </mat-card-content>
     </mat-card>
+    <div class="centered-container">
+        <button mat-stroked-button mat-dialog-close type="button">Close</button>
+    </div>
 </div>

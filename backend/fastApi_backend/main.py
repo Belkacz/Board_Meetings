@@ -148,9 +148,9 @@ def filesNotInOriginal(editedMeetingsDocs: list[str], originalDocs: list[str]) -
             notInEditedMeeting.append(doc)
     return notInEditedMeeting
 
-@app.put("/update-meeting", responses={
+@app.put("/update-meeting", responses= {
     403: {"description": "Meeting need at least one meeting address or online address", "model": ErrorResponse},
-    403: {"description": "Meeting with id #{edited_meeting.id} not found", "model": ErrorResponse},
+    404: {"description": "Meeting not found", "model": ErrorResponse},
 })
 async def update_meeting(edited_meeting: ExistedMeeting):
     updated_meeting = ExistedMeeting(
@@ -181,7 +181,9 @@ async def update_meeting(edited_meeting: ExistedMeeting):
 
 
 
-@app.delete("/delete-meeting/{meeting_id}")
+@app.delete("/delete-meeting/{meeting_id}", responses={
+    404: {"description": "Meeting not found", "model": ErrorResponse},
+})
 async def delete_meetings(meeting_id: int):
     tempMeetings = meetings
     for meeting in tempMeetings:
@@ -189,6 +191,8 @@ async def delete_meetings(meeting_id: int):
             if(meeting.documents):
                 deleteFiles(meeting.documents)
             meetings.remove(meeting)
+            return f"deleted meeting #{meeting_id}"
+    raise HTTPException(status_code=404, detail=f"Meeting with id #{meeting_id} not found")
 
 def deleteFiles(files: list[str]):
     for url in files:

@@ -56,6 +56,14 @@ h4 {
     width: 20%;
 }
 
+.mat-mdc-list-item.mdc-list-item.mat-mdc-list-item-single-line.mdc-list-item--with-one-line {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.segemnt {
+    padding: 5px;
+}
+
 @media only screen and (max-height: 750px) {
     .scrollable-content {
         max-height: 500px;

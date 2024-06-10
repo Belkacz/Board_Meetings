@@ -11,6 +11,10 @@
     <div *ngIf="meetingsNotEmpty">
         <div class="my-list">
             <table mat-table [dataSource]="meetingsList" class="mat-elevation-z8">
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
                 <ng-container matColumnDef="meetingName">
                     <th mat-header-cell *matHeaderCellDef> Meeting name </th>
                     <td mat-cell *matCellDef="let element"> {{element.meetingName}} </td>

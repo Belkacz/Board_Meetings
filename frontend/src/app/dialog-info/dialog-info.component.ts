@@ -9,6 +9,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ExistedBoardMeetings } from '../shared/interfaces';
 import { FileDownloadService } from '../services/file-download.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 @Component({
   selector: 'app-dialog-info',
@@ -22,14 +24,15 @@ import { FileDownloadService } from '../services/file-download.service';
     MatTabsModule,
     MatButtonModule,
     MatListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatProgressSpinnerModule
   ]
 })
 export class DialogInfoComponent {
-  meeting: ExistedBoardMeetings;
+  public meeting: ExistedBoardMeetings | null = null;
   panelOpenState = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ExistedBoardMeetings, public fileDownloadService: FileDownloadService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ExistedBoardMeetings | null, public fileDownloadService: FileDownloadService) {
     this.meeting = data;
   }
 }

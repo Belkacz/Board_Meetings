@@ -42,16 +42,19 @@
           <app-timepicker [selectedTime]="defaultTimeEnd"
             (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
         </div>
-        <mat-error *ngIf="(dateStartControl.errors?.['endBeforeBeginning'] || dateEndControl.errors?.['endBeforeBeginning'])
-        && !dateStartControl.pristine && !dateEndControl.pristine">The start date cannot be earlier than the end
-          date</mat-error>
+        <mat-error *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
+          && !form.get('dateStart')?.pristine && !form.get('dateEnd')?.pristine">
+          The start date cannot be earlier than the end date
+        </mat-error>
         <mat-error
-          *ngIf="dateStartControl.hasError('noStartingTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
+          *ngIf="form.get('dateStart')?.hasError('noStartingTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
           No starting meeting time
         </mat-error>
         <mat-error
-          *ngIf="dateEndControl.hasError('noEndTime') && (!dateStartControl.pristine || !dateEndControl.pristine)">
-          No end meeting time</mat-error>
+          *ngIf="form.get('dateEnd')?.hasError('noEndTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
+          No end meeting time
+        </mat-error>
+
       </div>
       <div>
         <h3>Location</h3>

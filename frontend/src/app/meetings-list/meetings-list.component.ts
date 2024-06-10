@@ -19,7 +19,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
   public meetingsList: ShortMetting[] = [];
-  public displayedColumns: string[] = ['meetingName', 'meetingType', 'dateStart', 'dateEnd', 'infoButton', 'deleteButton', 'editButton'];
+  public displayedColumns: string[] = ['id', 'meetingName', 'meetingType', 'dateStart', 'dateEnd', 'infoButton', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
   public page: number;
   public recordsNumber: number;

@@ -1,11 +1,15 @@
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Directive, OnInit } from '@angular/core';
 
-
-export abstract class BaseFormComponent {
+@Directive()
+export abstract class BaseFormComponent implements OnInit {
   public form!: FormGroup;
 
-  constructor() {
+  constructor(protected formBuilder: FormBuilder) {
     this.createFormControls();
+  }
+
+  ngOnInit() {
   }
 
   protected abstract createFormControls(): void;
