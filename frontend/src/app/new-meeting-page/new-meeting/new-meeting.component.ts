@@ -3,6 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType, urls } from '../../shared/enums';
 import { Agenda, ExistedBoardMeetings } from '../../shared/interfaces';
+import { FileDownloadService } from '../../services/file-download.service';
 import { FormValidators } from 'src/app/shared/formValidators.directive';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +12,6 @@ import { DialogSelectComponent } from 'src/app/dialog-select/dialog-select.compo
 import { Subscription } from 'rxjs';
 import { RestService } from 'src/app/services/restService.service';
 import { dataService } from 'src/app/services/dataService.service';
-import { FileDownloadService } from 'src/app/services/file-download.service';
 
 @Component({
   selector: 'app-new-meeting',
@@ -28,8 +28,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   private dateStart: Date;
   private dateEnd: Date;
   public TimeType = TimeType;
-  public dateStartControl!: FormControl;
-  public dateEndControl!: FormControl;
 
   public isHybridChecked!: boolean;
   public isAddressChecked!: boolean;
@@ -45,10 +43,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   public agendas: Agenda[];
   public agendasErrorMessage: string;
   private agendaSubscription: Subscription | undefined;
-
   private selectedDate = false;
   public noDatePicked = false;
-
   constructor(
     public fileDownloadService: FileDownloadService,
     public dialog: MatDialog,
@@ -67,6 +63,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
     this.agendas = [];
     this.agendasErrorMessage = ""
+
     this.createFormControls();
     this.pickedStartTimeString = null;
     this.pickedEndTimeString = null;
@@ -80,17 +77,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   private updateControlsWithEditMeeting(): void {
     if (this.editedMeeting) {
-      if (this.editedMeeting.dateStart) {
-        this.dateStart = new Date(this.editedMeeting.dateStart);
-      }
-      if (this.editedMeeting.dateEnd) {
-        this.dateEnd = new Date(this.editedMeeting.dateEnd);
-      }
       this.form.patchValue({
         selectedMeetingType: this.editedMeeting.meetingType || null,
         meetingName: this.editedMeeting.meetingName || null,
-        dateStart: this.dateStart || null,
-        dateEnd: this.dateEnd || null,
+        dateStart: this.editedMeeting.dateStart || null,
+        dateEnd: this.editedMeeting.dateEnd || null,
         meetingAddress: this.editedMeeting.meetingAddress || null,
         onlineAddress: this.editedMeeting.onlineAddress || null,
         attachedDocuments: this.editedMeeting.attachedDocuments || null,
@@ -101,65 +92,38 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateStart).getMinutes().toString();
         this.defaultTimeStart = `${tempHours}:${tempMinutes}`;
+        this.pickedStartTimeString = `${tempHours}:${tempMinutes}`;
       }
       if (this.editedMeeting.dateEnd) {
         const tempHours = new Date(this.editedMeeting.dateEnd).getHours().toString();
         const tempMinutes = new Date(this.editedMeeting.dateEnd).getMinutes().toString();
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`;
+        this.pickedEndTimeString = `${tempHours}:${tempMinutes}`;
       }
     }
-    this.form.updateValueAndValidity();
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   this.updateControlsWithEditMeeting();
-  //   this.formValidators();
-  // }
+  ngOnChanges(changes: SimpleChanges) {
+    this.updateControlsWithEditMeeting();
+  }
 
-  protected createFormControls(): void {
-    this.dateStartControl = new FormControl([Validators.required]);
-    this.dateEndControl = new FormControl([Validators.required]);
-    this.form = this.formBuilder.group({
-      selectedMeetingType: [null, Validators.required],
-      meetingName: [null, FormValidators.notEmpty()],
-      dateStart: [null, Validators.required],
-      dateEnd: [null, Validators.required],
-      meetingAddress: [null],
-      onlineAddress: [null],
-      addedDocuments: [null],
-      hybridType: [null],
-      agenda: this.formBuilder.group({
-        agendaName: [null],
-        list: [null]
+  createFormControls(): void {
+    this.form = new FormGroup({
+      selectedMeetingType: new FormControl([Validators.required]),
+      meetingName: new FormControl(null, FormValidators.notEmpty()),
+      dateStart: new FormControl(null, FormValidators.notEmpty()),
+      dateEnd: new FormControl(null, FormValidators.notEmpty()),
+      meetingAddress: new FormControl(),
+      onlineAddress: new FormControl(),
+      addedDocuments: new FormControl(null),
+      hybridType: new FormControl(),
+      agenda: new FormGroup({
+        agendaName: new FormControl(),
+        list: new FormControl()
       }),
-      attachedDocuments: [null]
+      attachedDocuments: new FormControl()
     });
     this.formValidators();
-  }
-
-  protected formValidators(): void {
-    console.log(this.dateStart)
-    this.form.get('dateStart')?.setAsyncValidators([
-      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl),
-    ]);
-    this.form.get('dateEnd')?.setAsyncValidators([
-      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl)
-    ]);
-    this.form.get('dateStart')?.setValidators([
-      Validators.required,
-    ]);
-    this.form.get('dateEnd')?.setValidators([
-      Validators.required,
-    ]);
-    this.form.setValidators([
-      FormValidators.locationValidator(this.isHybridChecked, this.isAddressChecked, this.isOnlineChecked),
-    ]);
-    this.dateStartControl.setAsyncValidators([
-      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl),
-    ]);
-    this.dateEndControl.setAsyncValidators([
-      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl)
-    ]);
   }
 
   private getAgendas(): Promise<void> {
@@ -184,6 +148,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       selectedMeetingType: option
     });
   }
+
 
   newAgenda(): void {
     const dialogRef = this.dialog.open(DialogListComponent)
@@ -231,18 +196,13 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.dateEnd.setFullYear(selectedDate.getFullYear());
       this.dateEnd.setMonth(selectedDate.getMonth());
       this.dateEnd.setDate(selectedDate.getDate());
+      this.selectedDate = true;
+      this.noDatePicked = false;
 
       this.form.get('dateStart')?.setValue(this.dateStart);
       this.form.get('dateEnd')?.setValue(this.dateEnd);
       this.form.get('dateStart')?.markAsDirty();
       this.form.get('dateEnd')?.markAsDirty();
-      this.selectedDate = true;
-      this.noDatePicked = false;
-
-      this.dateStartControl.setValue(this.dateStart);
-      this.dateEndControl.setValue(this.dateEnd);
-      this.dateStartControl.markAsDirty();
-      this.dateEndControl.markAsDirty();
       this.confirmTheExistenceOfTime();
     }
   }
@@ -255,8 +215,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.dateStart.setHours(parseInt(hour, 10));
       this.dateStart.setMinutes(parseInt(min, 10));
       this.form.get('dateStart')?.setValue(this.dateStart);
-      this.dateStartControl.setValue(this.dateStart);
-      console.log(this.dateStart)
 
     }
     if (type === TimeType.End) {
@@ -264,17 +222,14 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.dateEnd.setHours(parseInt(hour, 10));
       this.dateEnd.setMinutes(parseInt(min, 10));
       this.form.get('dateEnd')?.setValue(this.dateEnd);
-      this.dateEndControl.setValue(this.dateEnd);
     }
-    this.dateStartControl.markAsDirty();
-    this.dateEndControl.markAsDirty();
     this.form.get('dateStart')?.markAsDirty();
     this.form.get('dateEnd')?.markAsDirty();
+
     this.confirmTheExistenceOfTime();
     this.form.updateValueAndValidity();
     this.checkDateExistence();
   }
-
   private checkDateExistence() {
     if ((this.form.get('dateStart')?.dirty || this.form.get('dateEnd')?.dirty) && !this.selectedDate) {
       this.noDatePicked = true;
@@ -283,31 +238,16 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-  // private confirmTheExistenceOfTime(): void {
-  //   if (!this.pickedStartTimeString) {
-  //     const currentErrors = this.dateStartControl.errors || {};
-  //     currentErrors['noStartingTime'] = true;
-  //     this.dateStartControl.setErrors(currentErrors);
-  //   } else {
-  //     const currentErrors = this.dateStartControl.errors;
-  //     if (currentErrors && currentErrors['noStartingTime']) {
-  //       delete currentErrors['noStartingTime'];
-  //       this.dateStartControl.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
-  //     }
-  //   }
-
   private confirmTheExistenceOfTime(): void {
     if (!this.pickedStartTimeString) {
       const currentErrors = this.form.get('dateStart')?.errors || {};
       currentErrors['noStartingTime'] = true;
       this.form.get('dateStart')?.setErrors(currentErrors);
-      this.dateStartControl.setErrors(currentErrors);
     } else {
       const currentErrors = this.form.get('dateStart')?.errors;
       if (currentErrors && currentErrors['noStartingTime']) {
         delete currentErrors['noStartingTime'];
         this.form.get('dateStart')?.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
-        this.dateStartControl.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
       }
     }
 
@@ -323,6 +263,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       }
     }
   }
+
 
   public clearInput() {
     this.form.get('meetingName')?.reset('');
@@ -372,18 +313,18 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   openFilePicker(inputElement: ElementRef): void {
     inputElement.nativeElement.click();
   }
-
   onFileSelected(event: Event, type: FileType): void {
     const target = event.target as HTMLInputElement;
     if (target?.files !== null) {
       const selectedFile = target.files[0];
       if (type === FileType.AddDocument) {
-        const filesControl = this.form.get('addedDocuments')?.value;
+        const filesControl = this.form.get('addedDocuments')?.value
         const currentFiles = this.form.get('addedDocuments')?.value || [];
         this.form.get('addedDocuments')?.patchValue([...currentFiles, selectedFile]);
       }
     }
   }
+
 
   deleteDocs(docIndex: number): void {
     const currentFiles = this.form.get('addedDocuments')?.value || [];
@@ -397,9 +338,30 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.form.controls['attachedDocuments'].setValue(currentFiles);
   }
 
+
+
+  protected formValidators(): void {
+    this.form.get('dateStart')?.setAsyncValidators([
+      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl),
+    ]);
+    this.form.get('dateEnd')?.setAsyncValidators([
+      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl)
+    ]);
+    this.form.get('dateStart')?.setValidators([
+      Validators.required,
+    ]);
+    this.form.get('dateEnd')?.setValidators([
+      Validators.required,
+    ]);
+    this.form.setValidators([
+      FormValidators.locationValidator(this.isHybridChecked, this.isAddressChecked, this.isOnlineChecked),
+    ]);
+  }
+
   ngOnDestroy(): void {
     if (this.agendaSubscription) {
       this.agendaSubscription.unsubscribe();
     }
   }
+
 }

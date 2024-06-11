@@ -56,7 +56,6 @@ export class RestService {
       agenda: dataToSend.agenda,
       documents: attachedDocumentsUrls.length > 0 ? attachedDocumentsUrls : null
     };
-    console.log(packedText)
 
     if (endpoint === urls.UPDATEMEETING) {
       let updatePack = { ...packedText, id: dataToSend.id }

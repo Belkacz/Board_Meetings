@@ -150,7 +150,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       agenda: null,
       attachedDocuments: null
     }
-    console.log(this.combinedData)
   }
 
   public saveAndPublish(): void {
