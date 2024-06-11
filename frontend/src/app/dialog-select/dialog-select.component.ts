@@ -12,12 +12,15 @@ import { Agenda } from '../shared/interfaces';
 export class DialogSelectComponent {
 
   @Input() agendaList: Agenda[];
-  selectedAgenda: Agenda | null;
+  public selectedAgenda: Agenda | null;
+  public noAgendas = true;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Agenda[]) {
     this.selectedAgenda = null;
-    this.agendaList = data || [];
+    this.agendaList = data;
+    if(this.agendaList.length > 0) {
+      this.noAgendas = false;
+    }
   }
   panelOpenState = false;
-
 }

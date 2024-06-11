@@ -73,7 +73,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
       this.restService.deleteMeeting(id).subscribe({
         next: () => {
           this.fetchMeetings();
-          this._snackBar.open("Deleted object of id" + id, 'Close', { duration: 3000 });
+          this._snackBar.open("Deleted object of id" + id, 'Close', { duration: 3000, verticalPosition: 'top' });
         },
         error: (error: any) => {
           console.error('Error: ', error);

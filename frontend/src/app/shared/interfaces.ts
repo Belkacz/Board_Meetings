@@ -75,7 +75,7 @@ export interface ShortMetting {
 export interface Task {
     id: number;
     name: string;
-    description?: string;
+    description: string;
     priority?: number;
 }
 

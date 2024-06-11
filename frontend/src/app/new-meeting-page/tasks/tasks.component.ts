@@ -35,7 +35,8 @@ export class TasksComponent implements OnDestroy {
 
   private updateInitialTaskList() {
     if (!this.initialTasks) {
-      this.tasksList = [{ id: 1, name: "New task name 1" }, { id: 2, name: "New task name 2" }]
+      this.tasksList = [{ id: 1, name: "New task name 1", "description": "New task name 1" },
+      { id: 2, name: "New task name 2", "description": "New task name 1" }]
     } else {
       this.tasksList = this.initialTasks
     }
@@ -50,7 +51,7 @@ export class TasksComponent implements OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         const lastTask = this.tasksList[this.tasksList.length - 1];
-        let newTask: Task = { id: 0, name: result.Name };
+        let newTask: Task = { id: 0, name: result.Name, description: result.description };
         if (lastTask != undefined) {
           newTask.id = lastTask.id + 1;
         } else {

@@ -1,5 +1,6 @@
 from enum import Enum
-from pydantic import BaseModel, constr
+from typing_extensions import Annotated
+from pydantic import BaseModel, StringConstraints
 from datetime import datetime
 
 class ErrorResponse(BaseModel):
@@ -9,6 +10,12 @@ class Guest(BaseModel):
     name: str
     surname: str
     job_position: str
+    
+class ExternalGuest(BaseModel):
+    id: int
+    name: str
+    surname: str
+    jobPosition: str
 
 class Task(BaseModel):
     id: int
@@ -28,17 +35,25 @@ class MeetingType(Enum):
 class ShortMeeting(BaseModel):
     id: int | None = None
     meeting_type: MeetingType
-    meeting_name: constr(min_length=1)
+    meeting_name: Annotated[str, StringConstraints(min_length=1)]
     start_date: datetime
     end_date: datetime
+    
+class ExternalShortMeeting(BaseModel):
+    id: int | None = None
+    meetingType: MeetingType
+    meetingName: Annotated[str, StringConstraints(min_length=1)]
+    startDate: datetime
+    endDate: datetime
+
 
 class PagedListMeetings(BaseModel):
-    meetings: list[ShortMeeting]
+    meetings: list[ExternalShortMeeting]
     total_length: int
 
 class BaseMeeting(BaseModel):
     meeting_type: MeetingType
-    meeting_name: constr(min_length=1)
+    meeting_name: Annotated[str, StringConstraints(min_length=1)]
     start_date: datetime
     end_date: datetime
     meeting_address: str | None = None
@@ -47,8 +62,23 @@ class BaseMeeting(BaseModel):
     tasksList: list[Task] | None = None
     agenda: Agenda | None = None
     documents: list[str] | None = None
+    
+class ExternalBaseMeeting(BaseModel):
+    meetingType: MeetingType
+    meetingName: Annotated[str, StringConstraints(min_length=1)]
+    startDate: datetime
+    endDate: datetime
+    meetingAddress: str | None = None
+    onlineAddress: str | None = None
+    guests: list[ExternalGuest] | None = None
+    tasksList: list[Task] | None = None
+    agenda: Agenda | None = None
+    documents: list[str] | None = None
 
 class ExistedMeeting(BaseMeeting):
+    id: int | None = None
+    
+class ExternalExistedMeeting(ExternalBaseMeeting):
     id: int | None = None
 
 guests = [

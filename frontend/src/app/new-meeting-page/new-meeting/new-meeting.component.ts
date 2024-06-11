@@ -28,13 +28,15 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   private dateStart: Date;
   private dateEnd: Date;
   public TimeType = TimeType;
+  public dateStartControl!: FormControl;
+  public dateEndControl!: FormControl;
 
   public isHybridChecked!: boolean;
   public isAddressChecked!: boolean;
   public isOnlineChecked!: boolean;
 
-  private pickedStartTimeString!: string | null;
-  private pickedEndTimeString!: string | null;
+  private pickedStartTimeString: string | null;
+  private pickedEndTimeString: string | null;
 
   public defaultDate: Date | null;
   public defaultTimeStart: string | null;
@@ -66,27 +68,34 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.agendas = [];
     this.agendasErrorMessage = ""
     this.createFormControls();
+    this.pickedStartTimeString = null;
+    this.pickedEndTimeString = null;
   }
 
   ngOnInit() {
     this.form.get('meetingAddress')?.disable();
     this.form.get('onlineAddress')?.disable();
-    this.pickedStartTimeString = null;
-    this.pickedEndTimeString = null;
+    this.updateControlsWithEditMeeting();
   }
 
   private updateControlsWithEditMeeting(): void {
     if (this.editedMeeting) {
+      if (this.editedMeeting.dateStart) {
+        this.dateStart = new Date(this.editedMeeting.dateStart);
+      }
+      if (this.editedMeeting.dateEnd) {
+        this.dateEnd = new Date(this.editedMeeting.dateEnd);
+      }
       this.form.patchValue({
         selectedMeetingType: this.editedMeeting.meetingType || null,
         meetingName: this.editedMeeting.meetingName || null,
-        dateStart: this.editedMeeting.dateStart || null,
-        dateEnd: this.editedMeeting.dateEnd || null,
+        dateStart: this.dateStart || null,
+        dateEnd: this.dateEnd || null,
         meetingAddress: this.editedMeeting.meetingAddress || null,
         onlineAddress: this.editedMeeting.onlineAddress || null,
         attachedDocuments: this.editedMeeting.attachedDocuments || null,
       });
-
+      this.selectedDate = true;
       this.defaultDate = this.editedMeeting.dateStart || null;
       if (this.editedMeeting.dateStart) {
         const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
@@ -99,13 +108,17 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         this.defaultTimeEnd = `${tempHours}:${tempMinutes}`;
       }
     }
+    this.form.updateValueAndValidity();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.updateControlsWithEditMeeting();
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   this.updateControlsWithEditMeeting();
+  //   this.formValidators();
+  // }
 
   protected createFormControls(): void {
+    this.dateStartControl = new FormControl([Validators.required]);
+    this.dateEndControl = new FormControl([Validators.required]);
     this.form = this.formBuilder.group({
       selectedMeetingType: [null, Validators.required],
       meetingName: [null, FormValidators.notEmpty()],
@@ -121,11 +134,31 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       }),
       attachedDocuments: [null]
     });
+    this.formValidators();
+  }
+
+  protected formValidators(): void {
+    console.log(this.dateStart)
+    this.form.get('dateStart')?.setAsyncValidators([
+      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl),
+    ]);
+    this.form.get('dateEnd')?.setAsyncValidators([
+      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl)
+    ]);
     this.form.get('dateStart')?.setValidators([
       Validators.required,
     ]);
     this.form.get('dateEnd')?.setValidators([
       Validators.required,
+    ]);
+    this.form.setValidators([
+      FormValidators.locationValidator(this.isHybridChecked, this.isAddressChecked, this.isOnlineChecked),
+    ]);
+    this.dateStartControl.setAsyncValidators([
+      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl),
+    ]);
+    this.dateEndControl.setAsyncValidators([
+      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.dateStartControl, this.dateEndControl)
     ]);
   }
 
@@ -205,6 +238,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.form.get('dateEnd')?.markAsDirty();
       this.selectedDate = true;
       this.noDatePicked = false;
+
+      this.dateStartControl.setValue(this.dateStart);
+      this.dateEndControl.setValue(this.dateEnd);
+      this.dateStartControl.markAsDirty();
+      this.dateEndControl.markAsDirty();
       this.confirmTheExistenceOfTime();
     }
   }
@@ -217,13 +255,19 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.dateStart.setHours(parseInt(hour, 10));
       this.dateStart.setMinutes(parseInt(min, 10));
       this.form.get('dateStart')?.setValue(this.dateStart);
+      this.dateStartControl.setValue(this.dateStart);
+      console.log(this.dateStart)
+
     }
     if (type === TimeType.End) {
       this.pickedEndTimeString = time;
       this.dateEnd.setHours(parseInt(hour, 10));
       this.dateEnd.setMinutes(parseInt(min, 10));
       this.form.get('dateEnd')?.setValue(this.dateEnd);
+      this.dateEndControl.setValue(this.dateEnd);
     }
+    this.dateStartControl.markAsDirty();
+    this.dateEndControl.markAsDirty();
     this.form.get('dateStart')?.markAsDirty();
     this.form.get('dateEnd')?.markAsDirty();
     this.confirmTheExistenceOfTime();
@@ -239,16 +283,31 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
+  // private confirmTheExistenceOfTime(): void {
+  //   if (!this.pickedStartTimeString) {
+  //     const currentErrors = this.dateStartControl.errors || {};
+  //     currentErrors['noStartingTime'] = true;
+  //     this.dateStartControl.setErrors(currentErrors);
+  //   } else {
+  //     const currentErrors = this.dateStartControl.errors;
+  //     if (currentErrors && currentErrors['noStartingTime']) {
+  //       delete currentErrors['noStartingTime'];
+  //       this.dateStartControl.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
+  //     }
+  //   }
+
   private confirmTheExistenceOfTime(): void {
     if (!this.pickedStartTimeString) {
       const currentErrors = this.form.get('dateStart')?.errors || {};
       currentErrors['noStartingTime'] = true;
       this.form.get('dateStart')?.setErrors(currentErrors);
+      this.dateStartControl.setErrors(currentErrors);
     } else {
       const currentErrors = this.form.get('dateStart')?.errors;
       if (currentErrors && currentErrors['noStartingTime']) {
         delete currentErrors['noStartingTime'];
         this.form.get('dateStart')?.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
+        this.dateStartControl.setErrors(Object.keys(currentErrors).length === 0 ? null : currentErrors);
       }
     }
 
@@ -336,24 +395,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     const currentFiles = this.form.get('attachedDocuments')?.value || [];
     currentFiles.splice(docIndex, 1);
     this.form.controls['attachedDocuments'].setValue(currentFiles);
-  }
-
-  protected formValidators(): void {
-    this.form.get('dateStart')?.setAsyncValidators([
-      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl),
-    ]);
-    this.form.get('dateEnd')?.setAsyncValidators([
-      FormValidators.startBeforeEnd(this.dateStart, this.dateEnd, this.form.get('dateStart') as FormControl, this.form.get('dateEnd') as FormControl)
-    ]);
-    this.form.get('dateStart')?.setValidators([
-      Validators.required,
-    ]);
-    this.form.get('dateEnd')?.setValidators([
-      Validators.required,
-    ]);
-    this.form.setValidators([
-      FormValidators.locationValidator(this.isHybridChecked, this.isAddressChecked, this.isOnlineChecked),
-    ]);
   }
 
   ngOnDestroy(): void {

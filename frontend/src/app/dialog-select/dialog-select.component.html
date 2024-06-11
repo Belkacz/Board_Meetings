@@ -1,8 +1,16 @@
 <mat-dialog-content class="main-dialog">
-    <div>
+    <div *ngIf="!noAgendas" class="avatar-container">
         <h3>Choose Agenda</h3>
     </div>
-    <div>
+    <div *ngIf="noAgendas">
+        <h3>No agendas</h3>
+        <br>
+        <div class="avatar-container">
+            <mat-icon style="margin-right: 5px;">notification_important</mat-icon>
+            <p>The agenda list is empty</p>
+        </div>
+    </div>
+    <div *ngIf="!noAgendas">
         <mat-radio-group class="padding-container" [(ngModel)]="selectedAgenda">
             <div class="flex-box-space" *ngFor="let agenda of agendaList">
                 <mat-accordion>

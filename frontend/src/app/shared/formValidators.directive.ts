@@ -1,4 +1,4 @@
-import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Observable, of } from "rxjs";
 
 export class FormValidators {
@@ -13,19 +13,20 @@ export class FormValidators {
     };
   }
 
-  // public static startBeforeEnd(endDate: Date | null): AsyncValidatorFn {
-  //     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-  //         const value = control.value;
-  //         if (value && endDate && value > endDate ) {
-  //             return of({ endBeforeBeginning: true });
-  //         }
-  //         return of(null);
-  //     };
-  // }
+
   public static startBeforeEnd(startDate: Date, endDate: Date, startControl: FormControl, endControl: FormControl): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      console.log("asynch valid")
       const value = control.value;
+      console.log(startDate.getTime())
+      console.log(endDate.getTime())
       if (startDate.getTime() > endDate.getTime()) {
+        console.log(true)
+      } else {
+        console.log(false)
+      }
+      if (startDate.getTime() > endDate.getTime()) {
+        console.log("WARUNEk")
         startControl.setErrors({ endBeforeBeginning: true });
         endControl.setErrors({ endBeforeBeginning: true });
       } else {

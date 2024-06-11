@@ -143,7 +143,8 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
         { id: 1, name: "Wade", surname: "Warner", jobPosition: "Cair of the board" },
         { id: 2, name: "Floyd", surname: "Miles", jobPosition: "Board member" },
         { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" }],
-      tasksList: [{ "id": 1, "name": "New task name 1" }, { "id": 2, "name": "New task name 2" }],
+      tasksList: [{ "id": 1, "name": "New task name 1", "description": "New task name 1" },
+        { "id": 2, "name": "New task name 2","description": "New task name 1" }],
       chooseFile: null,
       addedDocuments: null,
       agenda: null,
@@ -160,15 +161,13 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       }
     }
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
+    this.combinedData.meetingAddress = this.newMeetingComponent.form.get('meetingAddress')?.value;
+    this.combinedData.onlineAddress = this.newMeetingComponent.form.get('onlineAddress')?.value;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
     this.combinedData.addedDocuments = this.newMeetingComponent.form.get('addedDocuments')?.value;
 
     const files = this.newMeetingComponent.form.get('addedDocuments')?.value;
-
-    if (!this.combinedData.agenda?.name) {
-      this.combinedData.agenda = null;
-    }
 
     if (this.combinedData.meetingType === "") {
       alert("meeting type cannot be empty")

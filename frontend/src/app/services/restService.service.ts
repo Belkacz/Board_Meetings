@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { promiseData } from './promise';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BoardMeetingData, backendGuest } from '../shared/interfaces';
+import { BoardMeetingData, ExistedBoardMeetings, Guest, backendGuest } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RestService {
-  constructor(private http: HttpClient, private router: Router, private _snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   uploadFiles(files: File[], endpoint: string) {
     const formData = new FormData();
@@ -23,40 +23,43 @@ export class RestService {
     return this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData);
   }
 
-  sendDataToFastApi(dataToSend: BoardMeetingData, endpoint: urls) {
+  sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls) {
     const attachedDocumentsUrls: string[] = []
     if (dataToSend.attachedDocuments) {
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
       });
     }
-    const newGuests: backendGuest[] = [];
+    const newGuests: Guest[] = [];
     if (dataToSend.guests != undefined) {
       dataToSend.guests.forEach(guest => {
         const newGuest = {
           id: guest.id,
           name: guest.name,
           surname: guest.surname,
-          job_position: guest.jobPosition
+          jobPosition: guest.jobPosition
         }
         newGuests.push(newGuest);
       });
     }
 
     let packedText = {
-      meeting_type: dataToSend.meetingType,
-      meeting_name: dataToSend.meetingName,
-      start_date: dataToSend.dateStart,
-      end_date: dataToSend.dateEnd,
-      meeting_address: dataToSend.meetingAddress,
-      online_address: dataToSend.onlineAddress,
+      id: dataToSend.id,
+      meetingType: dataToSend.meetingType,
+      meetingName: dataToSend.meetingName,
+      startDate: dataToSend.dateStart,
+      endDate: dataToSend.dateEnd,
+      meetingAddress: dataToSend.meetingAddress,
+      onlineAddress: dataToSend.onlineAddress,
       guests: newGuests,
-      tasks: dataToSend.tasksList,
+      tasksList: dataToSend.tasksList,
       agenda: dataToSend.agenda,
-      documents: attachedDocumentsUrls ? attachedDocumentsUrls : null
+      documents: attachedDocumentsUrls.length > 0 ? attachedDocumentsUrls : null
     };
+    console.log(packedText)
+
     if (endpoint === urls.UPDATEMEETING) {
-      let updatePack = { ...packedText, id: dataToSend['id'] }
+      let updatePack = { ...packedText, id: dataToSend.id }
       this.http.put(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
         .subscribe({
           next: response => {

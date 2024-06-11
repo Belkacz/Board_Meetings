@@ -27,7 +27,6 @@ export class InviteService {
 export class dataService {
   constructor(private restService: RestService) { }
   private actualMeetingsList$ = new BehaviorSubject<ShortMetting[]>([]);
-  private actualShortMeetingsList$ = new BehaviorSubject<ShortMetting[]>([]);
   private meetingGetError: Error | null = null;
 
   public setGlobalMeetingsList(meetingsList: ShortMetting[]) {
@@ -75,12 +74,12 @@ export class dataService {
     if (meeting) {
       const newGuests: Array<Guest> = []
       if (meeting.guests) {
-        meeting.guests.forEach((guest: IncomingGuest) => {
+        meeting.guests.forEach((guest: Guest) => {
           const newGuest: Guest = {
             id: guest.id,
             name: guest.name,
             surname: guest.surname,
-            jobPosition: guest.job_position,
+            jobPosition: guest.jobPosition,
           }
           newGuests.push(newGuest);
         })
@@ -108,12 +107,12 @@ export class dataService {
       }
       const newMeeting: ExistedBoardMeetings = {
         id: meeting.id,
-        meetingType: meeting.meeting_type,
-        meetingName: meeting.meeting_name,
-        dateStart: meeting.start_date,
-        dateEnd: meeting.end_date,
-        meetingAddress: meeting.meeting_address,
-        onlineAddress: meeting.online_address,
+        meetingType: meeting.meetingType,
+        meetingName: meeting.meetingName,
+        dateStart: meeting.startDate,
+        dateEnd: meeting.endDate,
+        meetingAddress: meeting.meetingAddress,
+        onlineAddress: meeting.onlineAddress,
         chooseFile: null,
         addedDocuments: null,
         guests: newGuests,
@@ -132,11 +131,10 @@ export class dataService {
       response.forEach((meeting: any) => {
         const newMeeting: ShortMetting = {
           id: meeting.id,
-          meetingType: meeting.meeting_type,
-          meetingName: meeting.meeting_name,
-          dateStart: meeting.start_date,
-          dateEnd: meeting.end_date,
-
+          meetingType: meeting.meetingType,
+          meetingName: meeting.meetingName,
+          dateStart: meeting.startDate,
+          dateEnd: meeting.endDate,
         }
         meetingsList.push(newMeeting);
       });
@@ -168,6 +166,7 @@ export class dataService {
       this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGDETAILS, null, id)
         .subscribe({
           next: (response: any) => {
+            console.log(response)
             let metting = this.mapMeetingDetails(response);
             if (!metting) {
               resolve(null);
