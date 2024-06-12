@@ -72,20 +72,28 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   private loadMeetingData(id: number): void {
     this.loadingMeeting = true;
     this.dataService.getMeetingDetailService(id)
-      .then((resolve) => {
-        if (resolve instanceof Error) {
-          console.error("Error occurred:", resolve);
-          this.loadingMeeting = false;
-          this.getMeetingError = "Server communication error";
+    .then((resolve) => {
+      if (this.dataService.isError(resolve)) {
+        console.error("Error occurred:", resolve);
+        if(this.dataService.getErrorStatus(resolve) == 404) {
+          this.getMeetingError = "The meeting with the specified ID cannot be found";
         } else {
+          this.getMeetingError = "Server communication error";
+        }
+        this.loadingMeeting = false;
+
+      } else {
+        if (resolve !== null && !(resolve instanceof Error)) {
           this.editedMeeting = resolve;
-          this.foundMeeting = true;
           this.loadingMeeting = false;
           this.mapMeetingData();
           this.formDisabled = false;
+        } else {
+          console.error("Null response received");
         }
-      });
-  }
+      }
+    });
+}
 
   private mapMeetingData(): void {
     if (this.editedMeeting && this.editedMeeting.guests) {

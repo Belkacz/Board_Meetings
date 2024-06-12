@@ -1,14 +1,26 @@
 import os
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
-from pydantic import BaseModel
-from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional, Union
 from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
-import ssl
+from fastapi.responses import FileResponse
 
-from .meetings import meetings, guests, agendas, ExternalGuest, ExternalExistedMeeting, Guest, Agenda, BaseMeeting, ExistedMeeting, ShortMeeting, PagedListMeetings, ErrorResponse, ExternalShortMeeting, ExternalBaseMeeting
+from .meetings import (
+    meetings,
+    guests,
+    agendas,
+    ExternalGuest,
+    ExternalExistedMeeting,
+    Guest,
+    Agenda,
+    ExistedMeeting,
+    ShortMeeting,
+    PagedListMeetings,
+    ErrorResponse,
+    ExternalShortMeeting,
+    ExternalBaseMeeting
+)
 from .projectInformation import projectInfo1, ProjectDataExternal
 
 app = FastAPI()
@@ -56,7 +68,7 @@ async def get_meetings_list(page: int, pagesize: int):
     total_length = len(meetings)
     response_data = {
         "meetings": meetings_list,
-        "total_length": total_length
+        "totalLength": total_length
     }
 
     if total_length <= 0:
@@ -122,7 +134,7 @@ async def get_agendas_list():
     print("agendas")
     return agendas
 
-UPLOAD_DIRECTORY = "fastApi_backend/meetings_docs"
+UPLOAD_DIRECTORY = "./meetings_docs"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
 
@@ -138,8 +150,24 @@ async def create_upload_files(files: List[UploadFile] = File(...)):
         file_urls.append(f"/files/{filename}")
     return {"file_urls": file_urls}
 
-app.mount("/files", StaticFiles(directory=UPLOAD_DIRECTORY), name="files")
 
+@app.get("/files/{file_name}")
+async def get_file(file_name: str):
+    file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
+    print(file_path)
+    if os.path.exists(file_path):
+        dollar_index = file_name.find('$') + 1
+        if dollar_index != -1:
+            new_file_name = file_name[dollar_index:]
+        else:
+            new_file_name = file_name
+
+        return FileResponse(
+            path=file_path,
+            filename=new_file_name,
+        )
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
 
 def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
     if (meeting_address and len(meeting_address) > 0) or (online_address and len(online_address) > 0):

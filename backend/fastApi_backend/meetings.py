@@ -49,7 +49,7 @@ class ExternalShortMeeting(BaseModel):
 
 class PagedListMeetings(BaseModel):
     meetings: list[ExternalShortMeeting]
-    total_length: int
+    totalLength: int
 
 class BaseMeeting(BaseModel):
     meeting_type: MeetingType
@@ -150,7 +150,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
         ExistedMeeting(
     id=5,
@@ -170,7 +170,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=6,
@@ -190,7 +190,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=7,
@@ -210,7 +210,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=8,
@@ -230,7 +230,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=9,
@@ -250,7 +250,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     )
     ,
     ExistedMeeting(
@@ -271,7 +271,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=11,
@@ -291,7 +291,7 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=12,
@@ -311,12 +311,12 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     ),
     ExistedMeeting(
     id=13,
     meeting_type="boardMeeting",
-    meeting_name="Meeting 3",
+    meeting_name="Meeting 13",
     start_date="2024-04-10T13:14:50.985Z",
     end_date="2024-04-10T15:16:50.985Z",
     meeting_address="uczelnia",
@@ -331,6 +331,6 @@ meetings = [
         Task(id=2, name="task2", description="task2 desc")
     ],
     agenda=agendas[1],
-    documents = ["/files/testFile1.txt", "/files/testFile2.txt"]
+    documents = ["/files/123$testFile1.txt", "/files/1234$testFile2.txt"]
     )
 ]

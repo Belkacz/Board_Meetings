@@ -6,7 +6,7 @@ COPY ./fastApi_backend/requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY ./fastApi_backend/* /code/app
+COPY ./fastApi_backend/ /code/app
 
 EXPOSE 8000
 

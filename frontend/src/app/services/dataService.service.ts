@@ -149,7 +149,7 @@ export class dataService {
           next: (response: any) => {
             let meetingsList = this.mapMeetings(response.meetings);
             this.setGlobalMeetingsList(meetingsList);
-            resolve({ result: true, length: response.total_length });
+            resolve({ result: true, length: response.totalLength });
           },
           error: (error: any) => {
             this.meetingGetError = error;
@@ -168,15 +168,14 @@ export class dataService {
           next: (response: any) => {
             let metting = this.mapMeetingDetails(response);
             if (!metting) {
-              resolve(null);
+              return resolve(null);
             } else {
-              resolve(metting);
+              return resolve(metting);
             }
 
           },
-          error: (error: any) => {
-            console.error("Error:", error);
-            resolve(error);
+          error: (error: Error) => {
+            return resolve(error);
           }
         });
     });
@@ -185,13 +184,30 @@ export class dataService {
   public createDocumentsData = (filesUrls: Array<string>): Array<AttachedDocument> => {
     const attachedDocuments: Array<AttachedDocument> = [];
     filesUrls.forEach(url => {
+      const dollarIndex = url.indexOf('$')+1;
       const newAttachedDocument: AttachedDocument = {
-        fileName: url.slice(7),
+        fileName: url.slice(dollarIndex),
         originalUrl: url,
         fullUrl: `${urls.protocolBase}${urls.localFastApi}${url}`,
       }
       attachedDocuments.push(newAttachedDocument);
     });
     return attachedDocuments;
+  }
+
+  public isError(obj: any): boolean {
+    if(obj.status > 400){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public getErrorStatus(obj: any): number {
+    if(obj.status){
+      return obj.status;
+    } else {
+      return 0;
+    }
   }
 }

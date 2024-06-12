@@ -86,7 +86,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   meetingInfo(meetingId: number): void {
     this.dataService.getMeetingDetailService(meetingId)
       .then((resolve) => {
-        if (resolve instanceof Error) {
+        if (this.dataService.isError(resolve)) {
           console.error("Error occurred:", resolve);
         } else {
           const dialogRef = this.dialog.open(DialogInfoComponent, {

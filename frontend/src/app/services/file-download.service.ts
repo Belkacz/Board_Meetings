@@ -6,10 +6,14 @@ import { AttachedDocument, DownloadFile } from '../shared/interfaces';
 })
 export class FileDownloadService {
   private downloadFile(url: string, name: string): void {
+    console.log(name)
+    const dollarIndex = name.indexOf('$')+1;
+    console.log(dollarIndex)
+
     const downloadLink = document.createElement('a');
     downloadLink.setAttribute('target', '_blank');
     downloadLink.setAttribute('href', url);
-    downloadLink.setAttribute('download', name);
+    downloadLink.setAttribute('download', "dupa");
     downloadLink.click();
     downloadLink.remove();
   }

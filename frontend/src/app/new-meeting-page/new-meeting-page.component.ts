@@ -61,7 +61,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    console.log(this.newMeetingComponent)
     this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
       this.formDisabled = status !== 'VALID';
     });
