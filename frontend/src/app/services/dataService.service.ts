@@ -166,7 +166,6 @@ export class dataService {
       this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGDETAILS, null, id)
         .subscribe({
           next: (response: any) => {
-            console.log(response)
             let metting = this.mapMeetingDetails(response);
             if (!metting) {
               resolve(null);

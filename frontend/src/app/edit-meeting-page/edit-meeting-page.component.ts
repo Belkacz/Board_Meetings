@@ -1,49 +1,44 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
 import { InviteService, dataService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
 import { NewMeetingComponent } from '../new-meeting-page/new-meeting/new-meeting.component';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-meeting-page',
   templateUrl: './edit-meeting-page.component.html',
-  styleUrls: ['./edit-meeting-page.component.css'],
-  providers: [NewMeetingComponent]
+  styleUrls: ['./edit-meeting-page.component.css']
 })
-
 export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
   editedMeetingId: number | null = null;
-  editedMeting: ExistedBoardMeetings | null = null;
-  public formDisabled: boolean;
+  public formDisabled: boolean = true;
   private subscription: Subscription | undefined;
 
-  @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
+  // @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent | undefined;
 
-  private guestsList: GuestInvited[];
-  private tasksList: Task[];
+  private guestsList: GuestInvited[] = [];
+  private tasksList: Task[] = [];
   private combinedData: BoardMeetingData;
   private draft: BoardMeetingData;
   public editedMeeting: ExistedBoardMeetings | null = null;
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
-  public foundMeeting: boolean;
-  public getMeetingError: string | null;
-  public loadingMeeting: boolean;
+  public foundMeeting: boolean = false;
+  public getMeetingError: string | null = null;
+  public loadingMeeting: boolean = true;
+  private newFiels: any;
 
-  constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private dataService: dataService
+  constructor(
+    private inviteService: InviteService,
+    private restService: RestService,
+    private route: ActivatedRoute,
+    private dataService: dataService
   ) {
-    this.loadingMeeting = true;
-    this.foundMeeting = false;
-    this.getMeetingError = null;
-    this.newMeetingComponent = newMeeting;
-    this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
-    this.tasksList = []
     this.combinedData = {
       meetingType: '',
       meetingName: '',
@@ -59,9 +54,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       attachedDocuments: null
     }
     this.draft = this.combinedData;
-
-    this.formDisabled = this.editedMeeting ? false : true;
-
   }
 
   ngOnInit() {
@@ -76,29 +68,23 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
-    if (this.newMeetingComponent) {
-      this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
-        this.formDisabled = status !== 'VALID';
-      });
-    }
-  }
 
   private loadMeetingData(id: number): void {
     this.loadingMeeting = true;
     this.dataService.getMeetingDetailService(id)
-    .then((resolve) => {
-      if (resolve instanceof Error) {
-        console.error("Error occurred:", resolve);
-        this.loadingMeeting = false;
-        this.getMeetingError = "Server communication error";
-      } else {
-        this.editedMeeting = resolve
-        this.foundMeeting = true;
-        this.loadingMeeting = false;
-        this.mapMeetingData();
-      }
-    })
+      .then((resolve) => {
+        if (resolve instanceof Error) {
+          console.error("Error occurred:", resolve);
+          this.loadingMeeting = false;
+          this.getMeetingError = "Server communication error";
+        } else {
+          this.editedMeeting = resolve;
+          this.foundMeeting = true;
+          this.loadingMeeting = false;
+          this.mapMeetingData();
+          this.formDisabled = false;
+        }
+      });
   }
 
   private mapMeetingData(): void {
@@ -111,22 +97,22 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
           surname: guest.surname,
           jobPosition: guest.jobPosition,
           invited: true
-        }
+        };
         editedInvitedGuests.push(invitedGuest);
       });
-      this.inviteService.updateGuestsList(editedInvitedGuests)
+      this.inviteService.updateGuestsList(editedInvitedGuests);
     }
 
     if (this.editedMeeting && this.editedMeeting.tasksList) {
-      this.editedTasks = this.editedMeeting.tasksList
+      this.editedTasks = this.editedMeeting.tasksList;
     }
     if (this.editedMeeting && this.editedMeeting.guests) {
-      this.invitedToEdited = this.editedMeeting.guests
+      this.invitedToEdited = this.editedMeeting.guests;
     }
 
     this.inviteService.inviteList$.subscribe(invited => {
       this.guestsList = invited;
-    })
+    });
   }
 
   public saveDraft(): void {
@@ -142,49 +128,38 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       guests: [
         { id: 1, name: "Wade", surname: "Warner", jobPosition: "Cair of the board" },
         { id: 2, name: "Floyd", surname: "Miles", jobPosition: "Board member" },
-        { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" }],
-      tasksList: [{ "id": 1, "name": "New task name 1", "description": "New task name 1" },
-        { "id": 2, "name": "New task name 2","description": "New task name 1" }],
+        { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" }
+      ],
+      tasksList: [
+        { id: 1, name: "New task name 1", description: "New task name 1" },
+        { id: 2, name: "New task name 2", description: "New task name 1" }
+      ],
       chooseFile: null,
       addedDocuments: null,
       agenda: null,
       attachedDocuments: null
-    }
+    };
   }
 
   public saveAndPublish(): void {
-    const formValue = this.newMeetingComponent.form.value;
-    for (const key in formValue) {
-      if (key in this.combinedData) {
-        this.combinedData = { ...this.combinedData, [key]: formValue[key] };
-      }
-    }
-    this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
-    this.combinedData.meetingAddress = this.newMeetingComponent.form.get('meetingAddress')?.value;
-    this.combinedData.onlineAddress = this.newMeetingComponent.form.get('onlineAddress')?.value;
-    this.combinedData.guests = this.guestsList;
-    this.combinedData.tasksList = this.tasksList;
-    this.combinedData.addedDocuments = this.newMeetingComponent.form.get('addedDocuments')?.value;
-
-    const files = this.newMeetingComponent.form.get('addedDocuments')?.value;
 
     if (this.combinedData.meetingType === "") {
-      alert("meeting type cannot be empty")
+      alert("meeting type cannot be empty");
     } else if (this.combinedData.meetingName === "") {
-      alert("meeting name cannot be empty")
-    } else if ((!this.newMeetingComponent.form.get('dateStart') || !this.newMeetingComponent.form.get('dateEnd'))) {
-      alert("You need to chose date")
+      alert("meeting name cannot be empty");
+    } else if ((!this.combinedData.dateStart) || !this.combinedData.dateEnd) {
+      alert("You need to choose a date");
     } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
       alert("You need to provide a location or choose an online option");
     } else {
-      alert('Save And Publish Placeholder, open console for more details')
+      alert('Save And Publish Placeholder, open console for more details');
     }
 
     if (this.editedMeeting) {
-      this.combinedData = { ...this.combinedData, id: this.editedMeeting.id }
-      if (files && files.length > 0) {
-        const responseUrls: string[] = []
-        this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
+      this.combinedData = { ...this.combinedData, id: this.editedMeeting.id };
+      if (this.newFiels && this.newFiels.length > 0) {
+        const responseUrls: string[] = [];
+        this.restService.uploadFiles(this.newFiels, urls.UPLOADFILES).subscribe({
           next: (response: any) => {
             console.log("Response from FastApi:", response);
             response.file_urls.forEach((url: string) => {
@@ -206,6 +181,21 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
   public saveTasksList(tasksList: Task[]): void {
     this.tasksList = tasksList;
+    this.combinedData.tasksList = this.tasksList;
+  }
+
+  public reciveForm(form : any): void {
+    this.combinedData.meetingName = form.value.meetingName;
+    this.combinedData.meetingType = form.value.selectedMeetingType;
+    this.combinedData.dateStart = form.value.dateStart;
+    this.combinedData.dateEnd = form.value.dateEnd;
+    this.combinedData.meetingAddress = form.get('meetingAddress')?.value;
+    this.combinedData.onlineAddress = form.get('onlineAddress')?.value;
+    this.combinedData.guests = this.guestsList;
+    this.combinedData.tasksList = this.tasksList;
+    this.combinedData.addedDocuments = form.get('addedDocuments')?.value;
+    this.newFiels = form.get('addedDocuments')?.value;
+    this.formDisabled = form.status !== 'VALID';
   }
 
   ngOnDestroy(): void {

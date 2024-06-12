@@ -27,7 +27,7 @@
 <div *ngIf="foundMeeting && !getMeetingError && !loadingMeeting">
     <div class="main-container">
         <div class="main-menu">
-            <app-new-meeting [editedMeeting]="editedMeeting"></app-new-meeting>
+            <app-new-meeting [editedMeeting]="editedMeeting" (formEmiter)="reciveForm($event)"></app-new-meeting>
         </div>
         <div class="separator-vertical"></div>
         <div class="side-menu">

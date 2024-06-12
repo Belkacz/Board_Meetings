@@ -27,6 +27,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   public editedMeeting: ExistedBoardMeetings | null = null;
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
+  private newFiles: any;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private route: ActivatedRoute, private dataService: dataService
@@ -60,6 +61,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    console.log(this.newMeetingComponent)
     this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
       this.formDisabled = status !== 'VALID';
     });
@@ -88,7 +90,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  public saveAndPublish(): void {
+  private mapFormToCombienedData(): void {
     const formValue = this.newMeetingComponent.form.value;
     for (const key in formValue) {
       if (key in this.combinedData) {
@@ -98,13 +100,14 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
+    this.combinedData.agenda = this.newMeetingComponent.form.value.agenda
 
-    const files = this.newMeetingComponent.form.get('addedDocuments')?.value;
+    this.newFiles = this.newMeetingComponent.form.get('addedDocuments')?.value;
+  }
 
-    if (!this.combinedData.agenda?.name) {
-      this.combinedData.agenda = null;
-    }
-
+  public saveAndPublish(): void {
+    this.mapFormToCombienedData();
+  
     if (this.combinedData.meetingType === "") {
       alert("meeting type cannot be empty")
     } else if (this.combinedData.meetingName === "") {
@@ -117,9 +120,9 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       alert('Save And Publish Placeholder, open console for more details')
     }
 
-    if (files && files.length > 0) {
+    if (this.newFiles && this.newFiles.length > 0) {
       const responseUrls: string[] = []
-      this.restService.uploadFiles(files, urls.UPLOADFILES).subscribe({
+      this.restService.uploadFiles(this.newFiles, urls.UPLOADFILES).subscribe({
         next: (response: any) => {
           response.file_urls.forEach((url: string) => {
             const fullUrl = `${url}`;

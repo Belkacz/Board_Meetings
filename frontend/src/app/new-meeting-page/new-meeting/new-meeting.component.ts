@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType, urls } from '../../shared/enums';
@@ -20,6 +20,7 @@ import { dataService } from 'src/app/services/dataService.service';
 })
 export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   @Input() editedMeeting: ExistedBoardMeetings | null;
+  @Output() formEmiter = new EventEmitter<any>();
   @ViewChild('chooseFile') chooseFileInput!: ElementRef;
   @ViewChild('addDocument') addDocumentInput!: ElementRef;
 
@@ -73,6 +74,17 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     this.form.get('meetingAddress')?.disable();
     this.form.get('onlineAddress')?.disable();
     this.updateControlsWithEditMeeting();
+    this.form.valueChanges.subscribe(() => {
+      this.emitForm();
+    });
+  }
+
+  ngOnChanges(editedMeeting: SimpleChanges) {
+    this.updateControlsWithEditMeeting();
+  }
+
+  emitForm(): void {
+    this.formEmiter.emit(this.form);
   }
 
   private updateControlsWithEditMeeting(): void {
@@ -89,26 +101,30 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       this.selectedDate = true;
       this.defaultDate = this.editedMeeting.dateStart || null;
       if (this.editedMeeting.dateStart) {
-        const tempHours = new Date(this.editedMeeting.dateStart).getHours().toString();
-        const tempMinutes = new Date(this.editedMeeting.dateStart).getMinutes().toString();
-        this.defaultTimeStart = `${tempHours}:${tempMinutes}`;
+        const date = new Date(this.editedMeeting.dateStart);
+        const tempHours = date.getHours().toString();
+        let tempMinutes = date.getMinutes().toString();
+        if(tempMinutes.length === 1) {
+          tempMinutes = "0"+tempMinutes;
+        }
         this.pickedStartTimeString = `${tempHours}:${tempMinutes}`;
-      }
+        this.defaultTimeStart = this.pickedStartTimeString
+    }
       if (this.editedMeeting.dateEnd) {
-        const tempHours = new Date(this.editedMeeting.dateEnd).getHours().toString();
-        const tempMinutes = new Date(this.editedMeeting.dateEnd).getMinutes().toString();
-        this.defaultTimeEnd = `${tempHours}:${tempMinutes}`;
+        const date = new Date(this.editedMeeting.dateEnd);
+        const tempHours = date.getHours().toString();
+        let tempMinutes = date.getMinutes().toString();
+        if(tempMinutes.length === 1) {
+          tempMinutes = "0"+tempMinutes;
+        }
         this.pickedEndTimeString = `${tempHours}:${tempMinutes}`;
+        this.defaultTimeEnd = this.pickedEndTimeString
       }
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.updateControlsWithEditMeeting();
-  }
-
   createFormControls(): void {
-    this.form = new FormGroup({
+    this.form = this.formBuilder.group({
       selectedMeetingType: new FormControl([Validators.required]),
       meetingName: new FormControl(null, FormValidators.notEmpty()),
       dateStart: new FormControl(null, FormValidators.notEmpty()),
