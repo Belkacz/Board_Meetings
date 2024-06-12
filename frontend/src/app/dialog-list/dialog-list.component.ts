@@ -1,12 +1,39 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+
 
 @Component({
   selector: 'app-dialog-list',
   templateUrl: './dialog-list.component.html',
-  styleUrls: ['./dialog-list.component.css']
+  styleUrls: ['./dialog-list.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    CdkDropList,
+    CdkDrag,
+    MatButtonModule,
+    MatListModule,
+    MatFormFieldModule,
+    MatExpansionModule,
+    ReactiveFormsModule,
+    MatIcon,
+    MatInputModule
+  ]
 })
 export class DialogListComponent {
   public title: string;

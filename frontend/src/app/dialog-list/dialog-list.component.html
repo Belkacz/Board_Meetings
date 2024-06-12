@@ -1,28 +1,32 @@
-<div>
+<div class="main-dialog center">
     <h1 mat-dialog-title>Create Agenda</h1>
-    <form [formGroup]="form" style="display: flex; flex-direction: column; justify-content: center;">
+    <form [formGroup]="form">
         <div mat-dialog-content>
-            <mat-form-field class="container-flex wider-input" style="margin-left: 1rem;">
-                <input matInput class="" formControlName="agendaName" placeholder="Agenda Name">
-            </mat-form-field>
-            <div class="container-flex">
-                <div *ngIf="list.length > 0" cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-                    <div class="example-box" *ngFor="let item of list; index as i" cdkDrag>
-                        <span>{{ item }}</span>
-                        <button mat-icon-button (click)="removeElement(i)">
-                            <mat-icon class="small-icon">delete</mat-icon>
-                        </button>
+            <div class="center">
+                <input matInput class="custom-input top-input" matInput type="text" formControlName="agendaName" placeholder="Agenda Name">
+            </div>
+            <div class="container">
+                <div *ngIf="list.length > 0">
+                    <div class="label-cus">
+                        <label>Order:</label>
+                    </div>
+                    <div cdkDropList class="list-items" (cdkDropListDropped)="drop($event)">
+                        <div class="box" *ngFor="let item of list; index as i" cdkDrag>
+                            <span>{{ item }}</span>
+                            <button mat-icon-button (click)="removeElement(i)">
+                                <mat-icon class="small-icon">delete</mat-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="container-flex">
-                <div style="padding: 10px;">
-                    <label style="padding: 5px"></label>
-                    <input style="padding: 10px; margin-left: 2px;" matInput type="text" #newElement>
+            <div class="line-items">
+                <div class="bottom-input">
+                    <input matInput class="custom-input " matInput type="text" #newElement>
                 </div>
-                <button mat-flat-button (click)="addElement(newElement.value)" style="border-radius: 25%;">
-                    <mat-icon style="padding: 0 0 0 15px">playlist_add</mat-icon>
+                <button mat-flat-button (click)="addElement(newElement.value)">
+                    <mat-icon>playlist_add</mat-icon>
                 </button>
 
             </div>

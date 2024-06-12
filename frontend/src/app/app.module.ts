@@ -28,11 +28,10 @@ import { AboutComponent } from './about/about.component';
 import { DialogFormComponent } from './dialog-form/dialog-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { DialogListComponent } from './dialog-list/dialog-list.component';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MeetingsListComponent } from './meetings-list/meetings-list.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTable, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { dataService } from './services/dataService.service';
 import { DialogSelectComponent } from './dialog-select/dialog-select.component';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -58,7 +57,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MainMenuComponent,
     AboutComponent,
     DialogFormComponent,
-    DialogListComponent,
     MeetingsListComponent,
     DialogSelectComponent,
     EditMeetingPageComponent,
