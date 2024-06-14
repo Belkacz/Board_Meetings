@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { promiseData } from './promise';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BoardMeetingData, ExistedBoardMeetings, Guest, backendGuest } from '../shared/interfaces';
+import { BoardMeetingData, ExistedBoardMeetings, FileUploadResponse, Guest, backendGuest } from '../shared/interfaces';
 import { urls } from '../shared/enums';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,23 +11,37 @@ import { Observable } from 'rxjs';
 export class RestService {
   constructor(private http: HttpClient, private router: Router) { }
 
-  uploadFiles(files: File[], endpoint: string) {
+  uploadFiles(files: File[], endpoint: string): Observable<FileUploadResponse> {
     const formData = new FormData();
 
     for (const file of files) {
       formData.append('files', file, file.name);
     }
 
-    return this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData);
+    return new Observable<FileUploadResponse>((result) => {
+      this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData)
+        .subscribe({
+          next: (response: any) => {
+            console.log("Upload File Response:", response);
+            result.next(response);
+            result.complete();
+          },
+          error: (error: Error) => {
+            console.error("Error uploading files:", error);
+            result.error(false);
+            result.complete();
+          }
+        });
+    });
   }
 
-  sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls) {
-    const attachedDocumentsUrls: string[] = []
+
+  sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls): Observable<boolean> {
+    const attachedDocumentsUrls: string[] = [];
     if (dataToSend.attachedDocuments) {
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
       });
-
     }
     const newGuests: Guest[] = [];
     if (dataToSend.guests != undefined) {
@@ -39,7 +51,7 @@ export class RestService {
           name: guest.name,
           surname: guest.surname,
           jobPosition: guest.jobPosition
-        }
+        };
         newGuests.push(newGuest);
       });
     }
@@ -58,28 +70,36 @@ export class RestService {
       documents: attachedDocumentsUrls.length > 0 ? attachedDocumentsUrls : null
     };
 
-    if (endpoint === urls.UPDATEMEETING) {
-      let updatePack = { ...packedText, id: dataToSend.id }
-      this.http.put(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
-        .subscribe({
-          next: response => {
-            console.log("Response from FastApi:", response);
-          },
-          error: error => {
-            console.error("Error:", error);
-          }
-        });
-    } else {
-      this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
-        .subscribe({
-          next: response => {
-            console.log("Response from FastApi:", response);
-          },
-          error: error => {
-            console.error("Error:", error);
-          }
-        });
-    }
+    return new Observable<boolean>((observer) => {
+      if (endpoint === urls.UPDATEMEETING) {
+        let updatePack = { ...packedText, id: dataToSend.id };
+        this.http.put(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
+          .subscribe({
+            next: response => {
+              observer.next(true);
+              observer.complete();
+            },
+            error: error => {
+              console.error("Error:", error);
+              observer.next(false);
+              observer.complete();
+            }
+          });
+      } else {
+        this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
+          .subscribe({
+            next: response => {
+              observer.next(true);
+              observer.complete();
+            },
+            error: error => {
+              console.error("Error:", error);
+              observer.next(false);
+              observer.complete();
+            }
+          });
+      }
+    });
   }
 
   private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {

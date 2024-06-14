@@ -1,6 +1,8 @@
 <div class="calendar-container">
   <mat-form-field class="calendar-field">
-    <input matInput class="wider-input" [matDatepicker]="picker" placeholder="Data" [ngModel]="defaultDate" (dateChange)="onDateChange($event.value)">
+    <input matInput class="wider-input" [matDatepicker]="picker"
+      placeholder="Data" [ngModel]="defaultDate"
+      (dateChange)="onDateChange($event.value)">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>

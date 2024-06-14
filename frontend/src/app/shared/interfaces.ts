@@ -84,3 +84,15 @@ export interface Agenda {
     name: string;
     list: string[];
 }
+
+export interface FileUploadResponse {
+    file_urls: string[];
+}
+
+
+export interface FastApiResponse {
+    // Określ strukturę odpowiedzi, którą otrzymujesz z FastAPI
+    // Na przykład, jeśli oczekujesz powiadomienie o sukcesie, możesz użyć flagi success
+    edited_meeting: string;
+    // Dodaj inne pola, które mogą być zwracane przez Twoje API
+}

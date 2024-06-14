@@ -2,16 +2,18 @@
 
 @include mat.core();
 
-$my-primary: mat.define-palette(mat.$grey-palette,900, 50);
-$my-accent: mat.define-palette(mat.$grey-palette, 900, 50);
+$my-primary: mat.define-palette(mat.$grey-palette, 900, 50);
+$my-accent: mat.define-palette(mat.$indigo-palette, 900, 50);
 
-$board-meetings-theme: mat.define-light-theme((
- color: (
-   primary: $my-primary,
-   accent: $my-accent,
- ),
- typography: mat.define-typography-config(),
- density: 0,
-));
+$board-meetings-theme: mat.define-light-theme((color: (primary: $my-primary,
+        accent: $my-accent,
+      ),
+      typography: mat.define-typography-config(),
+      density: 0,
+    ));
+
+:root {
+  --my-accent-color: #{mat.get-color-from-palette($my-accent)};
+}
 
 @include mat.all-component-themes($board-meetings-theme);

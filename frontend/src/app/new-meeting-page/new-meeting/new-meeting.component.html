@@ -1,6 +1,6 @@
-<div>
+<div class="main-form">
   <form [formGroup]="form" class="meeting-form">
-    <div>
+    <mat-card-content class="main-card">
       <div>
         <h3>Meeting type</h3>
         <div example-button-row class="select-buttons-grup">
@@ -17,9 +17,11 @@
       </div>
       <div>
         <h3>Meeting name</h3>
-        <mat-form-field class="wider-element wider-container wider-box lower-input">
+        <mat-form-field
+          class="wider-element wider-container wider-box lower-input">
           <input class="wider-input" formControlName="meetingName" matInput>
-          <button class="button-X" mat-icon-button matSuffix (click)="clearInput()">
+          <button class="button-X" mat-icon-button matSuffix
+            (click)="clearInput()">
             <mat-icon>clear</mat-icon>
           </button>
         </mat-form-field>
@@ -35,13 +37,15 @@
       <div>
         <h3>Date and time</h3>
         <div class="calendar-container">
-          <app-datepicker [defaultDate]="defaultDate" (dateSelected)="handleDateSelected($event)"></app-datepicker>
+          <app-datepicker [defaultDate]="defaultDate"
+            (dateSelected)="handleDateSelected($event)"></app-datepicker>
           <app-timepicker [selectedTime]="defaultTimeStart"
             (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
           <app-timepicker [selectedTime]="defaultTimeEnd"
             (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
         </div>
-        <mat-error *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
+        <mat-error
+          *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
           && !form.get('dateStart')?.pristine && !form.get('dateEnd')?.pristine">
           The end date cannot be earlier than the start date
         </mat-error>
@@ -59,31 +63,37 @@
       </div>
       <div>
         <h3>Location</h3>
-        <section class="">
+        <section class>
           <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()"
             class="minus-10-margin">Location</mat-checkbox>
           <br>
-          <mat-form-field class="wider-element wider-container wider-box lower-input">
-            <input matInput formControlName="meetingAddress" placeholder="Address..." />
+          <mat-form-field
+            class="wider-element wider-container wider-box lower-input">
+            <input matInput formControlName="meetingAddress"
+              placeholder="Address..." />
           </mat-form-field>
         </section>
         <h3>Online meeting</h3>
-        <section class="">
-          <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()" class="minus-10-margin">Online
+        <section class>
+          <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()"
+            class="minus-10-margin">Online
             meeting</mat-checkbox>
           <br>
-          <mat-form-field class="wider-element wider-container wider-box lower-input">
-            <input matInput formControlName="onlineAddress" placeholder="Paste meeting link ..." value="" />
+          <mat-form-field
+            class="wider-element wider-container wider-box lower-input">
+            <input matInput formControlName="onlineAddress"
+              placeholder="Paste meeting link ..." value />
           </mat-form-field>
         </section>
         <h3>Hybrid: Online and stationary</h3>
-        <section class="">
+        <section class>
           <mat-checkbox [checked]="isHybridChecked" (click)="toggleHybrid()"
             class="minus-10-margin">Hybrid</mat-checkbox>
           <br>
         </section>
       </div>
-      <mat-error *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
+      <mat-error
+        *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
         Meeting address cannot be empty.
       </mat-error>
       <br>
@@ -91,13 +101,19 @@
         <mat-card-header>
           <mat-card-title>Agenda</mat-card-title>
         </mat-card-header>
-        <mat-card-content *ngIf="!form.get('agenda')?.value['agendaName']">agenda of the meeting</mat-card-content>
-        <mat-card-content *ngIf="form.get('agenda')?.value['agendaName']">{{ form.get('agenda')?.value['agendaName']
+        <mat-card-content
+          *ngIf="!form.get('agenda')?.value['agendaName']">agenda of the
+          meeting</mat-card-content>
+        <mat-card-content *ngIf="form.get('agenda')?.value['agendaName']">{{
+          form.get('agenda')?.value['agendaName']
           }}</mat-card-content>
         <div class="select-buttons-grup">
-          <button mat-stroked-button class="select-buttons-agenda" (click)="newAgenda()">Create agenda</button>
-          <input type="file" #chooseFile style="display: none" (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button class="select-buttons-agenda" disabled="false" (click)="selectAgenda()">Choose
+          <button mat-stroked-button class="select-buttons-agenda"
+            (click)="newAgenda()">Create agenda</button>
+          <input type="file" #chooseFile style="display: none"
+            (change)="onFileSelected($event, FileType.ChooseFile)" />
+          <button mat-stroked-button class="select-buttons-agenda"
+            disabled="false" (click)="selectAgenda()">Choose
             Agenda</button>
         </div>
       </mat-card>
@@ -108,15 +124,19 @@
           <div>
             <ng-container *ngIf="form.get('attachedDocuments')?.value != null">
               <h4 class="list-header">Attached Files :</h4>
-              <ul class="wider-element wider-container wider-box list-container">
-                <li *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
+              <ul
+                class="wider-element wider-container wider-box list-container">
+                <li
+                  *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
                   <div class="avatar-container text-listcontainter diplay-flex">
                     <mat-icon fontIcon="file_copy"></mat-icon>
                     <p>{{ doc.fileName }}</p>
-                    <button mat-icon-button matSuffix (click)="fileDownloadService.downloadFileFromUrl(doc)">
+                    <button mat-icon-button matSuffix
+                      (click)="fileDownloadService.downloadFileFromUrl(doc)">
                       <mat-icon>download</mat-icon>
                     </button>
-                    <button mat-icon-button matSuffix (click)="deleteAttachedDocs(i)">
+                    <button mat-icon-button matSuffix
+                      (click)="deleteAttachedDocs(i)">
                       <mat-icon>clear</mat-icon>
                     </button>
                   </div>
@@ -125,12 +145,15 @@
             </ng-container>
             <ng-container *ngIf="form.get('addedDocuments')?.value != null">
               <h4 class="list-header">Added Files :</h4>
-              <ul class="wider-element wider-container wider-box list-container">
-                <li *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
+              <ul
+                class="wider-element wider-container wider-box list-container">
+                <li
+                  *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
                   <div class="avatar-container text-listcontainter diplay-flex">
                     <mat-icon class="file-icon" fontIcon="file_copy"></mat-icon>
                     <p>{{ doc.name }}</p>
-                    <button mat-icon-button matSuffix (click)="fileDownloadService.downloadAddedFile(doc)">
+                    <button mat-icon-button matSuffix
+                      (click)="fileDownloadService.downloadAddedFile(doc)">
                       <mat-icon>download</mat-icon>
                     </button>
                     <button mat-icon-button matSuffix (click)="deleteDocs(i)">
@@ -143,9 +166,10 @@
           </div>
           <input type="file" #addDocument style="display: none"
             (change)="onFileSelected($event, FileType.AddDocument)" />
-          <button mat-stroked-button (click)="openFilePicker(addDocumentInput)">Add Documents</button>
+          <button mat-stroked-button
+            (click)="openFilePicker(addDocumentInput)">Add Documents</button>
         </div>
       </div>
-    </div>
+    </mat-card-content>
   </form>
 </div>

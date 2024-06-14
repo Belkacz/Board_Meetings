@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BoardMeetingData, ExistedBoardMeetings, Guest, GuestInvited, Task } from '../shared/interfaces';
+import { BoardMeetingData, ExistedBoardMeetings, FileUploadResponse, Guest, GuestInvited, Task } from '../shared/interfaces';
 import { InviteService, dataService } from '../services/dataService.service';
 import { RestService } from '../services/restService.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
 import { NewMeetingComponent } from '../new-meeting-page/new-meeting/new-meeting.component';
@@ -40,7 +40,8 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     private restService: RestService,
     private route: ActivatedRoute,
     private dataService: dataService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.combinedData = {
       meetingType: '',
@@ -132,42 +133,65 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   // public saveDraft(): void {
   // }
 
+
   public saveAndPublish(): void {
     if (this.combinedData.meetingType === "") {
-      alert("meeting type cannot be empty");
-    } else if (this.combinedData.meetingName === "") {
-      alert("meeting name cannot be empty");
-    } else if ((!this.combinedData.dateStart) || !this.combinedData.dateEnd) {
+      alert("Meeting type cannot be empty");
+      return;
+    }
+    if (this.combinedData.meetingName === "") {
+      alert("Meeting name cannot be empty");
+      return;
+    }
+    if (!this.combinedData.dateStart || !this.combinedData.dateEnd) {
       alert("You need to choose a date");
-    } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
+      return;
+    }
+    if (!this.combinedData.onlineAddress && !this.combinedData.meetingAddress) {
       alert("You need to provide a location or choose an online option");
+      return;
     }
 
     if (this.editedMeeting) {
       this.combinedData = { ...this.combinedData, id: this.editedMeeting.id };
+
       if (this.newFiles && this.newFiles.length > 0) {
-        const responseUrls: string[] = [];
         this.restService.uploadFiles(this.newFiles, urls.UPLOADFILES).subscribe({
-          next: (response: any) => {
-            console.log("Response from FastApi:", response);
-            response.file_urls.forEach((url: string) => {
-              const fullUrl = `${url}`;
-              responseUrls.push(fullUrl);
+          next: (response: FileUploadResponse) => {
+            const responseUrls: string[] = response.file_urls.map((url: string) => `${url}`);
+            this.combinedData.attachedDocuments = this.dataService.createDocumentsData(responseUrls);
+
+            this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING).subscribe({
+              next: (apiResponse: boolean) => {
+                if (apiResponse && this.editedMeeting) {
+                  this._snackBar.open(`Successfully edited meeting ${this.editedMeeting.id}`, 'Close', { duration: 4000, verticalPosition: 'top' });
+                  this.router.navigate(['/'])
+                }
+              },
+              error: (error: Error) => {
+                console.error("Error sending data to FastApi:", error);
+                this._snackBar.open(`Error editing meeting: ${error.message}`, 'Close', { duration: 4000, verticalPosition: 'top' });
+              }
             });
-            if (this.combinedData.attachedDocuments) {
-              this.combinedData.attachedDocuments = this.combinedData.attachedDocuments.concat(this.dataService.createDocumentsData(responseUrls));
-            } else {
-              this.dataService.createDocumentsData(responseUrls)
-            }
-            this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
-            this._snackBar.open("Successfully edited meeting" + this.editedMeetingId, 'Close', { duration: 3000, verticalPosition: 'top' })
           },
-          error: error => {
-            console.error("Error:", error);
+          error: (error: Error) => {
+            console.error("Error uploading files:", error);
+            this._snackBar.open(`Error uploading files: ${error.message}`, 'Close', { duration: 4000, verticalPosition: 'top' });
           }
         });
       } else {
-        this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
+        this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING).subscribe({
+          next: (apiResponse: boolean) => {
+            if (apiResponse && this.editedMeeting) {
+              this._snackBar.open(`Successfully edited meeting ${this.editedMeeting.id}`, 'Close', { duration: 4000, verticalPosition: 'top' });
+              this.router.navigate(['/'])
+            }
+          },
+          error: (error: Error) => {
+            console.error("Error sending data to FastApi:", error);
+            this._snackBar.open(`Error editing meeting: ${error.message}`, 'Close', { duration: 4000, verticalPosition: 'top' });
+          }
+        });
       }
     }
   }

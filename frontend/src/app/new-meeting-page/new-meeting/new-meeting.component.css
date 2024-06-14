@@ -1,23 +1,24 @@
-
-::ng-deep .mat-mdc-form-field-icon-suffix.ng-star-inserted{
+::ng-deep .mat-mdc-form-field-icon-suffix.ng-star-inserted {
     margin-bottom: 5px;
-    margin-top: 0px!important;
+    margin-top: 0px !important;
 }
 
-.mdc-icon-button.mat-mdc-icon-button.mat-unthemed.mat-mdc-button-base{
+.mdc-icon-button.mat-mdc-icon-button.mat-unthemed.mat-mdc-button-base {
     margin-top: 0px;
 }
 
-.button-X{
-    margin-top: -4px!important;
+.button-X {
+    margin-top: -4px !important;
 }
 
-.list-header{
+.list-header {
     margin-bottom: 0px;
 }
-.list-container{
+
+.list-container {
     padding-left: 20px;
 }
+
 .file-icon {
     padding-right: 15px;
 }
