@@ -33,7 +33,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public foundMeeting: boolean = false;
   public getMeetingError: string | null = null;
   public loadingMeeting: boolean = true;
-  private newFiles: any;
+  private newFiles: File[];
 
   constructor(
     private inviteService: InviteService,
@@ -56,6 +56,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       agenda: null,
       attachedDocuments: null
     }
+    this.newFiles = [];
     // draft option will be added in future to save draft data in local storage
     // this.draft = this.combinedData;
   }
@@ -153,7 +154,11 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
               const fullUrl = `${url}`;
               responseUrls.push(fullUrl);
             });
-            this.combinedData['attachedDocuments'] = this.dataService.createDocumentsData(responseUrls);
+            if (this.combinedData.attachedDocuments) {
+              this.combinedData.attachedDocuments = this.combinedData.attachedDocuments.concat(this.dataService.createDocumentsData(responseUrls));
+            } else {
+              this.dataService.createDocumentsData(responseUrls)
+            }
             this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
             this._snackBar.open("Successfully edited meeting" + this.editedMeetingId, 'Close', { duration: 3000, verticalPosition: 'top' })
           },
@@ -181,7 +186,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.onlineAddress = form.get('onlineAddress')?.value;
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
-    this.combinedData.addedDocuments = form.get('addedDocuments')?.value;
+    this.combinedData.attachedDocuments = form.get('attachedDocuments')?.value;
     this.newFiles = form.get('addedDocuments')?.value;
     this.formDisabled = form.status !== 'VALID';
   }

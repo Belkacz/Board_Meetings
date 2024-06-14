@@ -29,6 +29,7 @@ export class RestService {
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
       });
+
     }
     const newGuests: Guest[] = [];
     if (dataToSend.guests != undefined) {
