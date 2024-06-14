@@ -3,7 +3,8 @@
     <form [formGroup]="form">
         <div mat-dialog-content>
             <div class="center">
-                <input matInput class="custom-input top-input" matInput type="text" formControlName="agendaName" placeholder="Agenda Name">
+                <input matInput class="custom-input top-input" matInput type="text" formControlName="agendaName"
+                    placeholder="Agenda Name">
             </div>
             <div class="container">
                 <div *ngIf="list.length > 0">
@@ -30,7 +31,7 @@
                 </button>
 
             </div>
-            <div class="flex-box-space">
+            <div class="flex-box-space-right">
                 <button mat-stroked-button class="main-container select-buttons" [mat-dialog-close]="form"
                     [disabled]="form.invalid">Create</button>
                 <button mat-stroked-button class="main-container select-buttons" mat-dialog-close

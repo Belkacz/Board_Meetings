@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 from fastapi.responses import FileResponse
 
-from .meetings import (
+from meetings import (
     meetings,
     guests,
     agendas,
@@ -19,15 +19,13 @@ from .meetings import (
     PagedListMeetings,
     ErrorResponse,
     ExternalShortMeeting,
-    ExternalBaseMeeting
+    ExternalBaseMeeting,
 )
-from .projectInformation import projectInfo1, ProjectDataExternal
+from projectInformation import projectInfo1, ProjectDataExternal
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:4200"
-]
+origins = ["http://localhost:4200"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,20 +35,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+UPLOAD_DIRECTORY = "./meetings_docs"
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
+
 
 def mapShortMeetingToSend(meeting: ShortMeeting) -> ExternalShortMeeting:
     return ExternalShortMeeting(
-            id=meeting.id,
-            meetingType=meeting.meeting_type,
-            meetingName=meeting.meeting_name,
-            startDate=meeting.start_date,
-            endDate=meeting.end_date
-        )
+        id=meeting.id,
+        meetingType=meeting.meeting_type,
+        meetingName=meeting.meeting_name,
+        startDate=meeting.start_date,
+        endDate=meeting.end_date,
+    )
 
-@app.get("/get-meetings/{page}/{pagesize}", response_model=PagedListMeetings, responses={
-    404: {"description": "No meetings found", "model": ErrorResponse},
-    400: {"description": "Invalid pagination parameters", "model": ErrorResponse}
-})
+
+@app.get(
+    "/get-meetings/{page}/{pagesize}",
+    response_model=PagedListMeetings,
+    responses={
+        404: {"description": "No meetings found", "model": ErrorResponse},
+        400: {"description": "Invalid pagination parameters", "model": ErrorResponse},
+    },
+)
 async def get_meetings_list(page: int, pagesize: int):
     if page <= 0 or pagesize <= 0:
         raise HTTPException(status_code=400, detail="Invalid pagination parameters")
@@ -66,16 +73,14 @@ async def get_meetings_list(page: int, pagesize: int):
         meetings_list.append(short_meeting)
 
     total_length = len(meetings)
-    response_data = {
-        "meetings": meetings_list,
-        "totalLength": total_length
-    }
+    response_data = {"meetings": meetings_list, "totalLength": total_length}
 
     if total_length <= 0:
         raise HTTPException(status_code=404, detail="No meetings found")
 
     print("get_meetings_list")
     return response_data
+
 
 def mapGuestsToSend(meeting_guests: List[Guest]) -> list[ExternalGuest]:
     external_guests = []
@@ -84,10 +89,11 @@ def mapGuestsToSend(meeting_guests: List[Guest]) -> list[ExternalGuest]:
             id=guest.id,
             name=guest.name,
             surname=guest.surname,
-            jobPosition=guest.job_position
+            jobPosition=guest.job_position,
         )
         external_guests.append(external_guest)
     return external_guests
+
 
 def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
     guests = mapGuestsToSend(meeting.guests)
@@ -102,17 +108,26 @@ def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
         guests=guests,
         tasksList=meeting.tasksList,
         agenda=meeting.agenda,
-        documents=meeting.documents
+        documents=meeting.documents,
     )
 
-@app.get("/meeting-details/{meeting_id}", response_model=ExternalExistedMeeting, responses={
-    404: {"description": "Meeting not found", "model": ErrorResponse},
-})
-async def get_meeting_detials(meeting_id: int):
-    result_meeting:ExternalExistedMeeting = None
-    if(meeting_id-1 >= 0 and meeting_id-1 < len(meetings) and meetings[meeting_id-1].id == meeting_id):
-        meeting = meetings[meeting_id-1]
-    if(not result_meeting):
+
+@app.get(
+    "/meeting-details/{meeting_id}",
+    response_model=ExternalExistedMeeting,
+    responses={
+        404: {"description": "Meeting not found", "model": ErrorResponse},
+    },
+)
+async def get_meeting_details(meeting_id: int):
+    result_meeting: ExternalExistedMeeting = None
+    if (
+        meeting_id - 1 >= 0
+        and meeting_id - 1 < len(meetings)
+        and meetings[meeting_id - 1].id == meeting_id
+    ):
+        meeting = meetings[meeting_id - 1]
+    if not result_meeting:
         for meeting in meetings:
             if meeting_id == meeting.id:
                 result_meeting = mapMeetingToSend(meeting)
@@ -124,19 +139,18 @@ async def get_meeting_detials(meeting_id: int):
     print(f"get_meetings_details #{meeting_id}")
     return result_meeting
 
+
 @app.get("/get-people", response_model=list[Guest])
 async def get_people_list():
     print("people")
     return guests
+
 
 @app.get("/get-agendas", response_model=list[Agenda])
 async def get_agendas_list():
     print("agendas")
     return agendas
 
-UPLOAD_DIRECTORY = "./meetings_docs"
-if not os.path.exists(UPLOAD_DIRECTORY):
-    os.makedirs(UPLOAD_DIRECTORY)
 
 @app.post("/upload-files/")
 async def create_upload_files(files: List[UploadFile] = File(...)):
@@ -146,7 +160,7 @@ async def create_upload_files(files: List[UploadFile] = File(...)):
         file_path = os.path.join(UPLOAD_DIRECTORY, filename)
         with open(file_path, "wb") as newFile:
             content = await file.read()
-            newFile.write(content) 
+            newFile.write(content)
         file_urls.append(f"/files/{filename}")
     return {"file_urls": file_urls}
 
@@ -156,12 +170,12 @@ async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     print(file_path)
     if os.path.exists(file_path):
-        dollar_index = file_name.find('$') + 1
+        dollar_index = file_name.find("$") + 1
         if dollar_index != -1:
             new_file_name = file_name[dollar_index:]
         else:
             new_file_name = file_name
-
+        print(file_path)
         return FileResponse(
             path=file_path,
             filename=new_file_name,
@@ -169,11 +183,15 @@ async def get_file(file_name: str):
     else:
         raise HTTPException(status_code=404, detail="File not found")
 
+
 def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
-    if (meeting_address and len(meeting_address) > 0) or (online_address and len(online_address) > 0):
+    if (meeting_address and len(meeting_address) > 0) or (
+        online_address and len(online_address) > 0
+    ):
         return True
     else:
         return False
+
 
 def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
     guests = []
@@ -182,12 +200,15 @@ def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
             id=guest.id,
             name=guest.name,
             surname=guest.surname,
-            job_position=guest.jobPosition
+            job_position=guest.jobPosition,
         )
         guests.append(mapped_guest)
     return guests
 
-def mapMeetingIncoming(new_id: int, meeting: Union[ExternalBaseMeeting, ExternalExistedMeeting]) -> Optional[ExistedMeeting]:
+
+def mapMeetingIncoming(
+    new_id: int, meeting: Union[ExternalBaseMeeting, ExternalExistedMeeting]
+) -> Optional[ExistedMeeting]:
     guests = mapGuestsIncoming(meeting.guests)
     return ExistedMeeting(
         id=new_id,
@@ -200,10 +221,13 @@ def mapMeetingIncoming(new_id: int, meeting: Union[ExternalBaseMeeting, External
         guests=guests,
         tasksList=meeting.tasksList,
         agenda=meeting.agenda,
-        documents=meeting.documents
+        documents=meeting.documents,
     )
 
-def mapMeetingIncoming(new_id: int, meeting: ExternalExistedMeeting) -> Optional[ExistedMeeting]:
+
+def mapMeetingIncoming(
+    new_id: int, meeting: ExternalExistedMeeting
+) -> Optional[ExistedMeeting]:
     guests = mapGuestsIncoming(meeting.guests)
     return ExistedMeeting(
         id=new_id,
@@ -216,14 +240,21 @@ def mapMeetingIncoming(new_id: int, meeting: ExternalExistedMeeting) -> Optional
         guests=guests,
         tasksList=meeting.tasksList,
         agenda=meeting.agenda,
-        documents=meeting.documents
+        documents=meeting.documents,
     )
 
-@app.post("/new-meeting", responses={
-    403: {"description": "Meeting need at least one meeting address or online address", "model": ErrorResponse},
-})
+
+@app.post(
+    "/new-meeting",
+    responses={
+        403: {
+            "description": "Meeting need at least one meeting address or online address",
+            "model": ErrorResponse,
+        },
+    },
+)
 async def add_meeting(meeting: ExternalBaseMeeting):
-    if(len(meetings) > 0):
+    if len(meetings) > 0:
         last_meeting = meetings[-1]
     else:
         last_meeting = 1
@@ -231,54 +262,81 @@ async def add_meeting(meeting: ExternalBaseMeeting):
     new_meeting_id = last_meeting.id + 1
     new_meeting = mapMeetingIncoming(new_meeting_id, meeting)
 
-    if(not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address)):
-        raise HTTPException(status_code=403, detail="Meeting need at least one meeting address or online address")
+    if not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address):
+        raise HTTPException(
+            status_code=403,
+            detail="Meeting need at least one meeting address or online address",
+        )
     meetings.append(new_meeting)
     return {"message": f"Created new meeting with id# {new_meeting_id}"}
 
-def filesNotInOriginal(editedMeetingsDocs: list[str], originalDocs: list[str]) -> list[str]:
+
+def filesNotInOriginal(
+    editedMeetingsDocs: list[str], originalDocs: list[str]
+) -> list[str]:
     notInEditedMeeting: list[str] = []
     for doc in originalDocs:
         if doc not in editedMeetingsDocs:
             notInEditedMeeting.append(doc)
     return notInEditedMeeting
 
-@app.put("/update-meeting", responses= {
-    403: {"description": "Meeting need at least one meeting address or online address", "model": ErrorResponse},
-    404: {"description": "Meeting not found", "model": ErrorResponse},
-})
+
+@app.put(
+    "/update-meeting",
+    responses={
+        403: {
+            "description": "Meeting need at least one meeting address or online address",
+            "model": ErrorResponse,
+        },
+        404: {"description": "Meeting not found", "model": ErrorResponse},
+    },
+)
 async def update_meeting(edited_meeting: ExternalExistedMeeting):
-    
+
     updated_meeting = mapMeetingIncoming(edited_meeting.id, edited_meeting)
     print(updated_meeting.id)
-    if(not atLeastOneAddress(updated_meeting.meeting_address, updated_meeting.online_address)):
-        raise HTTPException(status_code=403, detail="Meeting need at least one meeting address or online address")
+    if not atLeastOneAddress(
+        updated_meeting.meeting_address, updated_meeting.online_address
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Meeting need at least one meeting address or online address",
+        )
     meetingUpdated = False
     for index, meeting in enumerate(meetings):
-        if(meeting.id == updated_meeting.id):
+        if meeting.id == updated_meeting.id:
             if meeting.documents is not None and len(meeting.documents) > 0:
-                deleteFiles(filesNotInOriginal(updated_meeting.documents, meeting.documents))
+                deleteFiles(
+                    filesNotInOriginal(updated_meeting.documents, meeting.documents)
+                )
             meetings[index] = updated_meeting
             meetingUpdated = True
-    if(meetingUpdated == False):
-        raise HTTPException(status_code=404, detail=f"Meeting with id #{edited_meeting.id} not found")
+    if meetingUpdated == False:
+        raise HTTPException(
+            status_code=404, detail=f"Meeting with id #{edited_meeting.id} not found"
+        )
 
     return {"edited meeting": f"updated meeting with id #{updated_meeting.id}"}
 
 
-
-@app.delete("/delete-meeting/{meeting_id}", responses={
-    404: {"description": "Meeting not found", "model": ErrorResponse},
-})
+@app.delete(
+    "/delete-meeting/{meeting_id}",
+    responses={
+        404: {"description": "Meeting not found", "model": ErrorResponse},
+    },
+)
 async def delete_meetings(meeting_id: int):
     tempMeetings = meetings
     for meeting in tempMeetings:
         if meeting.id == meeting_id:
-            if(meeting.documents):
+            if meeting.documents:
                 deleteFiles(meeting.documents)
             meetings.remove(meeting)
             return f"deleted meeting #{meeting_id}"
-    raise HTTPException(status_code=404, detail=f"Meeting with id #{meeting_id} not found")
+    raise HTTPException(
+        status_code=404, detail=f"Meeting with id #{meeting_id} not found"
+    )
+
 
 def deleteFiles(files: list[str]):
     for url in files:
@@ -301,6 +359,6 @@ async def get_project_info():
         "surname": projectInfo1.surname,
         "projectName": projectInfo1.project_name,
         "projectVersion": projectInfo1.project_version,
-        "indexNumber": projectInfo1.index_number
+        "indexNumber": projectInfo1.index_number,
     }
     return projectInfo

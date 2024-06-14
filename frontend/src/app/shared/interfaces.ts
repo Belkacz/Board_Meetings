@@ -64,7 +64,7 @@ export interface BoardMeetingData {
 export interface ExistedBoardMeetings extends BoardMeetingData {
     id: number;
 }
-export interface ShortMetting {
+export interface ShortMeeting {
     id: number;
     meetingType: string;
     meetingName: string;

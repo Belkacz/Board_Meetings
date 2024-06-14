@@ -41,6 +41,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { FooterComponent } from './footer/footer.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -92,7 +93,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCardModule,
     MatRadioModule,
     MatGridListModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTooltipModule
   ],
   providers: [dataService],
   bootstrap: [AppComponent]

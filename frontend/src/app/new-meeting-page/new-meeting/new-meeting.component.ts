@@ -20,7 +20,7 @@ import { dataService } from 'src/app/services/dataService.service';
 })
 export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   @Input() editedMeeting: ExistedBoardMeetings | null;
-  @Output() formEmiter = new EventEmitter<any>();
+  @Output() formEmitter = new EventEmitter<any>();
   @ViewChild('chooseFile') chooseFileInput!: ElementRef;
   @ViewChild('addDocument') addDocumentInput!: ElementRef;
 
@@ -84,7 +84,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   emitForm(): void {
-    this.formEmiter.emit(this.form);
+    this.formEmitter.emit(this.form);
   }
 
   private updateControlsWithEditMeeting(): void {
@@ -104,22 +104,23 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         const date = new Date(this.editedMeeting.dateStart);
         const tempHours = date.getHours().toString();
         let tempMinutes = date.getMinutes().toString();
-        if(tempMinutes.length === 1) {
-          tempMinutes = "0"+tempMinutes;
+        if (tempMinutes.length === 1) {
+          tempMinutes = "0" + tempMinutes;
         }
         this.pickedStartTimeString = `${tempHours}:${tempMinutes}`;
         this.defaultTimeStart = this.pickedStartTimeString
-    }
+      }
       if (this.editedMeeting.dateEnd) {
         const date = new Date(this.editedMeeting.dateEnd);
         const tempHours = date.getHours().toString();
         let tempMinutes = date.getMinutes().toString();
-        if(tempMinutes.length === 1) {
-          tempMinutes = "0"+tempMinutes;
+        if (tempMinutes.length === 1) {
+          tempMinutes = "0" + tempMinutes;
         }
         this.pickedEndTimeString = `${tempHours}:${tempMinutes}`;
         this.defaultTimeEnd = this.pickedEndTimeString
       }
+      this.emitForm();
     }
   }
 
@@ -187,7 +188,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       const dialogRef = this.dialog.open(DialogSelectComponent, {
         data: this.agendas
       });
-  
+
       dialogRef.afterClosed().subscribe(agenda => {
         if (agenda) {
           this.form.patchValue({

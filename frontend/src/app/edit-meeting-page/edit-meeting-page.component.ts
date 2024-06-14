@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
 import { NewMeetingComponent } from '../new-meeting-page/new-meeting/new-meeting.component';
 import { FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-meeting-page',
@@ -24,20 +25,22 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   private guestsList: GuestInvited[] = [];
   private tasksList: Task[] = [];
   private combinedData: BoardMeetingData;
-  private draft: BoardMeetingData;
+  // draft option will be added in future to save draft data in local storage
+  // private draft: BoardMeetingData;
   public editedMeeting: ExistedBoardMeetings | null = null;
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
   public foundMeeting: boolean = false;
   public getMeetingError: string | null = null;
   public loadingMeeting: boolean = true;
-  private newFiels: any;
+  private newFiles: any;
 
   constructor(
     private inviteService: InviteService,
     private restService: RestService,
     private route: ActivatedRoute,
-    private dataService: dataService
+    private dataService: dataService,
+    private _snackBar: MatSnackBar
   ) {
     this.combinedData = {
       meetingType: '',
@@ -53,7 +56,8 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       agenda: null,
       attachedDocuments: null
     }
-    this.draft = this.combinedData;
+    // draft option will be added in future to save draft data in local storage
+    // this.draft = this.combinedData;
   }
 
   ngOnInit() {
@@ -68,32 +72,31 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     }
   }
 
-
   private loadMeetingData(id: number): void {
     this.loadingMeeting = true;
     this.dataService.getMeetingDetailService(id)
-    .then((resolve) => {
-      if (this.dataService.isError(resolve)) {
-        console.error("Error occurred:", resolve);
-        if(this.dataService.getErrorStatus(resolve) == 404) {
-          this.getMeetingError = "The meeting with the specified ID cannot be found";
-        } else {
-          this.getMeetingError = "Server communication error";
-        }
-        this.loadingMeeting = false;
-
-      } else {
-        if (resolve !== null && !(resolve instanceof Error)) {
-          this.editedMeeting = resolve;
+      .then((resolve) => {
+        if (this.dataService.isError(resolve)) {
+          console.error("Error occurred:", resolve);
+          if (this.dataService.getErrorStatus(resolve) == 404) {
+            this.getMeetingError = "The meeting with the specified ID cannot be found";
+          } else {
+            this.getMeetingError = "Server communication error";
+          }
           this.loadingMeeting = false;
-          this.mapMeetingData();
-          this.formDisabled = false;
+
         } else {
-          console.error("Null response received");
+          if (resolve !== null && !(resolve instanceof Error)) {
+            this.editedMeeting = resolve;
+            this.loadingMeeting = false;
+            this.mapMeetingData();
+            this.formDisabled = false;
+          } else {
+            console.error("Null response received");
+          }
         }
-      }
-    });
-}
+      });
+  }
 
   private mapMeetingData(): void {
     if (this.editedMeeting && this.editedMeeting.guests) {
@@ -123,34 +126,12 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  public saveDraft(): void {
-    this.draft = this.combinedData;
-    alert('Element currently not working');
-    this.draft = {
-      meetingType: "boardMeeting",
-      meetingName: "spotkanie",
-      dateStart: new Date("2024-03-10T13:14:50.985Z"),
-      dateEnd: new Date("2024-03-10T15:16:50.985Z"),
-      meetingAddress: "park sledzia",
-      onlineAddress: null,
-      guests: [
-        { id: 1, name: "Wade", surname: "Warner", jobPosition: "Cair of the board" },
-        { id: 2, name: "Floyd", surname: "Miles", jobPosition: "Board member" },
-        { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" }
-      ],
-      tasksList: [
-        { id: 1, name: "New task name 1", description: "New task name 1" },
-        { id: 2, name: "New task name 2", description: "New task name 1" }
-      ],
-      chooseFile: null,
-      addedDocuments: null,
-      agenda: null,
-      attachedDocuments: null
-    };
-  }
+  // draft option will be added in future to save draft data in local storage
+  //
+  // public saveDraft(): void {
+  // }
 
   public saveAndPublish(): void {
-
     if (this.combinedData.meetingType === "") {
       alert("meeting type cannot be empty");
     } else if (this.combinedData.meetingName === "") {
@@ -159,15 +140,13 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
       alert("You need to choose a date");
     } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
       alert("You need to provide a location or choose an online option");
-    } else {
-      alert('Save And Publish Placeholder, open console for more details');
     }
 
     if (this.editedMeeting) {
       this.combinedData = { ...this.combinedData, id: this.editedMeeting.id };
-      if (this.newFiels && this.newFiels.length > 0) {
+      if (this.newFiles && this.newFiles.length > 0) {
         const responseUrls: string[] = [];
-        this.restService.uploadFiles(this.newFiels, urls.UPLOADFILES).subscribe({
+        this.restService.uploadFiles(this.newFiles, urls.UPLOADFILES).subscribe({
           next: (response: any) => {
             console.log("Response from FastApi:", response);
             response.file_urls.forEach((url: string) => {
@@ -176,6 +155,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
             });
             this.combinedData['attachedDocuments'] = this.dataService.createDocumentsData(responseUrls);
             this.restService.sendDataToFastApi(this.combinedData, urls.UPDATEMEETING);
+            this._snackBar.open("Successfully edited meeting" + this.editedMeetingId, 'Close', { duration: 3000, verticalPosition: 'top' })
           },
           error: error => {
             console.error("Error:", error);
@@ -192,7 +172,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.tasksList = this.tasksList;
   }
 
-  public reciveForm(form : any): void {
+  public receiveForm(form: any): void {
     this.combinedData.meetingName = form.value.meetingName;
     this.combinedData.meetingType = form.value.selectedMeetingType;
     this.combinedData.dateStart = form.value.dateStart;
@@ -202,7 +182,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.combinedData.guests = this.guestsList;
     this.combinedData.tasksList = this.tasksList;
     this.combinedData.addedDocuments = form.get('addedDocuments')?.value;
-    this.newFiels = form.get('addedDocuments')?.value;
+    this.newFiles = form.get('addedDocuments')?.value;
     this.formDisabled = form.status !== 'VALID';
   }
 

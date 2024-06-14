@@ -6,6 +6,7 @@ import { RestService } from '../services/restService.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-meeting-page',
@@ -23,14 +24,15 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   private guestsList: GuestInvited[];
   private tasksList: Task[];
   private combinedData: BoardMeetingData;
-  private draft: BoardMeetingData;
+  // draft option will be added in future to save draft data in local storage
+  // private draft: BoardMeetingData;
   public editedMeeting: ExistedBoardMeetings | null = null;
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
   private newFiles: any;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private dataService: dataService
+    private route: ActivatedRoute, private dataService: dataService, private _snackBar: MatSnackBar
   ) {
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
@@ -49,7 +51,8 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       agenda: null,
       attachedDocuments: null
     }
-    this.draft = this.combinedData;
+    // draft option will be added in future to save draft data in local storage
+    // this.draft = this.combinedData;
 
     this.formDisabled = this.editedMeeting ? false : true;
   }
@@ -66,30 +69,12 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  public saveDraft(): void {
-    this.draft = this.combinedData;
-    alert('Element currently not working');
-    this.draft = {
-      meetingType: "boardMeeting",
-      meetingName: "spotkanie",
-      dateStart: new Date("2024-03-10T13:14:50.985Z"),
-      dateEnd: new Date("2024-03-10T15:16:50.985Z"),
-      meetingAddress: "park sledzia",
-      onlineAddress: null,
-      guests: [
-        { id: 1, name: "Wade", surname: "Warner", jobPosition: "Cair of the board" },
-        { id: 2, name: "Floyd", surname: "Miles", jobPosition: "Board member" },
-        { id: 3, name: "Brooklyn", surname: "Simmons", jobPosition: "Board member" }],
-      tasksList: [{ "id": 1, "name": "New task name 1", "description": "New task name 1" },
-      { "id": 2, "name": "New task name 2", "description": "New task name 1" }],
-      chooseFile: null,
-      addedDocuments: null,
-      agenda: null,
-      attachedDocuments: null
-    }
-  }
+  // draft option will be added in future to save draft data in local storage
+  //
+  // public saveDraft(): void {
+  // }
 
-  private mapFormToCombienedData(): void {
+  private mapFormToCombinedData(): void {
     const formValue = this.newMeetingComponent.form.value;
     for (const key in formValue) {
       if (key in this.combinedData) {
@@ -105,8 +90,8 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   }
 
   public saveAndPublish(): void {
-    this.mapFormToCombienedData();
-  
+    this.mapFormToCombinedData();
+
     if (this.combinedData.meetingType === "") {
       alert("meeting type cannot be empty")
     } else if (this.combinedData.meetingName === "") {
@@ -115,8 +100,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       alert("You need to chose date")
     } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
       alert("You need to provide a location or choose an online option");
-    } else {
-      alert('Save And Publish Placeholder, open console for more details')
     }
 
     if (this.newFiles && this.newFiles.length > 0) {
@@ -129,6 +112,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
           });
           this.combinedData['attachedDocuments'] = this.dataService.createDocumentsData(responseUrls);
           this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING);
+          this._snackBar.open("Successfully created edited meeting", 'Close', { duration: 3000, verticalPosition: 'top' });
         },
         error: error => {
           console.error("Error:", error);

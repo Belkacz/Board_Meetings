@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMetting } from '../shared/interfaces';
+import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { RestService } from './restService.service';
 
@@ -26,23 +26,14 @@ export class InviteService {
 })
 export class dataService {
   constructor(private restService: RestService) { }
-  private actualMeetingsList$ = new BehaviorSubject<ShortMetting[]>([]);
-  private meetingGetError: Error | null = null;
+  private actualMeetingsList$ = new BehaviorSubject<ShortMeeting[]>([]);
 
-  public setGlobalMeetingsList(meetingsList: ShortMetting[]) {
+  public setGlobalMeetingsList(meetingsList: ShortMeeting[]) {
     this.actualMeetingsList$.next(meetingsList);
   }
 
-  public getGlobalMeetingsList(): Observable<ShortMetting[]> {
+  public getGlobalMeetingsList(): Observable<ShortMeeting[]> {
     return this.actualMeetingsList$.asObservable();
-  }
-
-  public getGlobalMeetingsErrorMessage(): string | null {
-    if (this.meetingGetError) {
-      return "Server communication error";
-    } else {
-      return null;
-    }
   }
 
   public mapProjectData = (response: ProjectData): ProjectData => {
@@ -70,7 +61,7 @@ export class dataService {
   }
 
   public mapMeetingDetails = (meeting: any): ExistedBoardMeetings | null => {
-    let restultMeeting: ExistedBoardMeetings | null = null;
+    let resultMeeting: ExistedBoardMeetings | null = null;
     if (meeting) {
       const newGuests: Array<Guest> = []
       if (meeting.guests) {
@@ -120,16 +111,16 @@ export class dataService {
         agenda: newAgenda,
         attachedDocuments: meeting.documents ? this.createDocumentsData(meeting.documents) : null
       }
-      restultMeeting = newMeeting;
+      resultMeeting = newMeeting;
     }
-    return restultMeeting;
+    return resultMeeting;
   }
 
-  public mapMeetings = (response: ExistedBoardMeetings[]): ShortMetting[] => {
-    const meetingsList: ShortMetting[] = [];
+  public mapMeetings = (response: ExistedBoardMeetings[]): ShortMeeting[] => {
+    const meetingsList: ShortMeeting[] = [];
     if (response.length > 0) {
       response.forEach((meeting: any) => {
-        const newMeeting: ShortMetting = {
+        const newMeeting: ShortMeeting = {
           id: meeting.id,
           meetingType: meeting.meetingType,
           meetingName: meeting.meetingName,
@@ -152,7 +143,6 @@ export class dataService {
             resolve({ result: true, length: response.totalLength });
           },
           error: (error: any) => {
-            this.meetingGetError = error;
             console.error("Error:", error);
             resolve({ result: false, error: "Server communication error" });
           }
@@ -184,7 +174,7 @@ export class dataService {
   public createDocumentsData = (filesUrls: Array<string>): Array<AttachedDocument> => {
     const attachedDocuments: Array<AttachedDocument> = [];
     filesUrls.forEach(url => {
-      const dollarIndex = url.indexOf('$')+1;
+      const dollarIndex = url.indexOf('$') + 1;
       const newAttachedDocument: AttachedDocument = {
         fileName: url.slice(dollarIndex),
         originalUrl: url,
@@ -196,7 +186,7 @@ export class dataService {
   }
 
   public isError(obj: any): boolean {
-    if(obj.status > 400){
+    if (obj.status > 400) {
       return true;
     } else {
       return false;
@@ -204,7 +194,7 @@ export class dataService {
   }
 
   public getErrorStatus(obj: any): number {
-    if(obj.status){
+    if (obj.status) {
       return obj.status;
     } else {
       return 0;

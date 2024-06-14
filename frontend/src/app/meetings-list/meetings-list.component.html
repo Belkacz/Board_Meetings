@@ -5,7 +5,7 @@
 </div>
 <div class="separator-horizontal margin-top-10px" style></div>
 <div class="my-list-container">
-    <div *ngIf="!meetingsNotEmpty">
+    <div *ngIf="loading">
         <mat-spinner></mat-spinner>
     </div>
     <div *ngIf="meetingsNotEmpty">
@@ -67,7 +67,8 @@
             aria-label="Select page" (page)="handlePageChange($event)">
         </mat-paginator>
     </div>
-    <div>
+    <div *ngIf="this.errorMessage" class="my-list-container">
+        <mat-icon class="padding-20px">warning</mat-icon>
         <mat-error>{{errorMessage}}</mat-error>
     </div>
 </div>

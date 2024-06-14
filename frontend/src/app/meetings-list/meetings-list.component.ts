@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestService } from '../services/restService.service';
 import { urls } from '../shared/enums';
-import { Guest, Task, Agenda, ExistedBoardMeetings, ShortMetting } from "../shared/interfaces"
+import { Guest, Task, Agenda, ExistedBoardMeetings, ShortMeeting } from "../shared/interfaces"
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { dataService } from '../services/dataService.service'
@@ -18,11 +18,12 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
 
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
-  public meetingsList: ShortMetting[] = [];
+  public meetingsList: ShortMeeting[] = [];
   public displayedColumns: string[] = ['id', 'meetingName', 'meetingType', 'dateStart', 'dateEnd', 'infoButton', 'deleteButton', 'editButton'];
   private subscription: Subscription | undefined;
   public page: number;
   public recordsNumber: number;
+  public loading = true;
 
   constructor(private dataService: dataService, private restService: RestService, private _snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -40,7 +41,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
     this.dataService.getMeetingsService(this.page).then((response) => {
       if (response.result) {
         this.subscription = this.dataService.getGlobalMeetingsList().subscribe(
-          (meetings: ShortMetting[]) => {
+          (meetings: ShortMeeting[]) => {
             this.meetingsList = meetings;
             if (this.meetingsList.length > 0) {
               this.meetingsNotEmpty = true;
@@ -48,13 +49,13 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
             if ('length' in response) {
               this.recordsNumber = response.length;
             }
-            this.errorMessage = this.dataService.getGlobalMeetingsErrorMessage();
+            this.loading = false;
           })
       } else {
         if ('error' in response) {
           this.errorMessage = response.error;
+          this.loading = false
         }
-        this.errorMessage = this.dataService.getGlobalMeetingsErrorMessage();
       }
     });
   }
@@ -67,7 +68,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   deleteMeeting(id: number) {
     if (id === null) {
       const returnMessage = "No object ID to delete";
-      this._snackBar.open(returnMessage, 'Close', { duration: 3000 });
+      this._snackBar.open(returnMessage, 'Close', { duration: 3000, verticalPosition: 'top' });
       throw new Error(returnMessage);
     } else {
       this.restService.deleteMeeting(id).subscribe({
@@ -77,7 +78,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
         },
         error: (error: any) => {
           console.error('Error: ', error);
-          this._snackBar.open("Cannot delete object, check console for more information", 'Close', { duration: 3000 });
+          this._snackBar.open("Cannot delete object, check console for more information", 'Close', { duration: 3000, verticalPosition: 'top' });
         }
       });
     }

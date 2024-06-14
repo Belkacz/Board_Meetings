@@ -5,17 +5,14 @@
     </button>
   </div>
   <h2>Create new meeting</h2>
-  <div class="near-button-container gap-20px">
-    <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">
-      Save as draft
-    </button>
-    <button
-      mat-stroked-button
-      (click)="saveAndPublish()"
-      [disabled]="formDisabled"
-    >
-      Save & Publish
-    </button>
+  <div class="near-button-container gap-20px"
+    matTooltip="Fields Meeting Name, Meeting Type, one Location type, date and time are mandatory to unlock"
+    [matTooltipDisabled]="!formDisabled">
+    <!-- <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">Save as draft</button> -->
+    <!-- saveDraft - coming soon -->
+    <button mat-stroked-button (click)="saveAndPublish()"
+      [disabled]="formDisabled">
+      Save & Publish</button>
   </div>
 </div>
 <div class="separator-horizontal margin-top-10px" style></div>
@@ -25,10 +22,8 @@
   </div>
   <div class="separator-vertical"></div>
   <div class="side-menu">
-    <app-tasks
-      [initialTasks]="editedTasks"
-      (tasksListOutput)="saveTasksList($event)"
-    ></app-tasks>
+    <app-tasks [initialTasks]="editedTasks"
+      (tasksListOutput)="saveTasksList($event)"></app-tasks>
     <app-invites [invitedToEdited]="invitedToEdited"></app-invites>
   </div>
 </div>

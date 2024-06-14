@@ -146,8 +146,7 @@ ul {
   align-items: center;
 }
 
-
-.flex-box-space {
+.flex-box-space-right {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -255,6 +254,15 @@ app-tasks {
 .caption {
   font-size: 0.875rem;
   color: grey;
+}
+
+.main-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 80%;
+  box-sizing: border-box;
 }
 
 @media only screen and (max-width: 1000px) {
