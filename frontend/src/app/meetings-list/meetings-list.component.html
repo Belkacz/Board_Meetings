@@ -10,8 +10,9 @@
         <mat-spinner></mat-spinner>
     </div>
     <div *ngIf="meetingsNotEmpty">
-        <div class="my-list">
-            <table mat-table [dataSource]="meetingsList">
+        <mat-card-content class="my-list">
+            <table mat-table [dataSource]="meetingsList"
+                class="mat-elevation-z8 ">
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef class="header-cell">
                         ID </th>
@@ -80,7 +81,7 @@
                 <tr mat-row
                     *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-        </div>
+        </mat-card-content>
     </div>
     <div *ngIf="meetingsNotEmpty">
         <mat-paginator [length]="recordsNumber"

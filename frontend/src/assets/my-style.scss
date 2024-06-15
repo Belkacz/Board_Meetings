@@ -13,7 +13,10 @@ $board-meetings-theme: mat.define-light-theme((color: (primary: $my-primary,
     ));
 
 :root {
+  --my-primary-color: #{mat.get-color-from-palette($my-primary)};
   --my-accent-color: #{mat.get-color-from-palette($my-accent)};
+  --my-primary-background-color: rgb(255, 255, 255);
 }
+
 
 @include mat.all-component-themes($board-meetings-theme);
