@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../base-form/base-form.component';
 import { TimeType, FileType, urls } from '../../shared/enums';
 import { Agenda, ExistedBoardMeetings } from '../../shared/interfaces';
@@ -134,9 +134,10 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       onlineAddress: new FormControl(),
       addedDocuments: new FormControl(null),
       hybridType: new FormControl(),
-      agenda: new FormGroup({
-        agendaName: new FormControl(),
-        list: new FormControl()
+      agenda: new FormControl({
+        id: null,
+        agendaName: '',
+        order: ''
       }),
       attachedDocuments: new FormControl()
     });
@@ -195,7 +196,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
             agenda: {
               id: agenda.id,
               agendaName: agenda.name,
-              list: agenda.list
+              order: agenda.order
             }
           });
         }

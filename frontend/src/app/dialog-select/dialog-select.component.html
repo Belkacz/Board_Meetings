@@ -6,7 +6,8 @@
         <h3>No agendas</h3>
         <br>
         <div class="avatar-container">
-            <mat-icon style="margin-right: 5px;">notification_important</mat-icon>
+            <mat-icon
+                style="margin-right: 5px;">notification_important</mat-icon>
             <p>The agenda list is empty</p>
         </div>
     </div>
@@ -14,20 +15,24 @@
         <mat-radio-group class="padding-container" [(ngModel)]="selectedAgenda">
             <div class="flex-box-space-right" *ngFor="let agenda of agendaList">
                 <mat-accordion>
-                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{agenda.name}}
                             </mat-panel-title>
                             <mat-panel-description>
-                                {{panelOpenState ? 'Close Details' : 'Open Details'}}
+                                {{panelOpenState ? 'Close Details' :
+                                'Open Details'}}
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <mat-list role="list">
                             <p class="list-title">Order:</p>
-                            <mat-list-item class="lower-list-items" role="listitem"
-                                *ngFor="let list of agenda.list; let idx = index">
-                                <span class="caption">{{idx + 1}}. {{ list }}</span>
+                            <mat-list-item class="lower-list-items"
+                                role="listitem"
+                                *ngFor="let list of agenda.order; let idx = index">
+                                <span class="caption">{{idx + 1}}. {{ list
+                                    }}</span>
                             </mat-list-item>
                         </mat-list>
                     </mat-expansion-panel>
@@ -37,8 +42,10 @@
         </mat-radio-group>
     </div>
     <div class="flex-box-space-right">
-        <button mat-stroked-button class="main-container select-buttons" [mat-dialog-close]="selectedAgenda"
+        <button mat-stroked-button class="main-container select-buttons"
+            [mat-dialog-close]="selectedAgenda"
             [disabled]="!selectedAgenda">Select</button>
-        <button mat-stroked-button class="main-container select-buttons" mat-dialog-close type="button">Close</button>
+        <button mat-stroked-button class="main-container select-buttons"
+            mat-dialog-close type="button">Close</button>
     </div>
 </mat-dialog-content>

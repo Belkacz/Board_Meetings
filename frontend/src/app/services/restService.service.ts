@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BoardMeetingData, ExistedBoardMeetings, FileUploadResponse, Guest, backendGuest } from '../shared/interfaces';
+import { BoardMeetingData, CreateMeetingResponse, EditedMeetingResponse, ExistedBoardMeetings, FileUploadResponse, Guest, backendGuest } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { Observable } from 'rxjs';
+import { PopUpService } from './pop-up.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestService {
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private popUpService: PopUpService) { }
 
   uploadFiles(files: File[], endpoint: string): Observable<FileUploadResponse> {
     const formData = new FormData();
@@ -22,12 +23,13 @@ export class RestService {
       this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData)
         .subscribe({
           next: (response: any) => {
-            console.log("Upload File Response:", response);
+            this.popUpService.showPopUp("Successfully uploaded files");
             result.next(response);
             result.complete();
           },
           error: (error: Error) => {
-            console.error("Error uploading files:", error);
+            console.error("Error when uploading files");
+            this.popUpService.showPopUp("Error uploading files");
             result.error(false);
             result.complete();
           }
@@ -36,13 +38,14 @@ export class RestService {
   }
 
 
-  sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls): Observable<boolean> {
-    const attachedDocumentsUrls: string[] = [];
+  sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls) {
+    const attachedDocumentsUrls: string[] = []
     if (dataToSend.attachedDocuments) {
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
       });
     }
+    console.log(dataToSend.agenda)
     const newGuests: Guest[] = [];
     if (dataToSend.guests != undefined) {
       dataToSend.guests.forEach(guest => {
@@ -51,7 +54,7 @@ export class RestService {
           name: guest.name,
           surname: guest.surname,
           jobPosition: guest.jobPosition
-        };
+        }
         newGuests.push(newGuest);
       });
     }
@@ -69,37 +72,32 @@ export class RestService {
       agenda: dataToSend.agenda,
       documents: attachedDocumentsUrls.length > 0 ? attachedDocumentsUrls : null
     };
-
-    return new Observable<boolean>((observer) => {
-      if (endpoint === urls.UPDATEMEETING) {
-        let updatePack = { ...packedText, id: dataToSend.id };
-        this.http.put(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
-          .subscribe({
-            next: response => {
-              observer.next(true);
-              observer.complete();
-            },
-            error: error => {
-              console.error("Error:", error);
-              observer.next(false);
-              observer.complete();
-            }
-          });
-      } else {
-        this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
-          .subscribe({
-            next: response => {
-              observer.next(true);
-              observer.complete();
-            },
-            error: error => {
-              console.error("Error:", error);
-              observer.next(false);
-              observer.complete();
-            }
-          });
-      }
-    });
+    console.log(packedText.agenda)
+    if (endpoint === urls.UPDATEMEETING) {
+      let updatePack = { ...packedText, id: dataToSend.id }
+      this.http.put<EditedMeetingResponse>(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
+        .subscribe({
+          next: response => {
+            this.popUpService.showPopUp(response.editedMeeting);
+            this.router.navigate(['/'])
+          },
+          error: error => {
+            this.popUpService.showPopUp(`Error when edited meeting # ${dataToSend.id}`);
+            console.error("Error:", error);
+          }
+        });
+    } else {
+      this.http.post<CreateMeetingResponse>(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
+        .subscribe({
+          next: response => {
+            this.popUpService.showPopUp(response.message);
+            this.router.navigate(['/'])
+          },
+          error: error => {
+            console.error("Error:", error);
+          }
+        });
+    }
   }
 
   private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {

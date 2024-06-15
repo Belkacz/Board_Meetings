@@ -7,6 +7,7 @@ from uuid import uuid4
 from fastapi.responses import FileResponse
 
 from meetings import (
+    ExternalAgenda,
     meetings,
     guests,
     agendas,
@@ -107,7 +108,7 @@ def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
         onlineAddress=meeting.online_address,
         guests=guests,
         tasksList=meeting.tasksList,
-        agenda=meeting.agenda,
+        agenda=mapAgendaOutgoing(meeting.agenda),
         documents=meeting.documents,
     )
 
@@ -119,7 +120,7 @@ def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
         404: {"description": "Meeting not found", "model": ErrorResponse},
     },
 )
-async def get_meeting_details(meeting_id: int):
+async def getMeetingDetails(meeting_id: int):
     result_meeting: ExternalExistedMeeting = None
     if (
         meeting_id - 1 >= 0
@@ -141,19 +142,23 @@ async def get_meeting_details(meeting_id: int):
 
 
 @app.get("/get-people", response_model=list[Guest])
-async def get_people_list():
+async def getPeopleList():
     print("people")
     return guests
 
 
-@app.get("/get-agendas", response_model=list[Agenda])
-async def get_agendas_list():
+@app.get("/get-agendas", response_model=list[ExternalAgenda])
+async def getAgendasList():
     print("agendas")
-    return agendas
+    externalAgendas = []
+    for agenda in agendas:
+        mappedAgenda = mapAgendaOutgoing(agenda)
+        externalAgendas.append(mappedAgenda)
+    return externalAgendas
 
 
 @app.post("/upload-files/")
-async def create_upload_files(files: List[UploadFile] = File(...)):
+async def createUploadFiles(files: List[UploadFile] = File(...)):
     file_urls = []
     for file in files:
         filename = f"{uuid4()}${file.filename}"
@@ -166,7 +171,7 @@ async def create_upload_files(files: List[UploadFile] = File(...)):
 
 
 @app.get("/files/{file_name}")
-async def get_file(file_name: str):
+async def getFile(file_name: str):
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     print(file_path)
     if os.path.exists(file_path):
@@ -206,10 +211,25 @@ def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
     return guests
 
 
-def mapMeetingIncoming(
-    new_id: int, meeting: Union[ExternalBaseMeeting, ExternalExistedMeeting]
+def mapAgendaIncoming(incomingAgenda: ExternalAgenda) -> Agenda:
+    return Agenda(
+        id=incomingAgenda.id,
+        agendaName=incomingAgenda.agendaName,
+        order=incomingAgenda.order,
+    )
+
+
+def mapAgendaOutgoing(insideAgenda: Agenda) -> ExternalAgenda:
+    return ExternalAgenda(
+        id=insideAgenda.id,
+        agendaName=insideAgenda.name,
+        order=insideAgenda.order,
+    )
+
+
+def mapNewMeetingIncoming(
+    new_id: int, meeting: ExternalBaseMeeting
 ) -> Optional[ExistedMeeting]:
-    guests = mapGuestsIncoming(meeting.guests)
     return ExistedMeeting(
         id=new_id,
         meeting_type=meeting.meetingType,
@@ -218,17 +238,14 @@ def mapMeetingIncoming(
         end_date=meeting.endDate,
         meeting_address=meeting.meetingAddress,
         online_address=meeting.onlineAddress,
-        guests=guests,
+        guests=mapGuestsIncoming(meeting.guests),
         tasksList=meeting.tasksList,
-        agenda=meeting.agenda,
+        agenda=mapAgendaIncoming(meeting.agenda),
         documents=meeting.documents,
     )
 
 
-def mapMeetingIncoming(
-    new_id: int, meeting: ExternalExistedMeeting
-) -> Optional[ExistedMeeting]:
-    guests = mapGuestsIncoming(meeting.guests)
+def mapMeetingIncoming(new_id: int, meeting: ExternalExistedMeeting) -> ExistedMeeting:
     return ExistedMeeting(
         id=new_id,
         meeting_type=meeting.meetingType,
@@ -237,11 +254,21 @@ def mapMeetingIncoming(
         end_date=meeting.endDate,
         meeting_address=meeting.meetingAddress,
         online_address=meeting.onlineAddress,
-        guests=guests,
+        guests=mapGuestsIncoming(meeting.guests),
         tasksList=meeting.tasksList,
-        agenda=meeting.agenda,
+        agenda=mapAgendaIncoming(meeting.agenda),
         documents=meeting.documents,
     )
+
+
+def createAgendaId():
+    if len(agendas) > 0:
+        last_agenda = agendas[-1]
+        last_agenda_id = last_agenda.id
+    else:
+        last_agenda_id = 1
+
+    return last_agenda_id
 
 
 @app.post(
@@ -260,7 +287,11 @@ async def add_meeting(meeting: ExternalBaseMeeting):
         last_meeting = 1
 
     new_meeting_id = last_meeting.id + 1
-    new_meeting = mapMeetingIncoming(new_meeting_id, meeting)
+
+    if meeting.agenda.id == None:
+        meeting.agenda.id = createAgendaId()
+
+    new_meeting = mapNewMeetingIncoming(new_meeting_id, meeting)
 
     if not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address):
         raise HTTPException(
@@ -294,7 +325,9 @@ def filesNotInOriginal(
 async def update_meeting(edited_meeting: ExternalExistedMeeting):
 
     updated_meeting = mapMeetingIncoming(edited_meeting.id, edited_meeting)
-    print(updated_meeting.id)
+    if edited_meeting.agenda.id is None:
+        edited_meeting.agenda.id = createAgendaId()
+
     if not atLeastOneAddress(
         updated_meeting.meeting_address, updated_meeting.online_address
     ):
@@ -316,7 +349,7 @@ async def update_meeting(edited_meeting: ExternalExistedMeeting):
             status_code=404, detail=f"Meeting with id #{edited_meeting.id} not found"
         )
 
-    return {"edited meeting": f"updated meeting with id #{updated_meeting.id}"}
+    return {"editedMeeting": f"Updated meeting with id #{updated_meeting.id}"}
 
 
 @app.delete(

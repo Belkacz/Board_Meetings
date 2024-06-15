@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { Agenda } from '../shared/interfaces';
 
 
@@ -18,7 +18,8 @@ export class DialogSelectComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: Agenda[]) {
     this.selectedAgenda = null;
     this.agendaList = data;
-    if(this.agendaList.length > 0) {
+    console.log(this.agendaList)
+    if (this.agendaList.length > 0) {
       this.noAgendas = false;
     }
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting } from '../shared/interfaces';
+import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting, IncomingAgenda } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { RestService } from './restService.service';
 
@@ -47,13 +47,13 @@ export class dataService {
     return projectData;
   }
 
-  public mapAgendas = (response: Agenda[]): Agenda[] => {
+  public mapAgendas = (response: IncomingAgenda[]): Agenda[] => {
     const agendas: Agenda[] = [];
     response.forEach((agenda: any) => {
       const newAgenda: Agenda = {
         id: agenda.id,
-        name: agenda.name,
-        list: agenda.order
+        name: agenda.agendaName,
+        order: agenda.order
       }
       agendas.push(newAgenda);
     })
@@ -92,8 +92,8 @@ export class dataService {
       if (meeting.agenda) {
         newAgenda = {
           id: meeting.agenda.id,
-          name: meeting.agenda.name,
-          list: meeting.agenda.order,
+          name: meeting.agenda.agendaName,
+          order: meeting.agenda.order,
         }
       }
       const newMeeting: ExistedBoardMeetings = {

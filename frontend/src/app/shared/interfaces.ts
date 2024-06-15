@@ -1,4 +1,4 @@
-import { FileType } from "./enums";
+import { FileType, PupUpTypes } from "./enums";
 
 export type newTaskVale = {
     name: string
@@ -82,17 +82,28 @@ export interface Task {
 export interface Agenda {
     id: number;
     name: string;
-    list: string[];
+    order: string[];
+}
+
+export interface IncomingAgenda {
+    id: number;
+    agendaName: string;
+    order: string[];
 }
 
 export interface FileUploadResponse {
     file_urls: string[];
 }
 
+export interface CreateMeetingResponse {
+    message: string;
+}
 
-export interface FastApiResponse {
-    // Określ strukturę odpowiedzi, którą otrzymujesz z FastAPI
-    // Na przykład, jeśli oczekujesz powiadomienie o sukcesie, możesz użyć flagi success
-    edited_meeting: string;
-    // Dodaj inne pola, które mogą być zwracane przez Twoje API
+export interface EditedMeetingResponse {
+    editedMeeting: string;
+}
+
+export interface PopUp {
+    message: string;
+    type: PupUpTypes
 }

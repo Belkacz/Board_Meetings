@@ -8,6 +8,7 @@ import { dataService } from '../services/dataService.service'
 import { MatDialog } from '@angular/material/dialog';
 import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
 import { PageEvent } from '@angular/material/paginator';
+import { PopUpService } from '../services/pop-up.service';
 
 @Component({
   selector: 'app-meetings-list',
@@ -25,7 +26,7 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   public recordsNumber: number;
   public loading = true;
 
-  constructor(private dataService: dataService, private restService: RestService, private _snackBar: MatSnackBar,
+  constructor(private dataService: dataService, private restService: RestService, private popUpService: PopUpService,
     public dialog: MatDialog,
   ) {
     this.meetingsList = [];
@@ -68,17 +69,17 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   deleteMeeting(id: number) {
     if (id === null) {
       const returnMessage = "No object ID to delete";
-      this._snackBar.open(returnMessage, 'Close', { duration: 3000, verticalPosition: 'top' });
+      this.popUpService.showPopUp(returnMessage);
       throw new Error(returnMessage);
     } else {
       this.restService.deleteMeeting(id).subscribe({
         next: () => {
           this.fetchMeetings();
-          this._snackBar.open("Deleted object of id" + id, 'Close', { duration: 3000, verticalPosition: 'top' });
+          this.popUpService.showPopUp("Deleted object of id" + id);
         },
         error: (error: any) => {
           console.error('Error: ', error);
-          this._snackBar.open("Cannot delete object, check console for more information", 'Close', { duration: 3000, verticalPosition: 'top' });
+          this.popUpService.showPopUp("Cannot delete object, check console for more information");
         }
       });
     }

@@ -34,6 +34,12 @@ class Agenda(BaseModel):
     order: list[str] | None = None
 
 
+class ExternalAgenda(BaseModel):
+    id: int | None = None
+    agendaName: str | None = None
+    order: list[str] | None = None
+
+
 class MeetingType(Enum):
     BOARDMEETINGS = "boardMeeting"
     GENERALASSEMBLY = "generalAssembly"
@@ -83,7 +89,7 @@ class ExternalBaseMeeting(BaseModel):
     onlineAddress: str | None = None
     guests: list[ExternalGuest] | None = None
     tasksList: list[Task] | None = None
-    agenda: Agenda | None = None
+    agenda: ExternalAgenda | None = None
     documents: list[str] | None = None
 
 

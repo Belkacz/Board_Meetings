@@ -32,7 +32,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   private newFiles: any;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private dataService: dataService, private _snackBar: MatSnackBar, private router: Router
+    private route: ActivatedRoute, private dataService: dataService
   ) {
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
@@ -115,32 +115,14 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
           const responseUrls: string[] = response.file_urls.map((url: string) => `${url}`);
           this.combinedData.attachedDocuments = this.dataService.createDocumentsData(responseUrls);
 
-          this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING).subscribe({
-            next: (apiResponse: boolean) => {
-              this._snackBar.open(`Successfully Created meeting`, 'Close', { duration: 4000, verticalPosition: 'top' });
-            },
-            error: (error: Error) => {
-              console.error("Error sending data to FastApi:", error);
-              this._snackBar.open(`Error create meeting: ${error.message}`, 'Close', { duration: 4000, verticalPosition: 'top' });
-            }
-          });
+          this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING)
         },
         error: (error: Error) => {
           console.error("Error uploading files:", error);
-          this._snackBar.open(`Error uploading files: ${error.message}`, 'Close', { duration: 4000, verticalPosition: 'top' });
         }
       });
     } else {
-      this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING).subscribe({
-        next: (apiResponse: boolean) => {
-          this._snackBar.open(`Successfully create meeting`, 'Close', { duration: 4000, verticalPosition: 'top' });
-          this.router.navigate(['/'])
-        },
-        error: (error: Error) => {
-          console.error("Error sending data to FastApi:", error);
-          this._snackBar.open(`Error create meeting: ${error.message}`, 'Close', { duration: 4000, verticalPosition: 'top' });
-        }
-      });
+      this.restService.sendDataToFastApi(this.combinedData, urls.NEWMEETING)
     }
   }
 

@@ -212,6 +212,7 @@ app-tasks {
 .separator-horizontal {
   background-color: var(--my-accent-color);
   height: 2px;
+  width: 95%;
 }
 
 .mat-mdc-form-field-focus-overlay .ng-star-inserted {

@@ -10,6 +10,13 @@ export enum FileType {
     AddDocument = "Add Document"
 }
 
+export enum PupUpTypes {
+    Error = "Error",
+    Neutral = "Neutral",
+    Warning = "Warning",
+    Success = "Success"
+}
+
 export enum urls {
     protocolBase = "http://",
     protocolHttps = "https://",
