@@ -130,6 +130,7 @@ ul {
 
 .main-container {
   display: flex;
+  justify-content: center;
 }
 
 .centered-top-container {
@@ -202,7 +203,7 @@ app-tasks {
   margin-bottom: 15px;
 }
 
-.separator-forInvates {
+.separator-forInvites {
 
   background-color: var(--my-accent-color);
   height: 3px;
@@ -314,20 +315,26 @@ app-tasks {
   }
 }
 
+@media only screen and (max-width:599px) {
+  .separator-horizontal {
+    width: 100%;
+  }
+}
+
 @media only screen and (min-width: 1300px) {
   .main-menu {
-    margin-left: 10%;
+    /* margin-left: 10%; */
   }
 }
 
 @media only screen and (min-width: 1400px) {
   .main-menu {
-    margin-left: 15%;
+    /* margin-left: 15%; */
   }
 }
 
 @media only screen and (min-width: 1700px) {
   .main-menu {
-    margin-left: 20%;
+    /* margin-left: 20%; */
   }
 }

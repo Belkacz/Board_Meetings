@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
 import { PageEvent } from '@angular/material/paginator';
 import { PopUpService } from '../services/pop-up.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-meetings-list',
@@ -16,7 +17,6 @@ import { PopUpService } from '../services/pop-up.service';
   styleUrl: './meetings-list.component.css',
 })
 export class MeetingsListComponent implements OnInit, OnDestroy {
-
   public meetingsNotEmpty = false;
   public errorMessage: null | string = null;
   public meetingsList: ShortMeeting[] = [];
@@ -26,17 +26,33 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
   public recordsNumber: number;
   public loading = true;
 
-  constructor(private dataService: dataService, private restService: RestService, private popUpService: PopUpService,
+
+  constructor(
+    private dataService: dataService,
+    private restService: RestService,
+    private popUpService: PopUpService,
     public dialog: MatDialog,
+    private breakpointObserver: BreakpointObserver
   ) {
     this.meetingsList = [];
     this.page = 1;
     this.recordsNumber = 0;
+
+    this.breakpointObserver.observe([
+      Breakpoints.Handset
+    ]).subscribe(result => {
+      if (result.matches) {
+        this.displayedColumns = ['id', 'meetingName', 'infoButton', 'deleteButton', 'editButton'];
+      } else {
+        this.displayedColumns = ['id', 'meetingName', 'meetingType', 'dateStart', 'dateEnd', 'infoButton', 'deleteButton', 'editButton'];
+      }
+    });
   }
 
   ngOnInit(): void {
     this.fetchMeetings();
   }
+
 
   private fetchMeetings(): void {
     this.dataService.getMeetingsService(this.page).then((response) => {

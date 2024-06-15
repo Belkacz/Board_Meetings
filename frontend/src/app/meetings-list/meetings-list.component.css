@@ -3,3 +3,14 @@
     float: right;
     margin: 5px;
 }
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 599px) {
+    .header-cell {
+        padding: 10px;
+    }
+
+    .cell {
+        padding: 10px;
+    }
+}
