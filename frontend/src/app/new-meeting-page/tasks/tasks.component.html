@@ -10,7 +10,7 @@
     <mat-expansion-panel *ngFor="let task of tasksList; let i = index"
       (opened)="panelOpenStates[i] = true"
       (closed)="panelOpenStates[i] = false">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header class="custom-exp-panel">
         <mat-panel-title style="flex-grow: 2">
           {{ task.name }}
         </mat-panel-title>
