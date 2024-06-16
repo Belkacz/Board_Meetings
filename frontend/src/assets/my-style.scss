@@ -16,7 +16,7 @@ $board-meetings-theme: mat.define-light-theme((color: (primary: $my-primary,
   --my-primary-color: #{mat.get-color-from-palette($my-primary)};
   --my-accent-color: #{mat.get-color-from-palette($my-accent)};
   --my-primary-background-color: rgb(255, 255, 255);
-  --my-accent-background-color: rgba(194, 208, 255, 0.541);
+  --my-accent-background-color: rgb(194, 208, 255);
 }
 
 

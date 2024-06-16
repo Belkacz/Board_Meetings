@@ -135,8 +135,12 @@ ul {
   /* background-color: rgba(172, 191, 255, 0.3) */
 }
 
-.base-container {
-  background: var(--my-accent-background-color)
+.base-color {
+  background: var(--my-primary-background-color) !important;
+}
+
+.accent-color {
+  background: var(--my-accent-background-color) !important;
 }
 
 .select-buttons-group {
@@ -151,13 +155,13 @@ ul {
   justify-content: start;
 }
 
-.centered-container {
+.center-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--my-primary-background-color);
 }
+
 
 .list-item {
   display: flex;
@@ -201,7 +205,7 @@ app-tasks {
 .burger-line-icons {
   display: flex;
   align-items: center;
-  border-radius: 100px !important;
+  border-radius: 30px !important;
 }
 
 .single-button-cont {
@@ -312,9 +316,9 @@ app-tasks {
 }
 
 @media only screen and (max-width: 1000px) {
-  /* .main-container {
+  .main-container {
     display: inline;
-  } */
+  }
 
   .main-menu {
     padding: 50px
@@ -358,6 +362,22 @@ app-tasks {
     width: 100%;
   }
 
+  .main-container {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    padding: 0px;
+  }
+
+  .main-menu {
+    padding: 25px;
+    width: 100%;
+  }
+
+  .main-card {
+    width: 100%;
+  }
+
   .single-select-but {
     padding: 0px;
     flex-direction: column;
@@ -369,27 +389,30 @@ app-tasks {
   }
 
   .meeting-form {
-    width: 100%;
-    padding: 0px;
+    width: 95%;
+    padding: 10px;
   }
 
   .side-menu {
-    padding: 10px 0px 10px 0px;
+    width: max-content;
+    padding: 10px;
   }
 
-  .foot-container {
-    height: 100px;
+
+  .bottom-save-cont {
+    display: flex;
+    justify-content: center
   }
 
-  .bigger-padding-bottom {
-    padding-bottom: 135px;
-    background-color: var(--my-accent-background-color);
+  .bottom-save-card {
+    border-radius: 10px;
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+    background: var(--my-primary-background-color);
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    justify-content: center
   }
-
-  .select-buttons-group.force-that.shiet {
-    display: flex !important;
-  }
-
 
   .top-items-grid {
     padding: 5px;

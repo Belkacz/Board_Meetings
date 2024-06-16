@@ -1,4 +1,5 @@
-<div *ngIf="activeHamburger" class="centered-container padding-standard">
+<div *ngIf="activeHamburger"
+  class="center-content padding-standard base-color">
   <h2 class="padding-standard">Create new meeting</h2>
   <div class="burger-line-icons">
     <div class="burger-line-icons main-card padding-standard"
@@ -27,7 +28,7 @@
       Save & Publish</button>
   </div>
 </div>
-<div class="centered-container ">
+<div class="center-content ">
   <div class="separator-horizontal" style></div>
 </div>
 <div class="main-container base-container">
@@ -40,15 +41,15 @@
       (tasksListOutput)="saveTasksList($event)"></app-tasks>
     <app-invites [invitedToEdited]="invitedToEdited"></app-invites>
   </div>
-  <div *ngIf="activeHamburger"
-    class="centered-container bigger-padding-bottom">
-    <mat-card-content class="container main-card main-card">
-      <div>
-        <button mat-stroked-button class="padding-standard"
-          (click)="saveAndPublish()"
-          [disabled]="formDisabled">
-          Save & Publish</button>
-      </div>
-    </mat-card-content>
+
+  <div *ngIf="activeHamburger" class="bottom-save-cont">
+    <div
+      class="bottom-save-card">
+      <button mat-stroked-button
+        class="padding-standard"
+        (click)="saveAndPublish()"
+        [disabled]="formDisabled">
+        Save & Publish</button>
+    </div>
+
   </div>
-</div>

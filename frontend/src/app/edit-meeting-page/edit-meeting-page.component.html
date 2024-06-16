@@ -1,4 +1,4 @@
-<div *ngIf="activeHamburger" class="centered-container padding-standard">
+<div *ngIf="activeHamburger" class="center-content padding-standard base-color">
     <h2 *ngIf="!getMeetingError" class="padding-standard">Edit Meeting №
         {{editedMeetingId}}</h2>
     <h2 *ngIf="getMeetingError" class="padding-standard">Not found meeting with
@@ -34,7 +34,7 @@
             Save & Publish</button>
     </div>
 </div>
-<div class="centered-container">
+<div class="center-content">
     <div class="separator-horizontal" style></div>
 </div>
 
@@ -59,16 +59,14 @@
         </div>
     </div>
 
-    <div *ngIf="activeHamburger"
-        class="centered-container bigger-padding-bottom">
-        <mat-card-content class="container main-card main-card">
-            <div>
-                <button mat-stroked-button class="padding-standard"
-                    (click)="saveAndPublish()"
-                    [disabled]="formDisabled">
-                    Save & Publish</button>
-            </div>
-        </mat-card-content>
-    </div>
+    <div *ngIf="activeHamburger" class="bottom-save-cont">
+        <div
+            class="bottom-save-card">
+            <button mat-stroked-button
+                class="padding-standard"
+                (click)="saveAndPublish()"
+                [disabled]="formDisabled">
+                Save & Publish</button>
+        </div>
 
-</div>
+    </div>
