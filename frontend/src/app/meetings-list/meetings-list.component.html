@@ -1,11 +1,15 @@
-<div class="header">
-    <div class="padding-left-30px">
+<div class="header ">
+    <div class="padding-left-oversize">
         <button mat-icon-button matSuffix
             routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
     </div>
+    <div class="padding-small">
+    </div>
 </div>
-<div class="separator-horizontal margin-top-10px" style></div>
-<div class="my-list-container">
+<div class="separator-horizontal" style></div>
+<div class="padding-small">
+</div>
+<div class="my-list-container base-container">
     <div *ngIf="loading">
         <mat-spinner></mat-spinner>
     </div>
@@ -90,7 +94,7 @@
         </mat-paginator>
     </div>
     <div *ngIf="this.errorMessage" class="my-list-container">
-        <mat-icon class="padding-20px">warning</mat-icon>
+        <mat-icon class="padding-standard">warning</mat-icon>
         <mat-error>{{errorMessage}}</mat-error>
     </div>
 </div>

@@ -1,173 +1,197 @@
 <div class="main-form">
   <form [formGroup]="form" class="meeting-form">
-    <mat-card-content class="main-card">
-      <div>
-        <h3>Meeting type</h3>
-        <div example-button-row class="select-buttons-grup">
-          <button mat-stroked-button class="margin-left-0px select-buttons"
-            [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'boardMeeting'}"
-            (click)="selectType('boardMeeting')">Board Meeting</button>
-          <button mat-stroked-button class="select-buttons"
-            [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'generalAssembly'}"
-            (click)="selectType('generalAssembly')">General Assembly</button>
-          <button mat-stroked-button class="select-buttons"
-            [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'other'}"
-            (click)="selectType('other')">Other</button>
+    <mat-card-content class="main-card main-card ">
+      <div class="padding-standard">
+        <div>
+          <h3>Meeting type</h3>
+          <div class="select-buttons-group">
+            <div class="single-select-but padding-small">
+              <button mat-stroked-button class="select-buttons"
+                [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'boardMeeting'}"
+                (click)="selectType('boardMeeting')">Board Meeting</button>
+            </div>
+            <div class="single-select-but padding-small">
+              <button mat-stroked-button class="select-buttons"
+                [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'generalAssembly'}"
+                (click)="selectType('generalAssembly')">General
+                Assembly</button>
+            </div>
+            <div class="single-select-but padding-small">
+              <button mat-stroked-button class="select-buttons"
+                [ngClass]="{'active': form.get('selectedMeetingType')?.value === 'other'}"
+                (click)="selectType('other')">Other</button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <h3>Meeting name</h3>
-        <mat-form-field
-          class="wider-element wider-container wider-box lower-input">
-          <input class="wider-input" formControlName="meetingName" matInput>
-          <button class="button-X" mat-icon-button matSuffix
-            (click)="clearInput()">
-            <mat-icon>clear</mat-icon>
-          </button>
-        </mat-form-field>
-        <mat-error *ngIf="form.get('meetingName')?.errors?.['notEmpty']">
-          Meeting name is required.
-        </mat-error>
-        <mat-error *ngIf="form.get('meetingName')?.touched &&
+        <div>
+          <h3>Meeting name</h3>
+          <mat-form-field
+            class="wider-element wider-container wider-box lower-input">
+            <input class="wider-input" formControlName="meetingName" matInput>
+            <button class="button-X" mat-icon-button matSuffix
+              (click)="clearInput()">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-error *ngIf="form.get('meetingName')?.errors?.['notEmpty']">
+            Meeting name is required.
+          </mat-error>
+          <mat-error *ngIf="form.get('meetingName')?.touched &&
             !form.get('meetingName')?.value &&
             !form.get('meetingName')?.errors?.['notEmpty']">
-          Meeting cannot be empty.
-        </mat-error>
-      </div>
-      <div>
-        <h3>Date and time</h3>
-        <div class="calendar-container">
-          <app-datepicker [defaultDate]="defaultDate"
-            (dateSelected)="handleDateSelected($event)"></app-datepicker>
-          <app-timepicker [selectedTime]="defaultTimeStart"
-            (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
-          <app-timepicker [selectedTime]="defaultTimeEnd"
-            (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
+            Meeting cannot be empty.
+          </mat-error>
         </div>
-        <mat-error
-          *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
-          && !form.get('dateStart')?.pristine && !form.get('dateEnd')?.pristine">
-          The end date cannot be earlier than the start date
-        </mat-error>
-        <mat-error
-          *ngIf="form.get('dateStart')?.hasError('noStartingTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
-          No starting meeting time
-        </mat-error>
-        <mat-error
-          *ngIf="form.get('dateEnd')?.hasError('noEndTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
-          No end meeting time
-        </mat-error>
-        <mat-error *ngIf="noDatePicked">
-          The date need to be chosen
-        </mat-error>
-      </div>
-      <div>
-        <h3>Location</h3>
-        <section class>
-          <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()"
-            class="minus-10-margin">Location</mat-checkbox>
-          <br>
-          <mat-form-field
-            class="wider-element wider-container wider-box lower-input">
-            <input matInput formControlName="meetingAddress"
-              placeholder="Address..." />
-          </mat-form-field>
-        </section>
-        <h3>Online meeting</h3>
-        <section class>
-          <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()"
-            class="minus-10-margin">Online
-            meeting</mat-checkbox>
-          <br>
-          <mat-form-field
-            class="wider-element wider-container wider-box lower-input">
-            <input matInput formControlName="onlineAddress"
-              placeholder="Paste meeting link ..." value />
-          </mat-form-field>
-        </section>
-        <h3>Hybrid: Online and stationary</h3>
-        <section class>
-          <mat-checkbox [checked]="isHybridChecked" (click)="toggleHybrid()"
-            class="minus-10-margin">Hybrid</mat-checkbox>
-          <br>
-        </section>
-      </div>
-      <mat-error
-        *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
-        Meeting address cannot be empty.
-      </mat-error>
-      <br>
-      <mat-card class="wider-element wider-container wider-box grey-box-shadow">
-        <mat-card-header>
-          <mat-card-title>Agenda</mat-card-title>
-        </mat-card-header>
-        <mat-card-content
-          *ngIf="!form.get('agenda')?.value['agendaName']">agenda of the
-          meeting</mat-card-content>
-        <mat-card-content *ngIf="form.get('agenda')?.value['agendaName']">{{
-          form.get('agenda')?.value['agendaName']
-          }}</mat-card-content>
-        <div class="select-buttons-grup">
-          <button mat-stroked-button class="select-buttons-agenda"
-            (click)="newAgenda()">Create agenda</button>
-          <input type="file" #chooseFile style="display: none"
-            (change)="onFileSelected($event, FileType.ChooseFile)" />
-          <button mat-stroked-button class="select-buttons-agenda"
-            disabled="false" (click)="selectAgenda()">Choose
-            Agenda</button>
-        </div>
-      </mat-card>
-      <div>
-        <h3>Documents</h3>
-        <p>Documents attached to the meeting</p>
-        <div class="select-buttons-grup">
-          <div>
-            <ng-container *ngIf="form.get('attachedDocuments')?.value != null">
-              <h4 class="list-header">Attached Files :</h4>
-              <ul
-                class="wider-element wider-container wider-box list-container">
-                <li
-                  *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
-                  <div class="avatar-container text-listcontainter diplay-flex">
-                    <mat-icon fontIcon="file_copy"></mat-icon>
-                    <p>{{ doc.fileName }}</p>
-                    <button mat-icon-button matSuffix
-                      (click)="fileDownloadService.downloadFileFromUrl(doc)">
-                      <mat-icon>download</mat-icon>
-                    </button>
-                    <button mat-icon-button matSuffix
-                      (click)="deleteAttachedDocs(i)">
-                      <mat-icon>clear</mat-icon>
-                    </button>
-                  </div>
-                </li>
-              </ul>
-            </ng-container>
-            <ng-container *ngIf="form.get('addedDocuments')?.value != null">
-              <h4 class="list-header">Added Files :</h4>
-              <ul
-                class="wider-element wider-container wider-box list-container">
-                <li
-                  *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
-                  <div class="avatar-container text-listcontainter diplay-flex">
-                    <mat-icon class="file-icon" fontIcon="file_copy"></mat-icon>
-                    <p>{{ doc.name }}</p>
-                    <button mat-icon-button matSuffix
-                      (click)="fileDownloadService.downloadAddedFile(doc)">
-                      <mat-icon>download</mat-icon>
-                    </button>
-                    <button mat-icon-button matSuffix (click)="deleteDocs(i)">
-                      <mat-icon>clear</mat-icon>
-                    </button>
-                  </div>
-                </li>
-              </ul>
-            </ng-container>
+        <div>
+          <h3>Date and time</h3>
+          <div class="calendar-container">
+            <app-datepicker [defaultDate]="defaultDate"
+              (dateSelected)="handleDateSelected($event)"></app-datepicker>
+            <app-timepicker [selectedTime]="defaultTimeStart"
+              (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
+            <app-timepicker [selectedTime]="defaultTimeEnd"
+              (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
           </div>
-          <input type="file" #addDocument style="display: none"
-            (change)="onFileSelected($event, FileType.AddDocument)" />
-          <button mat-stroked-button
-            (click)="openFilePicker(addDocumentInput)">Add Documents</button>
+          <mat-error
+            *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
+          && !form.get('dateStart')?.pristine && !form.get('dateEnd')?.pristine">
+            The end date cannot be earlier than the start date
+          </mat-error>
+          <mat-error
+            *ngIf="form.get('dateStart')?.hasError('noStartingTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
+            No starting meeting time
+          </mat-error>
+          <mat-error
+            *ngIf="form.get('dateEnd')?.hasError('noEndTime') && (!form.get('dateStart')?.pristine || !form.get('dateEnd')?.pristine)">
+            No end meeting time
+          </mat-error>
+          <mat-error *ngIf="noDatePicked">
+            The date need to be chosen
+          </mat-error>
+        </div>
+        <div>
+          <h3>Location</h3>
+          <section class>
+            <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()"
+              class="minus-10-margin">Location</mat-checkbox>
+            <br>
+            <mat-form-field
+              class="wider-element wider-container wider-box lower-input">
+              <input matInput formControlName="meetingAddress"
+                placeholder="Address..." />
+            </mat-form-field>
+          </section>
+          <h3>Online meeting</h3>
+          <section class>
+            <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()"
+              class="minus-10-margin">Online
+              meeting</mat-checkbox>
+            <br>
+            <mat-form-field
+              class="wider-element wider-container wider-box lower-input">
+              <input matInput formControlName="onlineAddress"
+                placeholder="Paste meeting link ..." value />
+            </mat-form-field>
+          </section>
+          <h3>Hybrid: Online and stationary</h3>
+          <section class>
+            <mat-checkbox [checked]="isHybridChecked" (click)="toggleHybrid()"
+              class="minus-10-margin">Hybrid</mat-checkbox>
+            <br>
+          </section>
+        </div>
+        <mat-error
+          *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
+          Meeting address cannot be empty.
+        </mat-error>
+        <br>
+        <mat-card
+          class="wider-element wider-container wider-box grey-box-shadow">
+          <mat-card-header>
+            <mat-card-title>Agenda: </mat-card-title>
+          </mat-card-header>
+          <mat-card-content
+            *ngIf="!form.get('agenda')?.value['name']"> <p>No
+              chosen agenda</p></mat-card-content>
+          <mat-card-content *ngIf="form.get('agenda')?.value['name']"
+            class="agenda-with-order">
+            <mat-card-content class="agenda-row">
+              <p>Selected: {{
+                form.get('agenda')?.value['name']
+                }}</p><button class mat-icon-button matSuffix
+                (click)="clearAgenda()">
+                <mat-icon>clear</mat-icon>
+              </button></mat-card-content>
+            <p class="caption padding-small">Order:
+              {{form.get('agenda')?.value['order']
+              }}</p>
+          </mat-card-content>
+          <div class="select-buttons-group">
+            <button mat-stroked-button class="select-buttons-agenda"
+              (click)="newAgenda()">Create agenda</button>
+            <input type="file" #chooseFile style="display: none"
+              (change)="onFileSelected($event, FileType.ChooseFile)" />
+            <button mat-stroked-button class="select-buttons-agenda"
+              disabled="false" (click)="selectAgenda()">Choose
+              Agenda</button>
+          </div>
+        </mat-card>
+        <div>
+          <h3>Documents</h3>
+          <p>Documents attached to the meeting</p>
+          <div class="select-buttons-group">
+            <div>
+              <ng-container
+                *ngIf="form.get('attachedDocuments')?.value != null">
+                <h4 class="list-header">Attached Files :</h4>
+                <ul
+                  class="wider-element wider-container wider-box list-container">
+                  <li
+                    *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
+                    <div
+                      class="avatar-container text-listcontainter diplay-flex">
+                      <mat-icon fontIcon="file_copy"></mat-icon>
+                      <p>{{ doc.fileName }}</p>
+                      <button mat-icon-button matSuffix
+                        (click)="fileDownloadService.downloadFileFromUrl(doc)">
+                        <mat-icon>download</mat-icon>
+                      </button>
+                      <button mat-icon-button matSuffix
+                        (click)="deleteAttachedDocs(i)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </ng-container>
+              <ng-container *ngIf="form.get('addedDocuments')?.value != null">
+                <h4 class="list-header">Added Files :</h4>
+                <ul
+                  class="wider-element wider-container wider-box list-container">
+                  <li
+                    *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
+                    <div
+                      class="avatar-container text-listcontainter diplay-flex">
+                      <mat-icon class="file-icon"
+                        fontIcon="file_copy"></mat-icon>
+                      <p>{{ doc.name }}</p>
+                      <button mat-icon-button matSuffix
+                        (click)="fileDownloadService.downloadAddedFile(doc)">
+                        <mat-icon>download</mat-icon>
+                      </button>
+                      <button mat-icon-button matSuffix (click)="deleteDocs(i)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </ng-container>
+            </div>
+            <input type="file" #addDocument style="display: none"
+              (change)="onFileSelected($event, FileType.AddDocument)" />
+            <button mat-stroked-button
+              (click)="openFilePicker(addDocumentInput)">Add Documents</button>
+          </div>
         </div>
       </div>
     </mat-card-content>

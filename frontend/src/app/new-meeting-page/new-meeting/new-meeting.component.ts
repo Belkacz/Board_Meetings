@@ -97,6 +97,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         meetingAddress: this.editedMeeting.meetingAddress || null,
         onlineAddress: this.editedMeeting.onlineAddress || null,
         attachedDocuments: this.editedMeeting.attachedDocuments || null,
+        agenda: this.editedMeeting.agenda || null
       });
       this.selectedDate = true;
       this.defaultDate = this.editedMeeting.dateStart || null;
@@ -136,8 +137,8 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       hybridType: new FormControl(),
       agenda: new FormControl({
         id: null,
-        agendaName: '',
-        order: ''
+        name: null,
+        order: null
       }),
       attachedDocuments: new FormControl()
     });
@@ -176,10 +177,11 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         this.form.patchValue({
           agenda: {
             id: null,
-            agendaName: result.value.agendaName,
-            list: result.value.list
+            name: result.value.agendaName,
+            order: result.value.order
           }
         })
+        console.log(this.form.value.agenda)
       }
     })
   }
@@ -195,7 +197,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
           this.form.patchValue({
             agenda: {
               id: agenda.id,
-              agendaName: agenda.name,
+              name: agenda.name,
               order: agenda.order
             }
           });
@@ -285,6 +287,14 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   public clearInput() {
     this.form.get('meetingName')?.reset('');
+  }
+
+  public clearAgenda() {
+    this.form.get('agenda')?.setValue({
+      id: null,
+      name: null,
+      order: null
+    });
   }
 
   toggleAddress() {

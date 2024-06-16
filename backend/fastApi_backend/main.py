@@ -98,6 +98,10 @@ def mapGuestsToSend(meeting_guests: List[Guest]) -> list[ExternalGuest]:
 
 def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
     guests = mapGuestsToSend(meeting.guests)
+    if meeting.agenda != None:
+        mappedAgenda = mapAgendaOutgoing(meeting.agenda)
+    else:
+        mappedAgenda = None
     return ExternalExistedMeeting(
         id=meeting.id,
         meetingName=meeting.meeting_name,
@@ -108,7 +112,7 @@ def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
         onlineAddress=meeting.online_address,
         guests=guests,
         tasksList=meeting.tasksList,
-        agenda=mapAgendaOutgoing(meeting.agenda),
+        agenda=mappedAgenda,
         documents=meeting.documents,
     )
 
@@ -212,9 +216,10 @@ def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
 
 
 def mapAgendaIncoming(incomingAgenda: ExternalAgenda) -> Agenda:
+    print("MAPUJE AGENDE")
     return Agenda(
         id=incomingAgenda.id,
-        agendaName=incomingAgenda.agendaName,
+        name=incomingAgenda.agendaName,
         order=incomingAgenda.order,
     )
 
@@ -230,6 +235,9 @@ def mapAgendaOutgoing(insideAgenda: Agenda) -> ExternalAgenda:
 def mapNewMeetingIncoming(
     new_id: int, meeting: ExternalBaseMeeting
 ) -> Optional[ExistedMeeting]:
+    mappedAgenda = None
+    if meeting.agenda is not None:
+        mappedAgenda = mapAgendaIncoming(meeting.agenda)
     return ExistedMeeting(
         id=new_id,
         meeting_type=meeting.meetingType,
@@ -240,12 +248,17 @@ def mapNewMeetingIncoming(
         online_address=meeting.onlineAddress,
         guests=mapGuestsIncoming(meeting.guests),
         tasksList=meeting.tasksList,
-        agenda=mapAgendaIncoming(meeting.agenda),
+        agenda=mappedAgenda,
         documents=meeting.documents,
     )
 
 
-def mapMeetingIncoming(new_id: int, meeting: ExternalExistedMeeting) -> ExistedMeeting:
+def mapExistedMeetingIncoming(
+    new_id: int, meeting: ExternalExistedMeeting
+) -> ExistedMeeting:
+    mappedAgenda = None
+    if meeting.agenda is not None:
+        mappedAgenda = mapAgendaIncoming(meeting.agenda)
     return ExistedMeeting(
         id=new_id,
         meeting_type=meeting.meetingType,
@@ -256,7 +269,7 @@ def mapMeetingIncoming(new_id: int, meeting: ExternalExistedMeeting) -> ExistedM
         online_address=meeting.onlineAddress,
         guests=mapGuestsIncoming(meeting.guests),
         tasksList=meeting.tasksList,
-        agenda=mapAgendaIncoming(meeting.agenda),
+        agenda=mappedAgenda,
         documents=meeting.documents,
     )
 
@@ -288,10 +301,14 @@ async def add_meeting(meeting: ExternalBaseMeeting):
 
     new_meeting_id = last_meeting.id + 1
 
-    if meeting.agenda.id == None:
+    if meeting.agenda.id == None and meeting.agenda.name != None:
         meeting.agenda.id = createAgendaId()
+    if meeting.agenda.id == None and meeting.agenda.name == None:
+        meeting.agenda = None
 
     new_meeting = mapNewMeetingIncoming(new_meeting_id, meeting)
+
+    print("ZAMAPWOALEM AGENDE")
 
     if not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address):
         raise HTTPException(
@@ -323,10 +340,13 @@ def filesNotInOriginal(
     },
 )
 async def update_meeting(edited_meeting: ExternalExistedMeeting):
-
-    updated_meeting = mapMeetingIncoming(edited_meeting.id, edited_meeting)
-    if edited_meeting.agenda.id is None:
+    print(edited_meeting.agenda)
+    if edited_meeting.agenda.id == None and edited_meeting.agenda.agendaName != None:
         edited_meeting.agenda.id = createAgendaId()
+    if edited_meeting.agenda.id == None and edited_meeting.agenda.agendaName == None:
+        edited_meeting.agenda = None
+
+    updated_meeting = mapExistedMeetingIncoming(edited_meeting.id, edited_meeting)
 
     if not atLeastOneAddress(
         updated_meeting.meeting_address, updated_meeting.online_address

@@ -1,0 +1,40 @@
+<!-- <div *ngIf="activeHamburger" class="centered-container padding-standard">
+    <h2 *ngIf="!getMeetingError" class="padding-standard">Edit Meeting №
+        {{editedMeetingId}}</h2>
+    <h2 *ngIf="getMeetingError" class="padding-standard">Not found meeting with
+        id
+        №{{editedMeetingId}}</h2>
+    <div class="burger-line-icons">
+        <div class="burger-line-icons main-card padding-standard"
+            mat-icon-button
+            routerLink="/home">
+            <button mat-icon-button
+                matSuffix><mat-icon>keyboard_backspace</mat-icon></button>
+            <p>Go back</p>
+        </div>
+    </div>
+</div>
+<div *ngIf="!activeHamburger" class="top-items-grid">
+    <div class="padding-left-oversize">
+        <button mat-icon-button matSuffix
+            routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
+    </div>
+    <h2 *ngIf="!getMeetingError" class="padding-standard">Edit Meeting №
+        {{editedMeetingId}}</h2>
+    <h2 *ngIf="getMeetingError" class="padding-standard">Not found meeting with
+        id
+        №{{editedMeetingId}}</h2>
+    <div class="near-button-container gap-20px"
+        matTooltip="Fields Meeting Name, Meeting Type, one Location type, date and time are mandatory to unlock"
+        [matTooltipDisabled]="!formDisabled">
+        <!-- <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">Save as draft</button> -->
+        <!-- saveDraft - coming soon -->
+        <button mat-stroked-button class="padding-standard"
+            (click)="saveAndPublish()"
+            [disabled]="formDisabled">
+            Save & Publish</button>
+    </div>
+</div>
+<div class="centered-container">
+    <div class="separator-horizontal" style></div>
+</div> -->

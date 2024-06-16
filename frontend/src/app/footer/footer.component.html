@@ -3,21 +3,24 @@
     <div *ngIf="!projectInfoError">
         <div class="footer">
             <div class="grid-container">
-                <div class="grid-item-left">
+                <div class>
                     <p><strong>Application Info</strong></p>
-                    <p><strong>Project:</strong> {{ projectInfo?.projectName }}</p>
-                    <p><strong>Project Data:</strong> {{ projectInfo?.projectVersion }}</p>
+                    <p><strong>Project:</strong> {{ projectInfo?.projectName
+                        }}</p>
+                    <p><strong>Project Data:</strong> {{
+                        projectInfo?.projectVersion }}</p>
                 </div>
-                <div class="grid-item-right">
+                <div class>
                     <p><strong>Author</strong></p>
                     <p><strong>Name:</strong> {{ projectInfo?.name }}</p>
                     <p><strong>Surname:</strong> {{ projectInfo?.surname }}</p>
-                    <p><strong>Index Number:</strong> {{ projectInfo?.indexNumber }}</p>
+                    <p><strong>Index Number:</strong> {{
+                        projectInfo?.indexNumber }}</p>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div *ngIf="projectInfoError">
         <div class="error-footer">
             <mat-icon>warning</mat-icon>

@@ -34,7 +34,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class DialogListComponent {
   public title: string;
-  public list: string[];
+  public order: string[];
   public newElement: string;
 
   public submitDisable = true;
@@ -45,28 +45,28 @@ export class DialogListComponent {
     public dialogRef: MatDialogRef<DialogListComponent>,
     @Inject(MAT_DIALOG_DATA) public form: FormGroup) {
     this.title = 'title';
-    this.list = [];
+    this.order = [];
     this.form = this.fb.group({
       agendaName: ['', Validators.required],
-      list: [this.list, Validators.required],
+      order: [this.order, Validators.required],
     });
     this.newElement = '';
   }
 
   public drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.list, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.order, event.previousIndex, event.currentIndex);
   }
 
   addElement(newElement: string) {
     if (newElement && newElement.trim() !== '') {
-      this.list.push(newElement.trim());
-      this.form.get('list')?.setValue(this.list);
+      this.order.push(newElement.trim());
+      this.form.get('order')?.setValue(this.order);
     }
   }
 
   removeElement(index: number) {
-    this.list.splice(index, 1);
-    this.form.get('list')?.setValue(this.list);
+    this.order.splice(index, 1);
+    this.form.get('order')?.setValue(this.order);
     this.form.updateValueAndValidity();
   }
 }

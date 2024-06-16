@@ -1,12 +1,12 @@
-<mat-card-content class="container main-card" style="max-width: 500px;">
-  <div class="flex-box-space-right">
+<mat-card-content class="container main-card main-card">
+  <div class="flex-box-space-right padding-standard">
     <h2>Tasks</h2>
     <button mat-stroked-button class="near-button-container gap-0"
       (click)="newTask('New Task', ['Name', 'Description'])">
       New Task
     </button>
   </div>
-  <div class="div-list">
+  <div class="div-list padding-small">
     <mat-expansion-panel *ngFor="let task of tasksList; let i = index"
       (opened)="panelOpenStates[i] = true"
       (closed)="panelOpenStates[i] = false">

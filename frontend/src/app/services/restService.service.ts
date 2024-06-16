@@ -39,6 +39,7 @@ export class RestService {
 
 
   sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls) {
+    console.log(dataToSend.agenda)
     const attachedDocumentsUrls: string[] = []
     if (dataToSend.attachedDocuments) {
       dataToSend.attachedDocuments.forEach(docs => {
@@ -59,6 +60,18 @@ export class RestService {
       });
     }
 
+    let newAgenda = null;
+
+    console.log(dataToSend.agenda?.order)
+
+    if (dataToSend.agenda) {
+      newAgenda = {
+        id: dataToSend.agenda.id,
+        agendaName: dataToSend.agenda.name,
+        order: dataToSend.agenda.order,
+      }
+    }
+
     let packedText = {
       id: dataToSend.id,
       meetingType: dataToSend.meetingType,
@@ -69,10 +82,9 @@ export class RestService {
       onlineAddress: dataToSend.onlineAddress,
       guests: newGuests,
       tasksList: dataToSend.tasksList,
-      agenda: dataToSend.agenda,
+      agenda: newAgenda,
       documents: attachedDocumentsUrls.length > 0 ? attachedDocumentsUrls : null
     };
-    console.log(packedText.agenda)
     if (endpoint === urls.UPDATEMEETING) {
       let updatePack = { ...packedText, id: dataToSend.id }
       this.http.put<EditedMeetingResponse>(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)

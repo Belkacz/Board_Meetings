@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-new-meeting-page',
@@ -30,9 +31,10 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
   private newFiles: any;
+  public activeHamburger: boolean = false;
 
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
-    private route: ActivatedRoute, private dataService: dataService
+    private dataService: dataService, private breakpointObserver: BreakpointObserver
   ) {
     this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
@@ -55,6 +57,14 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     // this.draft = this.combinedData;
 
     this.formDisabled = this.editedMeeting ? false : true;
+
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      if (result.matches) {
+        this.activeHamburger = true
+      } else {
+        this.activeHamburger = false;
+      }
+    })
   }
 
   ngOnInit() {

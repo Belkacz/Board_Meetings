@@ -9,6 +9,8 @@ import { NewMeetingComponent } from '../new-meeting-page/new-meeting/new-meeting
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PopUpService } from '../services/pop-up.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-edit-meeting-page',
@@ -35,12 +37,15 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public getMeetingError: string | null = null;
   public loadingMeeting: boolean = true;
   private newFiles: File[];
+  private sidenav: MatSidenav | undefined;
+  public activeHamburger: boolean = false;
 
   constructor(
     private inviteService: InviteService,
     private restService: RestService,
     private route: ActivatedRoute,
     private dataService: dataService,
+    private breakpointObserver: BreakpointObserver
   ) {
     this.combinedData = {
       meetingType: '',
@@ -59,6 +64,20 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.newFiles = [];
     // draft option will be added in future to save draft data in local storage
     // this.draft = this.combinedData;
+
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      if (result.matches) {
+        this.activeHamburger = true
+      } else {
+        this.activeHamburger = false;
+      }
+    })
+  }
+
+  toggleSidenav() {
+    if (this.sidenav) {
+      this.sidenav.toggle();
+    }
   }
 
   ngOnInit() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting, IncomingAgenda } from '../shared/interfaces';
+import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting, ExternalAgenda } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { RestService } from './restService.service';
 
@@ -47,14 +47,30 @@ export class dataService {
     return projectData;
   }
 
-  public mapAgendas = (response: IncomingAgenda[]): Agenda[] => {
-    const agendas: Agenda[] = [];
-    response.forEach((agenda: any) => {
-      const newAgenda: Agenda = {
+  private mapAgenda(agenda: ExternalAgenda): Agenda {
+    let newAgenda: Agenda;
+
+    if (agenda) {
+      newAgenda = {
         id: agenda.id,
         name: agenda.agendaName,
         order: agenda.order
-      }
+      };
+    } else {
+      newAgenda = {
+        id: null,
+        name: null,
+        order: null
+      };
+    }
+
+    return newAgenda;
+  }
+
+  public mapAgendas = (response: ExternalAgenda[]): Agenda[] => {
+    const agendas: Agenda[] = [];
+    response.forEach((agenda: any) => {
+      const newAgenda: Agenda = this.mapAgenda(agenda)
       agendas.push(newAgenda);
     })
     return agendas;
@@ -76,6 +92,7 @@ export class dataService {
         })
       }
 
+
       const newTasks: Array<Task> = []
       if (meeting.tasksList) {
         meeting.tasksList.forEach((task: Task) => {
@@ -88,14 +105,8 @@ export class dataService {
           newTasks.push(newTask);
         })
       }
-      let newAgenda = null;
-      if (meeting.agenda) {
-        newAgenda = {
-          id: meeting.agenda.id,
-          name: meeting.agenda.agendaName,
-          order: meeting.agenda.order,
-        }
-      }
+      let mappedAgenda = this.mapAgenda(meeting.agenda)
+
       const newMeeting: ExistedBoardMeetings = {
         id: meeting.id,
         meetingType: meeting.meetingType,
@@ -108,7 +119,7 @@ export class dataService {
         addedDocuments: null,
         guests: newGuests,
         tasksList: newTasks,
-        agenda: newAgenda,
+        agenda: mappedAgenda,
         attachedDocuments: meeting.documents ? this.createDocumentsData(meeting.documents) : null
       }
       resultMeeting = newMeeting;

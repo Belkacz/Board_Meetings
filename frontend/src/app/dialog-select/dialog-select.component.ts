@@ -18,7 +18,6 @@ export class DialogSelectComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: Agenda[]) {
     this.selectedAgenda = null;
     this.agendaList = data;
-    console.log(this.agendaList)
     if (this.agendaList.length > 0) {
       this.noAgendas = false;
     }

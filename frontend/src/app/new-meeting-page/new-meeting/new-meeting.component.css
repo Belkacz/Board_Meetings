@@ -22,3 +22,17 @@
 .file-icon {
     padding-right: 15px;
 }
+
+.agenda-row {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    border-bottom: dotted;
+    border-color: gainsboro;
+}
+
+.agenda-with-order {
+    border-top: solid;
+    border-bottom: solid;
+    border-color: rgba(134, 134, 134, 0.404);
+}

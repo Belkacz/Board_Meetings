@@ -1,12 +1,17 @@
-<div>
-  <div class="centered-top-container">
-    <h3>Main Menu</h3>
-    <div class="centered-top-container margin-top-10px">
-      <button mat-stroked-button class="margin-top-10px" routerLink="/new-meeting">New Meeting</button>
-      <button mat-stroked-button class="margin-top-10px" routerLink="/meetings-list">Meetings List</button>
-      <button mat-stroked-button class="margin-top-10px"
-        [routerLink]="[{ outlets: { bottomOutlet: ['about'] } }]">About</button>
+<div class="separator-horizontal" style></div>
+<div class="main-container padding-standard">
+  <div class="main-menu main-card">
+    <div class="centered-top-container">
+      <h3>Main Menu</h3>
+      <div class="centered-top-container margin-top-10px">
+        <button mat-stroked-button class="margin-top-10px"
+          routerLink="/new-meeting">New Meeting</button>
+        <button mat-stroked-button class="margin-top-10px"
+          routerLink="/meetings-list">Meetings List</button>
+        <button mat-stroked-button class="margin-top-10px"
+          [routerLink]="[{ outlets: { bottomOutlet: ['about'] } }]">About</button>
+      </div>
     </div>
+    <router-outlet name="bottomOutlet"></router-outlet>
   </div>
-  <router-outlet name="bottomOutlet"></router-outlet>
 </div>

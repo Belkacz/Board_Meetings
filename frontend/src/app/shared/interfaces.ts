@@ -80,12 +80,12 @@ export interface Task {
 }
 
 export interface Agenda {
-    id: number;
-    name: string;
-    order: string[];
+    id: number | null;
+    name: string | null;
+    order: string[] | null;
 }
 
-export interface IncomingAgenda {
+export interface ExternalAgenda {
     id: number;
     agendaName: string;
     order: string[];

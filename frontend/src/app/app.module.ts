@@ -42,7 +42,7 @@ import { FooterComponent } from './footer/footer.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @NgModule({
@@ -94,7 +94,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatRadioModule,
     MatGridListModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule
   ],
   providers: [dataService],
   bootstrap: [AppComponent]
