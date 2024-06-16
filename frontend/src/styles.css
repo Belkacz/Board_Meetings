@@ -362,6 +362,12 @@ app-tasks {
     width: 100%;
   }
 
+  .app-name-cont {
+    display: flex;
+    justify-content: center;
+    background: var(--my-primary-background-color);
+  }
+
   .main-container {
     display: flex;
     justify-content: center;
