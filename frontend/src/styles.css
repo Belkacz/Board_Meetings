@@ -194,14 +194,6 @@ ul {
   gap: 1rem;
 }
 
-app-new-meeting {
-  flex: 6;
-}
-
-app-tasks {
-  flex: 4;
-}
-
 .burger-line-icons {
   display: flex;
   align-items: center;
@@ -315,7 +307,22 @@ app-tasks {
   flex-direction: row;
 }
 
-@media only screen and (max-width: 1000px) {
+.bottom-save-cont {
+  display: flex;
+  justify-content: center
+}
+
+.bottom-save-card {
+  border-radius: 10px;
+  box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  background: var(--my-primary-background-color);
+  width: 50%;
+  padding: 20px;
+  display: flex;
+  justify-content: center
+}
+
+@media only screen and (max-width: 960px) {
   .main-container {
     display: inline;
   }
@@ -355,84 +362,75 @@ app-tasks {
     grid-template-columns: auto;
     align-items: center;
   }
-}
 
-@media only screen and (max-width:599px) {
-  .separator-horizontal {
-    width: 100%;
-  }
+  @media only screen and (max-width:599px) {
+    .separator-horizontal {
+      width: 100%;
+    }
 
-  .app-name-cont {
-    display: flex;
-    justify-content: center;
-    background: var(--my-primary-background-color);
-  }
+    .wider-element.wider-container.wider-box.lower-input {
+      padding: 5px;
+    }
 
-  .main-container {
-    display: flex;
-    justify-content: center;
-    width: 90%;
-    padding: 0px;
-  }
+    .app-name-cont {
+      display: flex;
+      justify-content: center;
+      background: var(--my-primary-background-color);
+    }
 
-  .main-menu {
-    padding: 25px;
-    width: 100%;
-  }
+    .main-container {
+      display: flex;
+      justify-content: center;
+      width: 90%;
+      padding: 0px;
+    }
 
-  .main-card {
-    width: 100%;
-  }
+    .main-menu {
+      padding: 25px;
+      width: 100%;
+      border-radius: 0px;
+    }
 
-  .single-select-but {
-    padding: 0px;
-    flex-direction: column;
-  }
+    .main-card {
+      width: 100%;
+    }
 
-  .select-buttons-group {
-    padding: 0px;
-    flex-direction: column;
-  }
+    .single-select-but {
+      padding: 0px;
+      flex-direction: column;
+    }
 
-  .meeting-form {
-    width: 95%;
-    padding: 10px;
-  }
+    .select-buttons-group {
+      padding: 0px;
+      flex-direction: column;
+    }
 
-  .side-menu {
-    width: max-content;
-    padding: 10px;
-  }
+    .meeting-form {
+      width: 95%;
+      padding: 10px;
+    }
 
+    .side-menu {
+      width: max-content;
+      padding: 10px;
+    }
 
-  .bottom-save-cont {
-    display: flex;
-    justify-content: center
-  }
+    .top-items-grid {
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-  .bottom-save-card {
-    border-radius: 10px;
-    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
-    background: var(--my-primary-background-color);
-    width: 50%;
-    padding: 20px;
-    display: flex;
-    justify-content: center
-  }
+    .main-container {
+      display: flex;
+      flex-direction: column;
+    }
 
-  .top-items-grid {
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .main-container {
-    display: flex;
-    flex-direction: column;
   }
 
 }
+
 
 @media only screen and (min-width: 1700px) {
   .main-menu {

@@ -5,10 +5,6 @@ import { RestService } from '../services/restService.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { urls } from '../shared/enums';
-import { NewMeetingComponent } from '../new-meeting-page/new-meeting/new-meeting.component';
-import { FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { PopUpService } from '../services/pop-up.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 
@@ -65,7 +61,8 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     // draft option will be added in future to save draft data in local storage
     // this.draft = this.combinedData;
 
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+    this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {
+      console.log(result.matches)
       if (result.matches) {
         this.activeHamburger = true
       } else {

@@ -1,0 +1,11 @@
+.foot-buffor {
+    padding-bottom: 140px;
+}
+
+
+
+@media screen and (max-width: 599px) {
+    .foot-buffor {
+        padding-bottom: 10px;
+    }
+}

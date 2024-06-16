@@ -19,7 +19,7 @@
 }
 
 .error-footer {
-  background-color: #72682f;
+  background-color: var(--my-error-background-color);
   color: #000000;
   padding: 10px 20px;
   text-align: center;
@@ -41,6 +41,13 @@
 
 @media screen and (max-width: 599px) {
 
+  .hide-on-small-screens {
+    display: none;
+  }
+
+  .foot-container {
+    font-size: 10px;
+  }
 
   @media screen and (max-width: 250px) {
     .grid-container {

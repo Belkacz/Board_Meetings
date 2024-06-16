@@ -1,5 +1,4 @@
-
-<div>
+<div class="dialog">
     <div>
         <div *ngIf="!meeting" class="centered-top-container padding-standard">
             <mat-spinner></mat-spinner>
@@ -42,9 +41,7 @@
                                 (opened)="panelOpenState = true"
                                 (closed)="panelOpenState = false">
                                 <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        Agendas
-                                    </mat-panel-title>
+                                    <mat-panel-title>Agendas</mat-panel-title>
                                     <mat-panel-description>
                                         {{panelOpenState ? 'Close Details' :
                                         'Open Details'}}
@@ -70,9 +67,7 @@
                                     (opened)="panelOpenState = true"
                                     (closed)="panelOpenState = false">
                                     <mat-expansion-panel-header>
-                                        <mat-panel-title>
-                                            Documnets
-                                        </mat-panel-title>
+                                        <mat-panel-title>Documnets</mat-panel-title>
                                         <mat-panel-description>
                                             {{panelOpenState ? 'Close Details' :
                                             'Open Details'}}
@@ -82,8 +77,10 @@
                                         <mat-list-item
                                             *ngFor="let doc of meeting.attachedDocuments">
                                             <a class="link"
-                                                (click)="fileDownloadService.downloadFileFromUrl(doc)">{{
-                                                doc.fileName }}</a><br>
+                                                (click)="fileDownloadService.downloadFileFromUrl(doc)">
+                                                {{ doc.fileName }}
+                                            </a>
+                                            <br />
                                         </mat-list-item>
                                     </mat-list>
                                 </mat-expansion-panel>
@@ -134,7 +131,7 @@
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
-    <div class="center-content">
+    <div class="fixed-close-button">
         <button mat-stroked-button mat-dialog-close type="button">Close</button>
     </div>
 </div>

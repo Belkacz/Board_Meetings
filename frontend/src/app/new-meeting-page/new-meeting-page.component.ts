@@ -58,7 +58,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
 
     this.formDisabled = this.editedMeeting ? false : true;
 
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+    this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {
       if (result.matches) {
         this.activeHamburger = true
       } else {

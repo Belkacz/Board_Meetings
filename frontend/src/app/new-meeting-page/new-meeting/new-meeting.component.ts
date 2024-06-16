@@ -181,7 +181,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
             order: result.value.order
           }
         })
-        console.log(this.form.value.agenda)
       }
     })
   }

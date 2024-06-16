@@ -1,6 +1,6 @@
 
 
-<div class="foot-container">
+<div class="foot-container" [ngClass]="{'hide-on-small-screens': !isHomePage}">
     <div *ngIf="!projectInfoError">
         <div class="footer">
             <div class="grid-container">
