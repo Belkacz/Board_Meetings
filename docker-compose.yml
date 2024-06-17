@@ -3,7 +3,7 @@ version: "2.2"
 services:
   backend_service:
     build:
-      context: ./backend/
+      context: ./backend
       dockerfile: Dockerfile
     container_name: fast_api_container
     ports:
