@@ -39,14 +39,12 @@ export class RestService {
 
 
   sendDataToFastApi(dataToSend: BoardMeetingData | ExistedBoardMeetings, endpoint: urls) {
-    console.log(dataToSend.agenda)
     const attachedDocumentsUrls: string[] = []
     if (dataToSend.attachedDocuments) {
       dataToSend.attachedDocuments.forEach(docs => {
         attachedDocumentsUrls.push(docs.originalUrl);
       });
     }
-    console.log(dataToSend.agenda)
     const newGuests: Guest[] = [];
     if (dataToSend.guests != undefined) {
       dataToSend.guests.forEach(guest => {
@@ -61,8 +59,6 @@ export class RestService {
     }
 
     let newAgenda = null;
-
-    console.log(dataToSend.agenda?.order)
 
     if (dataToSend.agenda) {
       newAgenda = {

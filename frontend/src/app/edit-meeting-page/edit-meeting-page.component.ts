@@ -62,7 +62,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     // this.draft = this.combinedData;
 
     this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {
-      console.log(result.matches)
       if (result.matches) {
         this.activeHamburger = true
       } else {
