@@ -2,15 +2,17 @@
   <div class="flex-box-space-right padding-standard">
     <h2>Tasks</h2>
     <button mat-stroked-button class="near-button-container gap-0"
-      (click)="newTask('New Task', ['Name', 'Description'])">
+      (click)="newTask('New Task')">
       New Task
     </button>
   </div>
-  <div class="div-list padding-small">
+  <div class="div-list padding-standard">
     <mat-expansion-panel *ngFor="let task of tasksList; let i = index"
       (opened)="panelOpenStates[i] = true"
       (closed)="panelOpenStates[i] = false">
-      <mat-expansion-panel-header class="custom-exp-panel">
+      <mat-expansion-panel-header class="custom-exp-panel padding-standard"
+        [attr.id]="'task-header-' + i"
+        [attr.aria-controls]="'task-content-' + i">
         <mat-panel-title style="flex-grow: 2">
           {{ task.name }}
         </mat-panel-title>
@@ -18,19 +20,19 @@
           Description: {{panelOpenStates[i] ? 'visible' : 'hidden'}}
         </mat-panel-description>
         <button mat-icon-button matSuffix
-          (click)="editTask('Edit Task', task, ['Name', 'Description'], $event)">
+          (click)="editTask('Edit Task', task, $event)"
+          [attr.aria-label]="'Edit task: ' + task.name">
           <mat-icon>edit_note</mat-icon>
         </button>
-        <button mat-icon-button matSuffix (click)="clearInput(i, $event)">
+        <button mat-icon-button matSuffix (click)="clearInput(i, $event)"
+          [attr.aria-label]="'Delete task: ' + task.name">
           <mat-icon>clear</mat-icon>
         </button>
       </mat-expansion-panel-header>
-      <p class="lower-list-items" *ngIf="task.description"
-        class="caption indent">{{
-        task.description }}</p>
-      <p class="lower-list-items" *ngIf="!task.description"
-        class="caption indent">No
-        task description</p>
+      <div id="task-content-{{i}}">
+        <p class="lower-list-items" *ngIf="task.description"
+          class="caption indent">{{ task.description }}</p>
+        <p class="lower-list-items" *ngIf="!task.description"
+          class="caption indent">No task description</p>
+      </div>
     </mat-expansion-panel>
-  </div>
-</mat-card-content>

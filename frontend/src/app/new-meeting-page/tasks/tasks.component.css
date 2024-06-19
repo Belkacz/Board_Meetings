@@ -2,9 +2,17 @@
     padding-left: 10px;
 }
 
+.custom-exp-panel {
+    padding: 10px;
+}
+
+.div-list {
+    padding: 5px
+}
 
 @media screen and (max-width: 599px) {
-    .custom-exp-panel {
-        padding: 10px
+
+    .div-list {
+        padding: 0px
     }
 }

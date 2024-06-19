@@ -46,10 +46,10 @@ export class TasksComponent implements OnDestroy, OnInit {
     this.sendTasksList();
   }
 
-  newTask(title: string, fields: string[]): void {
+  newTask(title: string): void {
     const dialogRef = this.dialog.open(DialogFormComponent);
     dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.fields = fields;
+    dialogRef.componentInstance.data = [{ field: "Name", initData: '' }, { field: "Description", initData: '' }];
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -63,11 +63,12 @@ export class TasksComponent implements OnDestroy, OnInit {
     });
   }
 
-  editTask(title: string, task: Task, fields: string[], event: MouseEvent): void {
+  editTask(title: string, task: Task, event: MouseEvent): void {
+    console.log(task)
     event.stopPropagation();
     const dialogRef = this.dialog.open(DialogFormComponent);
     dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.fields = fields;
+    dialogRef.componentInstance.data = [{ field: "Name", initData: task.name }, { field: "Description", initData: task.description }];
 
     this.dialogEditSub = dialogRef.afterClosed().subscribe(result => {
       if (result) {

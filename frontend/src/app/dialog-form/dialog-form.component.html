@@ -6,10 +6,10 @@
         <div mat-dialog-content class="mat-dailog-cont">
             <div
                 class="wider-element wider-container wider-box lower-input list-elements"
-                *ngFor="let field of fields">
-                <label class="list-elements">{{ field }} </label>
+                *ngFor="let obj of data">
+                <label class="list-elements">{{ obj.field }} </label>
                 <input class="task-input" matInput type="text"
-                    [formControlName]="field">
+                    [formControlName]="obj.field">
             </div>
             <div class="flex-box-space">
                 <button mat-stroked-button class="main-container select-buttons"

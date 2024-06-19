@@ -107,3 +107,8 @@ export interface PopUp {
     message: string;
     type: PupUpTypes
 }
+
+export interface dialogFormData {
+    field: string,
+    initData: string | number;
+}
