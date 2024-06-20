@@ -1,32 +1,7 @@
-<div *ngIf="activeHamburger"
-  class="center-content padding-standard base-color">
-  <h2 class="padding-standard">Create new meeting</h2>
-  <div class="burger-line-icons">
-    <div class="burger-line-icons main-card padding-standard"
-      mat-icon-button
-      routerLink="/home">
-      <button mat-icon-button
-        matSuffix><mat-icon>keyboard_backspace</mat-icon></button>
-      <p>Go back</p>
-    </div>
-  </div>
-</div>
-<div *ngIf="!activeHamburger" class="top-items-grid">
-  <div class="padding-left-oversize">
-    <button mat-icon-button matSuffix routerLink="/home">
-      <mat-icon>keyboard_backspace</mat-icon>
-    </button>
-  </div>
-  <h2 class="padding-standard">Create new meeting</h2>
-  <div class="near-button-container gap-20px padding-standard"
-    matTooltip="Fields Meeting Name, Meeting Type, one Location type, date and time are mandatory to unlock"
-    [matTooltipDisabled]="!formDisabled">
-    <!-- <button mat-stroked-button href="http://localhost/" (click)="saveDraft()">Save as draft</button> -->
-    <!-- saveDraft - coming soon -->
-    <button mat-stroked-button (click)="saveAndPublish()"
-      [disabled]="formDisabled">
-      Save & Publish</button>
-  </div>
+<div>
+  <app-nav-bar [title]="'Create new meeting'" [editedMeetingId]="null"
+    [formDisabled]="formDisabled" [meetingError]="null" [showSaveButton]="true"
+    (saveAndPublish)="saveAndPublish()"></app-nav-bar>
 </div>
 <div class="center-content ">
   <div class="separator-horizontal" style></div>
@@ -51,5 +26,4 @@
         [disabled]="formDisabled">
         Save & Publish</button>
     </div>
-
   </div>

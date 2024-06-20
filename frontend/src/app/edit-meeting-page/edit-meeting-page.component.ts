@@ -15,7 +15,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 })
 export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
-  editedMeetingId: number | null = null;
+  public editedMeetingId: number | null = null;
   public formDisabled: boolean = true;
   private subscription: Subscription | undefined;
 
@@ -30,7 +30,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public editedTasks: Task[] | null = null;
   public invitedToEdited: Guest[] | null = null;
   public foundMeeting: boolean = false;
-  public getMeetingError: string | null = null;
+  public meetingError: string | null = null;
   public loadingMeeting: boolean = true;
   private newFiles: File[];
   private sidenav: MatSidenav | undefined;
@@ -95,9 +95,9 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
         if (this.dataService.isError(resolve)) {
           console.error("Error occurred:", resolve);
           if (this.dataService.getErrorStatus(resolve) == 404) {
-            this.getMeetingError = "The meeting with the specified ID cannot be found";
+            this.meetingError = "The meeting with the specified ID cannot be found";
           } else {
-            this.getMeetingError = "Server communication error";
+            this.meetingError = "Server communication error";
           }
           this.loadingMeeting = false;
 

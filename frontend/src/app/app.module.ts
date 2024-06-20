@@ -43,6 +43,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { MatMenuModule } from '@angular/material/menu';
     DialogSelectComponent,
     EditMeetingPageComponent,
     PageNotFoundComponent,
-    FooterComponent
+    FooterComponent,
+    NavBarComponent
   ],
   imports: [
     ReactiveFormsModule,
