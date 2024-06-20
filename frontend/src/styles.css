@@ -364,6 +364,10 @@ ul {
     align-items: center;
   }
 
+  body.dialog-open {
+    overflow: hidden;
+  }
+
   @media only screen and (max-width:599px) {
     .separator-horizontal {
       width: 100%;

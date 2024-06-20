@@ -10,6 +10,7 @@ import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
 import { PageEvent } from '@angular/material/paginator';
 import { PopUpService } from '../services/pop-up.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-meetings-list',
@@ -82,20 +83,29 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
     this.fetchMeetings();
   }
 
+  performDeleteMeeting(id: number) {
+    this.restService.deleteMeeting(id).subscribe({
+      next: () => {
+        this.fetchMeetings();
+        this.popUpService.showPopUp("Deleted object of id " + id);
+      },
+      error: (error: any) => {
+        console.error('Error: ', error);
+        this.popUpService.showPopUp("Cannot delete object, check console for more information");
+      }
+    });
+  }
+
   deleteMeeting(id: number) {
     if (id === null) {
       const returnMessage = "No object ID to delete";
       this.popUpService.showPopUp(returnMessage);
       throw new Error(returnMessage);
     } else {
-      this.restService.deleteMeeting(id).subscribe({
-        next: () => {
-          this.fetchMeetings();
-          this.popUpService.showPopUp("Deleted object of id" + id);
-        },
-        error: (error: any) => {
-          console.error('Error: ', error);
-          this.popUpService.showPopUp("Cannot delete object, check console for more information");
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          question: "Are you sure you want to delete this meeting?",
+          confirmFn: () => this.performDeleteMeeting(id)
         }
       });
     }

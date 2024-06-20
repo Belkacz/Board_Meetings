@@ -1,0 +1,36 @@
+.card-cont {
+    display: inline;
+    padding: 20px;
+}
+
+.my-card {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.single-button-container {
+    padding: 20px;
+}
+
+@media only screen and (max-width:599px) {
+    .buttons-container {
+        flex-direction: column;
+    }
+
+    .single-button-container {
+        padding: 5px;
+    }
+
+    .question {
+        font-size: 18px;
+    }
+
+}
