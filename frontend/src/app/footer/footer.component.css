@@ -5,17 +5,18 @@
   z-index: 99;
   font-size: 13px;
   padding: 0px;
-  background-color: var(--my-accent-color);
+  background-color: var(--my-accent-background-color);
 }
 
 .footer {
-  color: #fff;
+  color: black;
   padding: 0px 20px;
   text-align: center;
 }
 
 :hover {
   background-color: #141414;
+  color: var(--my-accent-background-color);
 }
 
 .error-footer {

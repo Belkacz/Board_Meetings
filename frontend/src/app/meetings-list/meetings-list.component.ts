@@ -52,6 +52,8 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchMeetings();
+    console.log(this.meetingsList)
+    console.log(this.meetingsNotEmpty)
   }
 
 
@@ -63,6 +65,8 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
             this.meetingsList = meetings;
             if (this.meetingsList.length > 0) {
               this.meetingsNotEmpty = true;
+            } else {
+              this.meetingsNotEmpty = false;
             }
             if ('length' in response) {
               this.recordsNumber = response.length;

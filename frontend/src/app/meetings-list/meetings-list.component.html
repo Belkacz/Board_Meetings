@@ -91,7 +91,17 @@
         </mat-paginator>
     </div>
     <div *ngIf="this.errorMessage" class="my-list-container">
-        <mat-icon class="padding-standard">warning</mat-icon>
-        <mat-error>{{errorMessage}}</mat-error>
+        <mat-card class="padding-standard center-content main-card">
+            <mat-icon class="padding-standard">warning</mat-icon>
+            <mat-error>{{errorMessage}}</mat-error>
+        </mat-card>
     </div>
+    <div *ngIf="!this.errorMessage && !this.meetingsNotEmpty"
+        class="my-list-container">
+        <mat-card class="padding-standard center-content main-card">
+            <mat-icon class="padding-standard">info</mat-icon>
+            <mat-error>Not found any meetings</mat-error>
+        </mat-card>
+    </div>
+
 </div>

@@ -3,11 +3,11 @@
 @include mat.core();
 
 $my-primary: mat.define-palette(mat.$grey-palette, 900, 50);
-$my-accent: mat.define-palette(mat.$indigo-palette, 900, 50);
+$my-accent: mat.define-palette(mat.$indigo-palette, 800, 50);
 
 $board-meetings-theme: mat.define-light-theme((color: (primary: $my-primary,
         accent: $my-accent,
-      ),
+        warn: mat.define-palette(mat.$red-palette)),
       typography: mat.define-typography-config(),
       density: 0,
     ));
@@ -17,8 +17,9 @@ $board-meetings-theme: mat.define-light-theme((color: (primary: $my-primary,
   --my-accent-color: #{mat.get-color-from-palette($my-accent)};
   --my-primary-background-color: rgb(255, 255, 255);
   --my-accent-background-color: rgb(194, 208, 255);
-  --my-error-background-color: #72682f;
+  --my-error-background-color: #af9500;
   --my-caption-color: rgb(69, 69, 69);
+  --my-text-color: black;
 }
 
 

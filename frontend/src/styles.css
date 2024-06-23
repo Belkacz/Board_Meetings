@@ -3,7 +3,8 @@
 
 html,
 body {
-  background: var(--my-accent-background-color);
+  background: linear-gradient(0deg, rgba(26, 35, 126, 1) 0%, rgba(194, 208, 255, 1) 100%);
+  min-height: 100vh;
 }
 
 body {
@@ -208,6 +209,7 @@ ul {
 
 .mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--filled.mdc-text-field--no-label.mdc-text-field--disabled {
   background-color: gainsboro;
+  color: black;
 }
 
 .mdc-checkbox .mdc-checkbox__background {
@@ -256,7 +258,7 @@ ul {
 }
 
 .main-card {
-  border-radius: 10px;
+  border-radius: 10px !important;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
   background: var(--my-primary-background-color);
 }
@@ -288,6 +290,26 @@ ul {
   padding: 20px;
   display: flex;
   justify-content: center
+}
+
+.neutral-snackbar {
+  --mdc-snackbar-container-color: var(--my-accent-color);
+
+  .mat-mdc-button .mdc-button__label {
+    color: white !important;
+  }
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: var(--my-error-background-color);
+
+  .mat-mdc-button .mdc-button__label {
+    color: var(--my-text-color) !important;
+  }
+
+  .mat-mdc-snack-bar-label .mdc-snackbar__label {
+    color: var(--my-text-color) !important;
+  }
 }
 
 @media only screen and (max-width: 960px) {

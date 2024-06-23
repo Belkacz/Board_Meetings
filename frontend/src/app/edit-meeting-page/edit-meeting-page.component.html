@@ -11,8 +11,10 @@
 </div>
 
 <div *ngIf="meetingError" class="center-content padding-standard">
-    <mat-icon>warning</mat-icon>
-    <h2>{{meetingError}}</h2>
+    <mat-card class="padding-standard center-content main-card">
+        <mat-icon>warning</mat-icon>
+        <h2>{{meetingError}}</h2>
+    </mat-card>
 </div>
 <div *ngIf="loadingMeeting" class="center-content padding-standard">
     <mat-spinner></mat-spinner>

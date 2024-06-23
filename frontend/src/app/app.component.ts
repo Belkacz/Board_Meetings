@@ -4,6 +4,7 @@ import { PopUpService } from './services/pop-up.service';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PopUp } from './shared/interfaces';
+import { PupUpTypes } from './shared/enums';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +20,21 @@ export class AppComponent {
 
   ngOnInit() {
     this.subscription = this.popUpService.popUp$.subscribe((popUp: PopUp) => {
-      this._snackBar.open(popUp.message, 'Close', {
-        duration: 5000,
-        verticalPosition: 'top'
-      });
+      console.log(popUp)
+      if (popUp.type == PupUpTypes.Neutral) {
+        this._snackBar.open(popUp.message, 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          panelClass: ['neutral-snackbar']
+        });
+      } else if (popUp.type == PupUpTypes.Error) {
+        this._snackBar.open(popUp.message, 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        });
+      }
+
     });
   }
 

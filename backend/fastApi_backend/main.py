@@ -76,9 +76,6 @@ async def get_meetings_list(page: int, pagesize: int):
     total_length = len(meetings)
     response_data = {"meetings": meetings_list, "totalLength": total_length}
 
-    if total_length <= 0:
-        raise HTTPException(status_code=404, detail="No meetings found")
-
     print("get_meetings_list")
     return response_data
 
