@@ -144,10 +144,6 @@ ul {
   background: var(--my-accent-background-color) !important;
 }
 
-.select-buttons-group {
-  display: flex;
-  /* padding: 10px; */
-}
 
 .centered-top-container {
   display: flex;
@@ -184,15 +180,10 @@ ul {
 .near-button-container {
   display: flex;
   margin-left: 0px;
-  margin-right: 4rem;
 }
 
 .gap-0 {
   gap: 0px;
-}
-
-.gap-1rem {
-  gap: 1rem;
 }
 
 .burger-line-icons {
@@ -276,7 +267,7 @@ ul {
 
 .caption {
   font-size: 0.875rem;
-  color: rgb(0, 0, 0);
+  color: var(--my-caption-color) !important;
 }
 
 .main-input {

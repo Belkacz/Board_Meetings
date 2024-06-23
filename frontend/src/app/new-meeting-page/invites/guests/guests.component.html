@@ -1,12 +1,10 @@
 <div>
     <ul>
         <li *ngFor="let pop of guestsList; let i = index" class="list-item ">
-            <div *ngIf="pop.invited">
+            <div *ngIf="pop.invited" class="padding-standard">
                 <span> {{ pop.name }} </span>
                 <span> {{ pop.surname }} </span>
                 <span class="job-positon-color"> {{ pop.jobPosition }} </span>
-                <br>
-                <br>
             </div>
         </li>
     </ul>

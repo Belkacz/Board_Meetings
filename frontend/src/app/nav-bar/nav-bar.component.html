@@ -9,7 +9,7 @@
         <div class="burger-line-icons main-card padding-standard"
             mat-icon-button
             routerLink="/home">
-            <button mat-icon-button
+            <button mat-icon-button [attr.aria-label]="'Go back'"
                 matSuffix><mat-icon>keyboard_backspace</mat-icon></button>
             <p>Go back</p>
         </div>
@@ -17,7 +17,7 @@
 </div>
 <div *ngIf="!activeHamburger" class="top-items-grid">
     <div class="padding-left-oversize">
-        <button mat-icon-button matSuffix
+        <button mat-icon-button matSuffix [attr.aria-label]="'Go back'"
             routerLink="/home"><mat-icon>keyboard_backspace</mat-icon></button>
     </div>
     <h2 *ngIf="!meetingError" class="padding-standard">{{ title }}</h2>

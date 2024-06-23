@@ -27,8 +27,10 @@
           <h3>Meeting name</h3>
           <mat-form-field
             class="wider-element wider-container wider-box lower-input">
-            <input class="wider-input" formControlName="meetingName" matInput>
+            <input class="wider-input" formControlName="meetingName"
+              [attr.aria-label]="'Input Meeting Name'" matInput>
             <button class="button-X" mat-icon-button matSuffix
+              [attr.aria-label]="'Clear input meeting name'"
               (click)="clearInput()">
               <mat-icon>clear</mat-icon>
             </button>
@@ -119,6 +121,7 @@
               <p>Selected: {{
                 form.get('agenda')?.value['name']
                 }}</p><button class mat-icon-button matSuffix
+                [attr.aria-label]="'Remove selected agenda'"
                 (click)="clearAgenda()">
                 <mat-icon>clear</mat-icon>
               </button></mat-card-content>
@@ -153,10 +156,12 @@
                       <mat-icon fontIcon="file_copy"></mat-icon>
                       <p>{{ doc.fileName }}</p>
                       <button mat-icon-button matSuffix
+                        [attr.aria-label]="'Download attached doc' + doc.name + ' with index: ' + i"
                         (click)="fileDownloadService.downloadFileFromUrl(doc)">
                         <mat-icon>download</mat-icon>
                       </button>
-                      <button mat-icon-button matSuffix
+                      <button mat-icon-button matSuffix mat-icon-button
+                        [attr.aria-label]="'Delete attached doc' + doc.name + ' with index: ' + i"
                         (click)="deleteAttachedDocs(i)">
                         <mat-icon>clear</mat-icon>
                       </button>
@@ -176,10 +181,12 @@
                         fontIcon="file_copy"></mat-icon>
                       <p>{{ doc.name }}</p>
                       <button mat-icon-button matSuffix
+                        [attr.aria-label]="'Download added doc' + doc.name + ' with index: ' + i"
                         (click)="fileDownloadService.downloadAddedFile(doc)">
                         <mat-icon>download</mat-icon>
                       </button>
-                      <button mat-icon-button matSuffix (click)="deleteDocs(i)">
+                      <button mat-icon-button matSuffix (click)="deleteDocs(i)"
+                        [attr.aria-label]="'Delete added doc' + doc.name + ' with index: ' + i">
                         <mat-icon>clear</mat-icon>
                       </button>
                     </div>

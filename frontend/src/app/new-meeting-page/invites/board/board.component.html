@@ -2,11 +2,12 @@
     <div>
         <mat-form-field class="wider-input">
             <input matInput [(ngModel)]="wanted" (input)="search()"
+                [attr.aria-label]="'Search people'"
                 placeholder="Search" />
         </mat-form-field>
         <ul>
             <mat-checkbox (click)="handleCheckAll()" [checked]="allChecked"
-                class>
+                [attr.aria-label]="'Invite All'">
                 <span class> ALL </span>
             </mat-checkbox>
             <div class="separator-25rem-width"></div>
@@ -15,7 +16,8 @@
                     class="list-item ">
                     <div class="padding-bottom-10px">
                         <mat-checkbox [checked]="pop.invited"
-                            (click)="checkPerson(i)" class="margin-minus-10px">
+                            [attr.aria-label]="'Invite' + pop.name + ', '+ pop.surname"
+                            (click)="checkPerson(i)">
                             <span class> {{ pop.name }} </span>
                             <span class> {{ pop.surname }} </span>
                             <br>
