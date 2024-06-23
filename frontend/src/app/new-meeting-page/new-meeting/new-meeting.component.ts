@@ -12,6 +12,7 @@ import { DialogSelectComponent } from 'src/app/dialog-select/dialog-select.compo
 import { Subscription } from 'rxjs';
 import { RestService } from 'src/app/services/restService.service';
 import { dataService } from 'src/app/services/dataService.service';
+import { PopUpService } from 'src/app/services/pop-up.service';
 
 @Component({
   selector: 'app-new-meeting',
@@ -52,6 +53,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     private restService: RestService,
     private dataService: dataService,
     protected override formBuilder: FormBuilder,
+    private popUpService: PopUpService
   ) {
     super(formBuilder);
     this.editedMeeting = null;
@@ -203,6 +205,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
         }
       });
     }).catch(error => {
+      this.popUpService.showPopUp("We detected an error with window opening. Check the console for more information");
       console.error("Error:", error);
     });
   }

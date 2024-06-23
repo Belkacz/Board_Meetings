@@ -317,6 +317,11 @@ async def add_meeting(meeting: ExternalBaseMeeting):
 def filesNotInOriginal(
     editedMeetingsDocs: list[str], originalDocs: list[str]
 ) -> list[str]:
+    if editedMeetingsDocs is None:
+        editedMeetingsDocs = []
+    if originalDocs is None:
+        originalDocs = []
+
     notInEditedMeeting: list[str] = []
     for doc in originalDocs:
         if doc not in editedMeetingsDocs:
@@ -353,9 +358,11 @@ async def update_meeting(edited_meeting: ExternalExistedMeeting):
     for index, meeting in enumerate(meetings):
         if meeting.id == updated_meeting.id:
             if meeting.documents is not None and len(meeting.documents) > 0:
-                deleteFiles(
-                    filesNotInOriginal(updated_meeting.documents, meeting.documents)
-                )
+                print(meeting.documents)
+                if meeting.documents != None:
+                    deleteFiles(
+                        filesNotInOriginal(updated_meeting.documents, meeting.documents)
+                    )
             meetings[index] = updated_meeting
             meetingUpdated = True
     if meetingUpdated == False:
