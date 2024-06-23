@@ -142,10 +142,23 @@ async def getMeetingDetails(meeting_id: int):
     return result_meeting
 
 
-@app.get("/get-people", response_model=list[Guest])
+def mapPeopleToSend(guest: Guest) -> ExternalGuest:
+    return ExternalGuest(
+        id=guest.id,
+        name=guest.name,
+        surname=guest.surname,
+        jobPosition=guest.job_position,
+    )
+
+
+@app.get("/get-people", response_model=list[ExternalGuest])
 async def getPeopleList():
-    print("people")
-    return guests
+    external_guests = []
+    if len(guests) > 0:
+        for guest in guests:
+            mapped_guest = mapPeopleToSend(guest)
+            external_guests.append(mapped_guest)
+    return external_guests
 
 
 @app.get("/get-agendas", response_model=list[ExternalAgenda])

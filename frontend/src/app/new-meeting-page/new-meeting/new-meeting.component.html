@@ -152,19 +152,24 @@
                   <li
                     *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
                     <div
-                      class="avatar-container text-listcontainter diplay-flex">
-                      <mat-icon fontIcon="file_copy"></mat-icon>
-                      <p>{{ doc.fileName }}</p>
-                      <button mat-icon-button matSuffix
-                        [attr.aria-label]="'Download attached doc' + doc.name + ' with index: ' + i"
-                        (click)="fileDownloadService.downloadFileFromUrl(doc)">
-                        <mat-icon>download</mat-icon>
-                      </button>
-                      <button mat-icon-button matSuffix mat-icon-button
-                        [attr.aria-label]="'Delete attached doc' + doc.name + ' with index: ' + i"
-                        (click)="deleteAttachedDocs(i)">
-                        <mat-icon>clear</mat-icon>
-                      </button>
+                      class="flex-box-space">
+                      <div class="list-item">
+                        <mat-icon class="padding-small"
+                          fontIcon="file_copy"></mat-icon>
+                        <p>{{ doc.fileName }}</p>
+                      </div>
+                      <div>
+                        <button mat-icon-button matSuffix
+                          [attr.aria-label]="'Download attached doc' + doc.name + ' with index: ' + i"
+                          (click)="fileDownloadService.downloadFileFromUrl(doc)">
+                          <mat-icon>download</mat-icon>
+                        </button>
+                        <button mat-icon-button matSuffix mat-icon-button
+                          [attr.aria-label]="'Delete attached doc' + doc.name + ' with index: ' + i"
+                          (click)="deleteAttachedDocs(i)">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                      </div>
                     </div>
                   </li>
                 </ul>
@@ -176,19 +181,24 @@
                   <li
                     *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
                     <div
-                      class="avatar-container text-listcontainter diplay-flex">
-                      <mat-icon class="file-icon"
-                        fontIcon="file_copy"></mat-icon>
-                      <p>{{ doc.name }}</p>
-                      <button mat-icon-button matSuffix
-                        [attr.aria-label]="'Download added doc' + doc.name + ' with index: ' + i"
-                        (click)="fileDownloadService.downloadAddedFile(doc)">
-                        <mat-icon>download</mat-icon>
-                      </button>
-                      <button mat-icon-button matSuffix (click)="deleteDocs(i)"
-                        [attr.aria-label]="'Delete added doc' + doc.name + ' with index: ' + i">
-                        <mat-icon>clear</mat-icon>
-                      </button>
+                      class="flex-box-space">
+                      <div class="list-item">
+                        <mat-icon class="padding-small"
+                          fontIcon="file_copy"></mat-icon>
+                        <p>{{ doc.name }}</p>
+                      </div>
+                      <div>
+                        <button mat-icon-button matSuffix
+                          [attr.aria-label]="'Download added doc' + doc.name + ' with index: ' + i"
+                          (click)="fileDownloadService.downloadAddedFile(doc)">
+                          <mat-icon>download</mat-icon>
+                        </button>
+                        <button mat-icon-button matSuffix
+                          (click)="deleteDocs(i)"
+                          [attr.aria-label]="'Delete added doc' + doc.name + ' with index: ' + i">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                      </div>
                     </div>
                   </li>
                 </ul>
