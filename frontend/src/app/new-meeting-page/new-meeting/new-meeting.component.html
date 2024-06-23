@@ -73,9 +73,9 @@
         </div>
         <div>
           <h3>Location</h3>
-          <section class>
-            <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()"
-              class="minus-10-margin">Location</mat-checkbox>
+          <section>
+            <mat-checkbox [checked]="isAddressChecked"
+              (click)="toggleAddress()">Location</mat-checkbox>
             <br>
             <mat-form-field
               class="wider-element wider-container wider-box lower-input">
@@ -85,8 +85,8 @@
           </section>
           <h3>Online meeting</h3>
           <section class>
-            <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()"
-              class="minus-10-margin">Online
+            <mat-checkbox [checked]="isOnlineChecked"
+              (click)="toggleOnline()">Online
               meeting</mat-checkbox>
             <br>
             <mat-form-field
@@ -97,8 +97,8 @@
           </section>
           <h3>Hybrid: Online and stationary</h3>
           <section class>
-            <mat-checkbox [checked]="isHybridChecked" (click)="toggleHybrid()"
-              class="minus-10-margin">Hybrid</mat-checkbox>
+            <mat-checkbox [checked]="isHybridChecked"
+              (click)="toggleHybrid()">Hybrid</mat-checkbox>
             <br>
           </section>
         </div>

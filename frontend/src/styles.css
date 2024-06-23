@@ -13,7 +13,7 @@ body {
 }
 
 * {
-  text-shadow: 0px 5px 10px rgb(104, 104, 104, 0.3);
+  text-shadow: 0px 2px 2px rgb(104, 104, 104, 0.3);
 }
 
 .app-name {
@@ -38,10 +38,6 @@ body {
 .calendar-container {
   display: flex;
   align-items: center;
-}
-
-.mat-mdc-checkbox.minus-10-margin.mat-accent {
-  margin-left: -10px;
 }
 
 .mat-mdc-text-field-wrapper.mdc-text-field {
@@ -133,7 +129,6 @@ ul {
 .main-container {
   display: flex;
   justify-content: center;
-  /* background-color: rgba(172, 191, 255, 0.3) */
 }
 
 .base-color {
@@ -144,21 +139,12 @@ ul {
   background: var(--my-accent-background-color) !important;
 }
 
-
-.centered-top-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-}
-
 .center-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-
 
 .list-item {
   display: flex;
@@ -171,15 +157,6 @@ ul {
   justify-content: space-between;
   width: 100%;
   padding-right: 0px;
-}
-
-.task-name {
-  margin-right: 10px;
-}
-
-.near-button-container {
-  display: flex;
-  margin-left: 0px;
 }
 
 .gap-0 {
@@ -198,7 +175,6 @@ ul {
 
 .separator-vertical {
   width: 2px;
-  /* background-color: gainsboro; */
   background-color: var(--my-accent-color);
 }
 
@@ -213,7 +189,7 @@ ul {
 
   background-color: var(--my-accent-color);
   height: 3px;
-  margin-top: -1px;
+
 }
 
 .separator-horizontal {
@@ -425,11 +401,4 @@ ul {
 
   }
 
-}
-
-
-@media only screen and (min-width: 1700px) {
-  .main-menu {
-    /* margin-left: 20%; */
-  }
 }
