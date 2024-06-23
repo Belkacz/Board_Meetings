@@ -32,7 +32,7 @@ export class InvitesComponent implements OnInit, OnDestroy {
               id: person.id,
               name: person.name,
               surname: person.surname,
-              jobPosition: person.job_position
+              jobPosition: person.jobPosition
             };
             newPersonList.push(newPerson);
           });
