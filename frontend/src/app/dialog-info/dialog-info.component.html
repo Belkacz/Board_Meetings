@@ -1,142 +1,4 @@
-<!-- <mat-card class="dialog">
-    <div>
-        <div *ngIf="!meeting" class="center-content padding-standard">
-            <mat-spinner></mat-spinner>
-        </div>
-    </div>
-    <div *ngIf="meeting" class="scrollable-content">
-        <mat-card-content>
-            <h1 mat-dialog-title>Meeting Infomation</h1>
-            <mat-tab-group>
-                <mat-tab label="Base Infomation">
-                    <div>
-                        <div class="center-content">
-                            <mat-list class="segemnt">
-                                <mat-list-item role="listitem">
-                                    meeting name: {{ meeting.meetingName }}
-                                </mat-list-item>
-                                <mat-list-item role="listitem">
-                                    Meeting type: {{ meeting.meetingType }}
-                                </mat-list-item>
-                                <mat-list-item role="listitem">
-                                    Date start: {{ meeting.dateStart | date:
-                                    'dd-MM-yyyy, HH:mm' }}
-                                </mat-list-item>
-                                <mat-list-item role="listitem">
-                                    Date end: {{ meeting.dateEnd | date:
-                                    'dd-MM-yyyy, HH:mm' }}
-                                </mat-list-item>
-                                <mat-list-item *ngIf="meeting.meetingAddress "
-                                    role="listitem">
-                                    Location: {{ meeting.meetingAddress }}
-                                </mat-list-item>
-                                <mat-list-item *ngIf="meeting.onlineAddress"
-                                    role="listitem">
-                                    Online address: {{ meeting.onlineAddress }}
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                        <mat-accordion *ngIf="meeting.agenda">
-                            <mat-expansion-panel
-                                (opened)="panelOpenState = true"
-                                (closed)="panelOpenState = false">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>Agendas</mat-panel-title>
-                                    <mat-panel-description>
-                                        {{panelOpenState ? 'Close Details' :
-                                        'Open Details'}}
-                                    </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <mat-list role="list">
-                                    <mat-list-item>id: {{ meeting.agenda.id
-                                        }}</mat-list-item>
-                                    <mat-list-item>title: {{ meeting.agenda.name
-                                        }}</mat-list-item>
-                                    <h4> Order: </h4>
-                                    <mat-list-item
-                                        *ngFor="let order of meeting?.agenda?.order"
-                                        role="listitem">
-                                        {{ order }}
-                                    </mat-list-item>
-                                </mat-list>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                        <mat-card *ngIf="meeting.attachedDocuments">
-                            <mat-accordion>
-                                <mat-expansion-panel
-                                    (opened)="panelOpenState = true"
-                                    (closed)="panelOpenState = false">
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>Documnets</mat-panel-title>
-                                        <mat-panel-description>
-                                            {{panelOpenState ? 'Close Details' :
-                                            'Open Details'}}
-                                        </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <mat-list role="list">
-                                        <mat-list-item
-                                            *ngFor="let doc of meeting.attachedDocuments">
-                                            <a class="link"
-                                                (click)="fileDownloadService.downloadFileFromUrl(doc)">
-                                                {{ doc.fileName }}
-                                            </a>
-                                            <br />
-                                        </mat-list-item>
-                                    </mat-list>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </mat-card>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Tasks">
-                    <div>
-                        <mat-list>
-                            <div *ngFor="let task of meeting.tasksList"
-                                class="element-container" role="listitem">
-                                <div class="center-contiener">
-                                    <div class="columns-contiener">
-                                        <mat-list-item>Task name: {{ task.name
-                                            }}</mat-list-item>
-                                        <mat-list-item>Description: {{
-                                            task?.description }}</mat-list-item>
-                                    </div>
-                                </div>
-                                <div class="center-contiener">
-                                    <div class="separator"></div>
-                                </div>
-                            </div>
-                        </mat-list>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Guests">
-                    <div>
-                        <mat-list>
-                            <div *ngFor="let guest of meeting.guests"
-                                class="element-container" role="listitem">
-                                <div class="center-contiener">
-                                    <div class="columns-contiener">
-                                        <mat-list-item>Name: {{ guest.name
-                                            }}</mat-list-item>
-                                        <mat-list-item>Surname: {{ guest.surname
-                                            }}</mat-list-item>
-                                    </div>
-                                </div>
-                                <div class="center-contiener">
-                                    <div class="separator"></div>
-                                </div>
-                            </div>
-                        </mat-list>
-                    </div>
-                </mat-tab>
-            </mat-tab-group>
-        </mat-card-content>
-    </div>
-    <div class="fixed-close-button">
-        <button mat-stroked-button mat-dialog-close type="button">Close</button>
-    </div>
-</mat-card> -->
 <div class="dialog">
-
     <div *ngIf="!meeting" class="center-content padding-standard">
         <mat-spinner></mat-spinner>
     </div>
@@ -144,8 +6,8 @@
         <div class="center-content">
             <h1 mat-dialog-title>Meeting Information</h1>
         </div>
-        <mat-tab-group>
-            <mat-tab label="Base Infomation">
+        <mat-tab-group class="padding-small">
+            <mat-tab label="Base Information">
                 <div class="center-content">
                     <mat-list class="segemnt">
                         <mat-list-item role="listitem">
@@ -215,7 +77,6 @@
                                     (click)="fileDownloadService.downloadFileFromUrl(doc)">
                                     {{ doc.fileName }}
                                 </a>
-                                <br />
                             </mat-list-item>
                         </mat-list>
                     </mat-expansion-panel>

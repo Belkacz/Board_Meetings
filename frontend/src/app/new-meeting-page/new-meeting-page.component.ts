@@ -20,8 +20,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   public formDisabled: boolean;
   private subscription: Subscription | undefined;
 
-  @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent;
-
   private guestsList: GuestInvited[];
   private tasksList: Task[];
   private combinedData: BoardMeetingData;
@@ -36,7 +34,6 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
     private dataService: dataService, private breakpointObserver: BreakpointObserver
   ) {
-    this.newMeetingComponent = newMeeting;
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
     this.tasksList = []
     this.combinedData = {
@@ -73,34 +70,14 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngAfterViewInit() {
-    this.subscription = this.newMeetingComponent.form.statusChanges.subscribe(status => {
-      this.formDisabled = status !== 'VALID';
-    });
-  }
-
   // draft option will be added in future to save draft data in local storage
   //
   // public saveDraft(): void {
   // }
 
-  private mapFormToCombinedData(): void {
-    const formValue = this.newMeetingComponent.form.value;
-    for (const key in formValue) {
-      if (key in this.combinedData) {
-        this.combinedData = { ...this.combinedData, [key]: formValue[key] };
-      }
-    }
-    this.combinedData.meetingType = this.newMeetingComponent.form.value.selectedMeetingType;
-    this.combinedData.guests = this.guestsList;
-    this.combinedData.tasksList = this.tasksList;
-    this.combinedData.agenda = this.newMeetingComponent.form.value.agenda
 
-    this.newFiles = this.newMeetingComponent.form.get('addedDocuments')?.value;
-  }
 
   public saveAndPublish(): void {
-    this.mapFormToCombinedData();
     if (this.combinedData.meetingType === "") {
       alert("Meeting type cannot be empty");
       return;
@@ -136,9 +113,27 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
     }
   }
 
+
   public saveTasksList(tasksList: Task[]): void {
     this.tasksList = tasksList;
+    this.combinedData.tasksList = this.tasksList;
   }
+
+  public receiveForm(form: any): void {
+    this.combinedData.meetingName = form.value.meetingName;
+    this.combinedData.meetingType = form.value.selectedMeetingType;
+    this.combinedData.dateStart = form.value.dateStart;
+    this.combinedData.dateEnd = form.value.dateEnd;
+    this.combinedData.meetingAddress = form.get('meetingAddress')?.value;
+    this.combinedData.onlineAddress = form.get('onlineAddress')?.value;
+    this.combinedData.guests = this.guestsList;
+    this.combinedData.tasksList = this.tasksList;
+    this.combinedData.agenda = form.value.agenda
+    this.combinedData.attachedDocuments = form.get('attachedDocuments')?.value;
+    this.newFiles = form.get('addedDocuments')?.value;
+    this.formDisabled = form.status !== 'VALID';
+  }
+
 
   ngOnDestroy(): void {
     if (this.subscription) {

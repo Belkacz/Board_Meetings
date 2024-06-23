@@ -19,8 +19,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
   public formDisabled: boolean = true;
   private subscription: Subscription | undefined;
 
-  // @ViewChild(NewMeetingComponent, { static: false }) newMeetingComponent: NewMeetingComponent | undefined;
-
   private guestsList: GuestInvited[] = [];
   private tasksList: Task[] = [];
   private combinedData: BoardMeetingData;
@@ -187,7 +185,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
 
   public saveTasksList(tasksList: Task[]): void {
-    this.tasksList = tasksList;
+    // this.tasksList = tasksList;
     this.combinedData.tasksList = this.tasksList;
   }
 
