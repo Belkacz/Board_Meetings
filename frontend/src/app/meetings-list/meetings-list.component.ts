@@ -52,8 +52,6 @@ export class MeetingsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchMeetings();
-    console.log(this.meetingsList)
-    console.log(this.meetingsNotEmpty)
   }
 
 

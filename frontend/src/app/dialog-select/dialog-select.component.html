@@ -12,7 +12,7 @@
     </div>
     <div *ngIf="!noAgendas">
         <mat-radio-group class="padding-container" [(ngModel)]="selectedAgenda">
-            <div class="flex-box-space-right" *ngFor="let agenda of agendaList">
+            <div class="flex-box-space" *ngFor="let agenda of agendaList">
                 <mat-accordion>
                     <mat-expansion-panel (opened)="panelOpenState = true"
                         (closed)="panelOpenState = false">
@@ -40,7 +40,7 @@
             </div>
         </mat-radio-group>
     </div>
-    <div class="flex-box-space-right">
+    <div class="flex-box-space">
         <button mat-stroked-button class="main-container select-buttons"
             [mat-dialog-close]="selectedAgenda"
             [disabled]="!selectedAgenda">Select</button>

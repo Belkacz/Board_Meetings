@@ -19,10 +19,6 @@
     padding-left: 20px;
 }
 
-.file-icon {
-    padding-right: 15px;
-}
-
 .agenda-row {
     display: flex;
     justify-content: space-between;

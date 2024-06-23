@@ -3,15 +3,18 @@
         <h1 mat-dialog-title>{{ title }}</h1>
     </div>
     <form class="flex-box-space" [formGroup]="form">
-        <div mat-dialog-content class="mat-dailog-cont">
+        <div mat-dialog-content class="padding-standard">
             <div
-                class="wider-element wider-container wider-box lower-input list-elements"
+                class="avatar-container padding-small"
                 *ngFor="let obj of data">
-                <label class="list-elements">{{ obj.field }} </label>
-                <input class="task-input" matInput type="text"
-                    [formControlName]="obj.field">
+                <div class="flex-box-space">
+                    <label class="padding-small">{{ obj.field }} </label>
+                    <input class="main-input" matInput type="text"
+                        [formControlName]="obj.field">
+                </div>
+
             </div>
-            <div class="flex-box-space">
+            <div class="flex-box-space padding-samll">
                 <button mat-stroked-button class="main-container select-buttons"
                     [mat-dialog-close]="form.value"
                     type="submit">Submit</button>

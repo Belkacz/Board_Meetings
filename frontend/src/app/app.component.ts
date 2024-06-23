@@ -20,7 +20,6 @@ export class AppComponent {
 
   ngOnInit() {
     this.subscription = this.popUpService.popUp$.subscribe((popUp: PopUp) => {
-      console.log(popUp)
       if (popUp.type == PupUpTypes.Neutral) {
         this._snackBar.open(popUp.message, 'Close', {
           duration: 5000,

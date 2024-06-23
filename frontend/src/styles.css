@@ -152,6 +152,17 @@ ul {
   align-items: center;
 }
 
+.flex-box-space {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mat-mdc-checkbox.minus-10-margin.mat-accent {
+  margin-left: -10px;
+}
+
 .flex-box-space-right {
   display: flex;
   align-items: center;
@@ -159,6 +170,7 @@ ul {
   width: 100%;
   padding-right: 0px;
 }
+
 
 .gap-0 {
   gap: 0px;

@@ -96,7 +96,7 @@
             <mat-error>{{errorMessage}}</mat-error>
         </mat-card>
     </div>
-    <div *ngIf="!this.errorMessage && !this.meetingsNotEmpty"
+    <div *ngIf="!this.errorMessage && !this.meetingsNotEmpty && !loading"
         class="my-list-container">
         <mat-card class="padding-standard center-content main-card">
             <mat-icon class="padding-standard">info</mat-icon>

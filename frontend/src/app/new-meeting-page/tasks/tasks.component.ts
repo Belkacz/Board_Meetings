@@ -64,7 +64,6 @@ export class TasksComponent implements OnDestroy, OnInit {
   }
 
   editTask(title: string, task: Task, event: MouseEvent): void {
-    console.log(task)
     event.stopPropagation();
     const dialogRef = this.dialog.open(DialogFormComponent);
     dialogRef.componentInstance.title = title;
