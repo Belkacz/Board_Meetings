@@ -91,7 +91,6 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     this.dataService.getMeetingDetailService(id)
       .then((resolve) => {
         if (this.dataService.isError(resolve)) {
-          console.error("Error occurred:", resolve);
           if (this.dataService.getErrorStatus(resolve) == 404) {
             this.meetingError = "The meeting with the specified ID cannot be found";
           } else {

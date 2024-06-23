@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting, ExternalAgenda } from '../shared/interfaces';
 import { urls } from '../shared/enums';
 import { RestService } from './restService.service';
+import { PopUpService } from './pop-up.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class InviteService {
   providedIn: 'root'
 })
 export class dataService {
-  constructor(private restService: RestService) { }
+  constructor(private restService: RestService, private popUpService: PopUpService) { }
   private actualMeetingsList$ = new BehaviorSubject<ShortMeeting[]>([]);
 
   public setGlobalMeetingsList(meetingsList: ShortMeeting[]) {
@@ -167,20 +168,22 @@ export class dataService {
       this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGDETAILS, null, id)
         .subscribe({
           next: (response: any) => {
-            let metting = this.mapMeetingDetails(response);
-            if (!metting) {
+            let meeting = this.mapMeetingDetails(response);
+            if (!meeting) {
               return resolve(null);
             } else {
-              return resolve(metting);
+              return resolve(meeting);
             }
 
           },
           error: (error: Error) => {
+            this.popUpService.showPopUp("Cannot get meeting details, check console for more information");
             return resolve(error);
           }
         });
     });
   }
+
 
   public createDocumentsData = (filesUrls: Array<string>): Array<AttachedDocument> => {
     const attachedDocuments: Array<AttachedDocument> = [];
