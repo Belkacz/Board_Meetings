@@ -20,7 +20,7 @@ export class RestService {
     }
 
     return new Observable<FileUploadResponse>((result) => {
-      this.http.post(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, formData)
+      this.http.post(`/api/${endpoint}`, formData)
         .subscribe({
           next: (response: any) => {
             this.popUpService.showPopUp("Successfully uploaded files");

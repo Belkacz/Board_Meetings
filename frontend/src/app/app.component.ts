@@ -19,7 +19,7 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    console.log("App deployment: 20.10.2024, 19:12")
+    console.log("App deployment: 20.10.2024, 21:37")
     this.subscription = this.popUpService.popUp$.subscribe((popUp: PopUp) => {
       if (popUp.type == PupUpTypes.Neutral) {
         this._snackBar.open(popUp.message, 'Close', {

@@ -16,7 +16,6 @@ export class FileDownloadService {
   }
 
   public downloadAddedFile(doc: File): void {
-    console.log(doc)
     const url = window.URL.createObjectURL(doc);
     this.downloadFile(url, doc.name);
   }
