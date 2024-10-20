@@ -286,7 +286,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-
   public clearInput() {
     this.form.get('meetingName')?.reset('');
   }
@@ -355,7 +354,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-
   deleteDocs(docIndex: number): void {
     const currentFiles = this.form.get('addedDocuments')?.value || [];
     currentFiles.splice(docIndex, 1);
@@ -367,8 +365,6 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
     currentFiles.splice(docIndex, 1);
     this.form.controls['attachedDocuments'].setValue(currentFiles);
   }
-
-
 
   protected formValidators(): void {
     this.form.get('dateStart')?.setAsyncValidators([

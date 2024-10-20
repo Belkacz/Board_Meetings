@@ -10,15 +10,16 @@ export class FileDownloadService {
     const downloadLink = document.createElement('a');
     downloadLink.setAttribute('target', '_blank');
     downloadLink.setAttribute('href', url);
-    downloadLink.setAttribute('download', "dupa");
+    downloadLink.setAttribute('download', name);
     downloadLink.click();
     downloadLink.remove();
   }
 
-  public downloadAddedFile(doc: DownloadFile): void {
-    this.downloadFile(doc.fileUrl, doc.name);
+  public downloadAddedFile(doc: File): void {
+    console.log(doc)
+    const url = window.URL.createObjectURL(doc);
+    this.downloadFile(url, doc.name);
   }
-
 
   public downloadFileFromUrl(doc: AttachedDocument): void {
     this.downloadFile(doc.fullUrl, doc.fileName);
