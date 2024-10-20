@@ -2,6 +2,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,linux,angular,node,python,react,venv,virtualenv,yarn
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,linux,angular,node,python,react,venv,virtualenv,yarn
 
+
+###VSC###
+.vscode
+.editorconfig
+
 ### Angular ###
 ## Angular ##
 # compiled output

@@ -83,7 +83,7 @@ export class RestService {
     };
     if (endpoint === urls.UPDATEMEETING) {
       let updatePack = { ...packedText, id: dataToSend.id }
-      this.http.put<EditedMeetingResponse>(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, updatePack)
+      this.http.put<EditedMeetingResponse>(`/api/${endpoint}`, updatePack)
         .subscribe({
           next: response => {
             this.popUpService.showPopUp(response.editedMeeting);
@@ -95,7 +95,7 @@ export class RestService {
           }
         });
     } else {
-      this.http.post<CreateMeetingResponse>(`${urls.protocolBase}/${urls.localFastApi}/${endpoint}`, packedText)
+      this.http.post<CreateMeetingResponse>(`/api/${endpoint}`, packedText)
         .subscribe({
           next: response => {
             this.popUpService.showPopUp(response.message);
@@ -109,7 +109,7 @@ export class RestService {
   }
 
   private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {
-    let newUrl = protocol + baseUrl + '/' + endPoint;
+    let newUrl = '/api/' + endPoint;
 
     if (param !== null) {
       newUrl += param;
@@ -123,15 +123,13 @@ export class RestService {
     return newUrl;
   }
 
-
   receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null, number1: number | null = null, number2: number | null = null) {
     return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param, number1, number2));
   }
 
   deleteMeeting(id: number): Observable<any> {
-    const deleteUrl = `${urls.protocolBase}/${urls.localFastApi}/${urls.DELETEMEETING}/${id}`;
+    const deleteUrl = `/${urls.DELETEMEETING}/${id}`;
     return this.http.delete(deleteUrl);
   }
-
 
 }

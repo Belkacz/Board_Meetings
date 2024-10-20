@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: harbor.druid.moe/boardmeetings/front:0.1.1
+        ports:
+        - containerPort: 4200
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4200
+    targetPort: 4200
+  selector:
+    app: front
