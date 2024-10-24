@@ -171,7 +171,7 @@ async def getAgendasList():
     return externalAgendas
 
 
-@app.post("/upload-files/")
+@app.post("/upload-files")
 async def createUploadFiles(files: List[UploadFile] = File(...)):
     file_urls = []
     for file in files:

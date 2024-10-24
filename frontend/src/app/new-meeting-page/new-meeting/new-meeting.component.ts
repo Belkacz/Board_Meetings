@@ -342,10 +342,44 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   openFilePicker(inputElement: ElementRef): void {
     inputElement.nativeElement.click();
   }
+
   onFileSelected(event: Event, type: FileType): void {
     const target = event.target as HTMLInputElement;
+    const allowedFormats= [
+      '.pdf', '.doc', '.docx', '.odt', '.ods', '.odp', '.md', '.txt', '.xtml', '.json', '.yaml','.log',
+      '.epub', '.gif', '.jpg', '.png', '.bmp', '.svg'
+    ];
+
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.oasis.opendocument.text',
+      'application/vnd.oasis.opendocument.spreadsheet',
+      'application/vnd.oasis.opendocument.presentation',
+      'text/markdown',
+      'text/plain',
+      'application/xml',
+      'application/json',
+      'application/x-yaml',
+      'text/yaml',
+      'text/plain',
+      'application/epub+zip',
+      'image/gif',
+      'image/jpeg',
+      'image/png',
+      'image/bmp',
+      'image/svg+xml'
+    ];
+    
     if (target?.files !== null) {
       const selectedFile = target.files[0];
+      const fileExtension = '.' + selectedFile.name.split('.').pop()?.toLowerCase();
+      console.log(fileExtension)
+      if (!allowedFormats.includes(fileExtension) || !allowedTypes.includes(selectedFile.type)) {
+        this.popUpService.showPopUp("Not allowed file format");
+        return;
+      }
       if (type === FileType.AddDocument) {
         const filesControl = this.form.get('addedDocuments')?.value
         const currentFiles = this.form.get('addedDocuments')?.value || [];
