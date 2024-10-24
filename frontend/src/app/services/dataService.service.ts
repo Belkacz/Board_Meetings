@@ -186,13 +186,17 @@ export class dataService {
 
 
   public createDocumentsData = (filesUrls: Array<string>): Array<AttachedDocument> => {
+
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    const baseUrl = `${protocol}//${host}`;
     const attachedDocuments: Array<AttachedDocument> = [];
     filesUrls.forEach(url => {
       const dollarIndex = url.indexOf('$') + 1;
       const newAttachedDocument: AttachedDocument = {
         fileName: url.slice(dollarIndex),
         originalUrl: url,
-        fullUrl: `${urls.protocolBase}${urls.localFastApi}${url}`,
+        fullUrl: `${baseUrl}${url}`,
       }
       attachedDocuments.push(newAttachedDocument);
     });
