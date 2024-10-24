@@ -147,7 +147,7 @@ export class dataService {
 
   public getMeetingsService(page: number = 0, pageSize = 10): Promise<{ result: boolean, length: number } | { result: boolean, error: string }> {
     return new Promise<{ result: boolean, length: number } | { result: boolean, error: string }>((resolve) => {
-      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGS, null, page, pageSize)
+      this.restService.receiveDataFromFastApi(urls.GETMEETINGS, null, page, pageSize)
         .subscribe({
           next: (response: any) => {
             let meetingsList = this.mapMeetings(response.meetings);
@@ -165,7 +165,7 @@ export class dataService {
 
   public getMeetingDetailService(id: number): Promise<ExistedBoardMeetings | Error | null> {
     return new Promise<ExistedBoardMeetings | Error | null>((resolve) => {
-      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETMEETINGDETAILS, null, id)
+      this.restService.receiveDataFromFastApi(urls.GETMEETINGDETAILS, null, id)
         .subscribe({
           next: (response: any) => {
             let meeting = this.mapMeetingDetails(response);
@@ -196,7 +196,7 @@ export class dataService {
       const newAttachedDocument: AttachedDocument = {
         fileName: url.slice(dollarIndex),
         originalUrl: url,
-        fullUrl: `${baseUrl}${url}`,
+        fullUrl: `${baseUrl}/api${url}`,
       }
       attachedDocuments.push(newAttachedDocument);
     });

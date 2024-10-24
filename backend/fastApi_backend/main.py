@@ -185,19 +185,17 @@ async def createUploadFiles(files: List[UploadFile] = File(...)):
 
 
 @app.get("/files/{file_name}")
-async def getFile(file_name: str):
+async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
-    print(file_path)
+    
     if os.path.exists(file_path):
         dollar_index = file_name.find("$") + 1
-        if dollar_index != -1:
-            new_file_name = file_name[dollar_index:]
-        else:
-            new_file_name = file_name
-        print(file_path)
+        new_file_name = file_name[dollar_index:] if dollar_index != 0 else file_name
+
         return FileResponse(
             path=file_path,
             filename=new_file_name,
+            media_type='application/octet-stream'
         )
     else:
         raise HTTPException(status_code=404, detail="File not found")

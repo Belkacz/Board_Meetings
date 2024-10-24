@@ -23,7 +23,7 @@ export class InvitesComponent implements OnInit, OnDestroy {
   }
 
   private getPeople(): Subscription {
-    const result = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETPEOPLE)
+    const result = this.restService.receiveDataFromFastApi(urls.GETPEOPLE)
       .subscribe({
         next: (response: any) => {
           const newPersonList: Guest[] = []

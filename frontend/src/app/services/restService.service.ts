@@ -108,7 +108,7 @@ export class RestService {
     }
   }
 
-  private combineUrl(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {
+  private combineUrl(endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {
     let newUrl = '/api/' + endPoint;
 
     if (param !== null) {
@@ -123,8 +123,8 @@ export class RestService {
     return newUrl;
   }
 
-  receiveDataFromFastApi(protocol: urls, baseUrl: urls, endPoint: urls, param: urls | null = null, number1: number | null = null, number2: number | null = null) {
-    return this.http.get(this.combineUrl(protocol, baseUrl, endPoint, param, number1, number2));
+  receiveDataFromFastApi(endPoint: urls, param: urls | null = null, number1: number | null = null, number2: number | null = null) {
+    return this.http.get(this.combineUrl(endPoint, param, number1, number2));
   }
 
   deleteMeeting(id: number): Observable<any> {

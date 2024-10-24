@@ -25,7 +25,7 @@ export class FooterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscription = this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETPROJECTINFO)
+    this.subscription = this.restService.receiveDataFromFastApi(urls.GETPROJECTINFO)
       .subscribe({
         next: (response: any) => {
           this.projectInfo = this.dataService.mapProjectData(response);

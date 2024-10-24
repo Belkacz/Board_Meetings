@@ -149,7 +149,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
 
   private getAgendas(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.restService.receiveDataFromFastApi(urls.protocolBase, urls.localFastApi, urls.GETAGENDAS)
+      this.restService.receiveDataFromFastApi(urls.GETAGENDAS)
         .subscribe({
           next: (response: any) => {
             this.agendas = this.dataService.mapAgendas(response);
