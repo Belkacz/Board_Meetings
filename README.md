@@ -2,9 +2,9 @@
 
 ## Preview (deprecated)
 
-Click here to see [Preview](https://board-meetings.vercel.app/) of project.
+Click here to see **[Preview]([https://board-meetings.vercel.app/](https://boardmeetings.vino.paga.gg/new-meeting))** of project.
 
-Since I started to build the backend part of the app on Vercel, the platform used for deploying JS sites without backend, cannot handle these changes. You can check it there, but it reflects the state from the beginning of 2024 (January).
+**This preview of app is full funcionally production build and set on kubernettes kluster with docker image. Front-end and backend are set on two separeted pods**
 
 ## Front-end
 
