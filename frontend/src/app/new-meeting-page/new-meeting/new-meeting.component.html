@@ -4,7 +4,7 @@
       <div class="padding-standard">
         <div>
           <div class="list-item">
-            <h3 class="tittle-padding">Meeting type</h3> <mat-icon class="required-color" matTooltip="Meeting type is required">star</mat-icon>
+            <h3 class="tittle-padding">Meeting type</h3> <p class="required-color bold" matTooltip="Meeting type is required">*</p>
           </div>
           <div class="select-buttons-group">
             <div class="single-select-but padding-small">
@@ -27,7 +27,7 @@
         </div>
         <div>
           <div class="list-item">
-            <h3 class="tittle-padding">Meeting name</h3> <mat-icon class="required-color" matTooltip="Meeting name is required">star</mat-icon>
+            <h3 class="tittle-padding">Meeting name</h3> <p class="required-color bold" matTooltip="Meeting name is required">*</p>
           </div>
           <mat-form-field class="wider-element wider-container wider-box lower-input">
             <input class="wider-input" formControlName="meetingName" [attr.aria-label]="'Input Meeting Name'" matInput>
@@ -47,7 +47,7 @@
         </div>
         <div>
           <div class="list-item">
-            <h3 class="tittle-padding">Date and time</h3> <mat-icon class="required-color" matTooltip="Date and time name is required">star</mat-icon>
+            <h3 class="tittle-padding">Date and time</h3> <p class="required-color bold"  matTooltip="Date and time name is required">*</p>
           </div>
           <div class="calendar-container">
             <app-datepicker [defaultDate]="defaultDate" (dateSelected)="handleDateSelected($event)"></app-datepicker>
@@ -74,7 +74,7 @@
         </div>
         <div>
           <div class="list-item">
-            <h3 class="tittle-padding">Location</h3> <mat-icon class="required-color" matTooltip="Meeting location or online address is required">star</mat-icon>
+            <h3 class="tittle-padding">Location</h3> <p class="required-color bold" matTooltip="Meeting location or online address is required">*</p>
           </div>
           <section>
             <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()">Location</mat-checkbox>
@@ -84,7 +84,7 @@
             </mat-form-field>
           </section>
           <div class="list-item">
-            <h3 class="tittle-padding">Online meeting</h3> <mat-icon class="required-color" matTooltip="Meeting location or online address is required">star</mat-icon>
+            <h3 class="tittle-padding">Online meeting</h3> <p class="required-color bold"  matTooltip="Meeting location or online address is required">*</p>
           </div>
           <section class>
             <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()">Online

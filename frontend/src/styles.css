@@ -311,6 +311,10 @@ ul {
   color: var(--my-required-color);
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .neutral-snackbar {
   --mdc-snackbar-container-color: var(--my-accent-color);
 
