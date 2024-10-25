@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BoardMeetingData, CreateMeetingResponse, EditedMeetingResponse, ExistedBoardMeetings, FileUploadResponse, Guest, backendGuest } from '../shared/interfaces';
-import { urls } from '../shared/enums';
+import { PupUpTypes, urls } from '../shared/enums';
 import { Observable } from 'rxjs';
 import { PopUpService } from './pop-up.service';
 
@@ -20,7 +20,7 @@ export class RestService {
     }
 
     return new Observable<FileUploadResponse>((result) => {
-      this.http.post(`/api/${endpoint}`, formData)
+      this.http.post(`${urls.backendFolder}${endpoint}`, formData)
         .subscribe({
           next: (response: any) => {
             this.popUpService.showPopUp("Successfully uploaded files");
@@ -29,7 +29,7 @@ export class RestService {
           },
           error: (error: Error) => {
             console.error("Error when uploading files");
-            this.popUpService.showPopUp("Error uploading files");
+            this.popUpService.showPopUp("Error uploading files", PupUpTypes.Error);
             result.error(false);
             result.complete();
           }
@@ -83,19 +83,19 @@ export class RestService {
     };
     if (endpoint === urls.UPDATEMEETING) {
       let updatePack = { ...packedText, id: dataToSend.id }
-      this.http.put<EditedMeetingResponse>(`/api/${endpoint}`, updatePack)
+      this.http.put<EditedMeetingResponse>(`${urls.backendFolder}${endpoint}`, updatePack)
         .subscribe({
           next: response => {
             this.popUpService.showPopUp(response.editedMeeting);
             this.router.navigate(['/'])
           },
           error: error => {
-            this.popUpService.showPopUp(`Error when edited meeting # ${dataToSend.id}`);
+            this.popUpService.showPopUp(`Error when edited meeting # ${dataToSend.id}`, PupUpTypes.Error);
             console.error("Error:", error);
           }
         });
     } else {
-      this.http.post<CreateMeetingResponse>(`/api/${endpoint}`, packedText)
+      this.http.post<CreateMeetingResponse>(`${urls.backendFolder}${endpoint}`, packedText)
         .subscribe({
           next: response => {
             this.popUpService.showPopUp(response.message);
@@ -103,13 +103,14 @@ export class RestService {
           },
           error: error => {
             console.error("Error:", error);
+            this.popUpService.showPopUp(`Error when creating meeting # ${dataToSend.id}`, PupUpTypes.Error)
           }
         });
     }
   }
 
   private combineUrl(endPoint: urls, param: urls | null | number = null, number1: number | null = null, number2: number | null = null) {
-    let newUrl = '/api/' + endPoint;
+    let newUrl = urls.backendFolder + endPoint;
 
     if (param !== null) {
       newUrl += param;
@@ -128,7 +129,7 @@ export class RestService {
   }
 
   deleteMeeting(id: number): Observable<any> {
-    const deleteUrl = `/${urls.DELETEMEETING}/${id}`;
+    const deleteUrl = `${urls.backendFolder}${urls.DELETEMEETING}/${id}`;
     return this.http.delete(deleteUrl);
   }
 

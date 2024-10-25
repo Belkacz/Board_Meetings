@@ -31,7 +31,7 @@ else
     . ./fastapienv/bin/activate
 fi
 
-if [ ! -f "$SSL_KEYFILE" ] || [ ! -f "$SSL_CERTFILE" || true ]; then # hardcoded true to run http not https for now
+if [ ! -f "$SSL_KEYFILE" ] || [ ! -f "$SSL_CERTFILE" ]; then # hardcoded true to run http not https for now
     echo "Uruchamianie w tybie HTTP"
     uvicorn main:app
     exit 1

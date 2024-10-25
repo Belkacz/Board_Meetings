@@ -171,7 +171,6 @@ ul {
   padding-right: 0px;
 }
 
-
 .gap-0 {
   gap: 0px;
 }
@@ -281,7 +280,11 @@ ul {
 
 .single-select-but {
   display: flex;
-  padding: 15px;
+  padding: 5px 20px 5px 20px;
+}
+
+.tittle-padding {
+  padding: 0px 15px 0px 0px;
 }
 
 .select-buttons-group {
@@ -302,6 +305,10 @@ ul {
   padding: 20px;
   display: flex;
   justify-content: center
+}
+
+.required-color {
+  color: var(--my-required-color);
 }
 
 .neutral-snackbar {

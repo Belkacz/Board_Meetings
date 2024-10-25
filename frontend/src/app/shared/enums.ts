@@ -22,6 +22,7 @@ export enum urls {
     protocolHttps = "https://",
     protocolHttp = "http://",
     localFastApi = "127.0.0.1:8000",
+    backendFolder = "/api/",
     GETMEETINGS = "get-meetings",
     DELETEMEETING = "delete-meeting",
     NEWMEETING = "new-meeting",

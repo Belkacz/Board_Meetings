@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Agenda, ExistedBoardMeetings, GuestInvited, Guest, Task, AttachedDocument, IncomingGuest, ProjectData, ShortMeeting, ExternalAgenda } from '../shared/interfaces';
-import { urls } from '../shared/enums';
+import { PupUpTypes, urls } from '../shared/enums';
 import { RestService } from './restService.service';
 import { PopUpService } from './pop-up.service';
 
@@ -177,7 +177,7 @@ export class dataService {
 
           },
           error: (error: Error) => {
-            this.popUpService.showPopUp("Cannot get meeting details, check console for more information");
+            this.popUpService.showPopUp("Cannot get meeting details, check console for more information", PupUpTypes.Error);
             return resolve(error);
           }
         });
@@ -196,7 +196,7 @@ export class dataService {
       const newAttachedDocument: AttachedDocument = {
         fileName: url.slice(dollarIndex),
         originalUrl: url,
-        fullUrl: `${baseUrl}/api${url}`,
+        fullUrl: `${baseUrl}${urls.backendFolder}${url}`,
       }
       attachedDocuments.push(newAttachedDocument);
     });

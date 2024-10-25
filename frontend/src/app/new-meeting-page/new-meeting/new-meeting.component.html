@@ -3,7 +3,9 @@
     <mat-card-content class="main-card main-card ">
       <div class="padding-standard">
         <div>
-          <h3>Meeting type</h3>
+          <div class="list-item">
+            <h3 class="tittle-padding">Meeting type</h3> <mat-icon class="required-color" matTooltip="Meeting type is required">star</mat-icon>
+          </div>
           <div class="select-buttons-group">
             <div class="single-select-but padding-small">
               <button mat-stroked-button class="select-buttons"
@@ -24,13 +26,12 @@
           </div>
         </div>
         <div>
-          <h3>Meeting name</h3>
-          <mat-form-field
-            class="wider-element wider-container wider-box lower-input">
-            <input class="wider-input" formControlName="meetingName"
-              [attr.aria-label]="'Input Meeting Name'" matInput>
-            <button class="button-X" mat-icon-button matSuffix
-              [attr.aria-label]="'Clear input meeting name'"
+          <div class="list-item">
+            <h3 class="tittle-padding">Meeting name</h3> <mat-icon class="required-color" matTooltip="Meeting name is required">star</mat-icon>
+          </div>
+          <mat-form-field class="wider-element wider-container wider-box lower-input">
+            <input class="wider-input" formControlName="meetingName" [attr.aria-label]="'Input Meeting Name'" matInput>
+            <button class="button-X" mat-icon-button matSuffix [attr.aria-label]="'Clear input meeting name'"
               (click)="clearInput()">
               <mat-icon>clear</mat-icon>
             </button>
@@ -45,17 +46,17 @@
           </mat-error>
         </div>
         <div>
-          <h3>Date and time</h3>
+          <div class="list-item">
+            <h3 class="tittle-padding">Date and time</h3> <mat-icon class="required-color" matTooltip="Date and time name is required">star</mat-icon>
+          </div>
           <div class="calendar-container">
-            <app-datepicker [defaultDate]="defaultDate"
-              (dateSelected)="handleDateSelected($event)"></app-datepicker>
+            <app-datepicker [defaultDate]="defaultDate" (dateSelected)="handleDateSelected($event)"></app-datepicker>
             <app-timepicker [selectedTime]="defaultTimeStart"
               (timeSelected)="handleTimeSelected($event, TimeType.Start)"></app-timepicker>
             <app-timepicker [selectedTime]="defaultTimeEnd"
               (timeSelected)="handleTimeSelected($event, TimeType.End)"></app-timepicker>
           </div>
-          <mat-error
-            *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
+          <mat-error *ngIf="(form.get('dateStart')?.errors?.['endBeforeBeginning'] || form.get('dateEnd')?.errors?.['endBeforeBeginning']) 
           && !form.get('dateStart')?.pristine && !form.get('dateEnd')?.pristine">
             The end date cannot be earlier than the start date
           </mat-error>
@@ -72,88 +73,76 @@
           </mat-error>
         </div>
         <div>
-          <h3>Location</h3>
+          <div class="list-item">
+            <h3 class="tittle-padding">Location</h3> <mat-icon class="required-color" matTooltip="Meeting location or online address is required">star</mat-icon>
+          </div>
           <section>
-            <mat-checkbox [checked]="isAddressChecked"
-              (click)="toggleAddress()">Location</mat-checkbox>
+            <mat-checkbox [checked]="isAddressChecked" (click)="toggleAddress()">Location</mat-checkbox>
             <br>
-            <mat-form-field
-              class="wider-element wider-container wider-box lower-input">
-              <input matInput formControlName="meetingAddress"
-                placeholder="Address..." />
+            <mat-form-field class="wider-element wider-container wider-box lower-input">
+              <input matInput formControlName="meetingAddress" placeholder="Address..." />
             </mat-form-field>
           </section>
-          <h3>Online meeting</h3>
+          <div class="list-item">
+            <h3 class="tittle-padding">Online meeting</h3> <mat-icon class="required-color" matTooltip="Meeting location or online address is required">star</mat-icon>
+          </div>
           <section class>
-            <mat-checkbox [checked]="isOnlineChecked"
-              (click)="toggleOnline()">Online
+            <mat-checkbox [checked]="isOnlineChecked" (click)="toggleOnline()">Online
               meeting</mat-checkbox>
             <br>
-            <mat-form-field
-              class="wider-element wider-container wider-box lower-input">
-              <input matInput formControlName="onlineAddress"
-                placeholder="Paste meeting link ..." value />
+            <mat-form-field class="wider-element wider-container wider-box lower-input">
+              <input matInput formControlName="onlineAddress" placeholder="Paste meeting link ..." value />
             </mat-form-field>
           </section>
-          <h3>Hybrid: Online and stationary</h3>
+          <h3 class="tittle-padding">Hybrid: Online and stationary</h3>
           <section class>
-            <mat-checkbox [checked]="isHybridChecked"
-              (click)="toggleHybrid()">Hybrid</mat-checkbox>
+            <mat-checkbox [checked]="isHybridChecked" (click)="toggleHybrid()">Hybrid</mat-checkbox>
             <br>
           </section>
         </div>
-        <mat-error
-          *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
+        <mat-error *ngIf="(isHybridChecked || isAddressChecked || isOnlineChecked) && form.errors?.['addressRequired']">
           Meeting address cannot be empty.
         </mat-error>
         <br>
-        <mat-card
-          class="wider-element wider-container wider-box grey-box-shadow">
+        <mat-card class="wider-element wider-container wider-box grey-box-shadow">
           <mat-card-header>
             <mat-card-title>Agenda: </mat-card-title>
           </mat-card-header>
-          <mat-card-content
-            *ngIf="!form.get('agenda')?.value['name']"> <p>No
-              chosen agenda</p></mat-card-content>
-          <mat-card-content *ngIf="form.get('agenda')?.value['name']"
-            class="agenda-with-order">
+          <mat-card-content *ngIf="!form.get('agenda')?.value['name']">
+            <p>No
+              chosen agenda</p>
+          </mat-card-content>
+          <mat-card-content *ngIf="form.get('agenda')?.value['name']" class="agenda-with-order">
             <mat-card-content class="agenda-row">
               <p>Selected: {{
                 form.get('agenda')?.value['name']
-                }}</p><button class mat-icon-button matSuffix
-                [attr.aria-label]="'Remove selected agenda'"
+                }}</p><button class mat-icon-button matSuffix [attr.aria-label]="'Remove selected agenda'"
                 (click)="clearAgenda()">
                 <mat-icon>clear</mat-icon>
-              </button></mat-card-content>
+              </button>
+            </mat-card-content>
             <p class="caption padding-small">Order:
               {{form.get('agenda')?.value['order']
               }}</p>
           </mat-card-content>
           <div class="select-buttons-group">
-            <button mat-stroked-button class="select-buttons-agenda"
-              (click)="newAgenda()">Create agenda</button>
-            <button mat-stroked-button class="select-buttons-agenda"
-              disabled="false" (click)="selectAgenda()">Choose
+            <button mat-stroked-button class="select-buttons-agenda" (click)="newAgenda()">Create agenda</button>
+            <button mat-stroked-button class="select-buttons-agenda" disabled="false" (click)="selectAgenda()">Choose
               Agenda</button>
           </div>
         </mat-card>
-        <div>
+        <div class="tittle-padding">
           <h3>Documents</h3>
           <p>Documents attached to the meeting</p>
           <div class>
             <div>
-              <ng-container
-                *ngIf="form.get('attachedDocuments')?.value != null">
+              <ng-container *ngIf="form.get('attachedDocuments')?.value != null">
                 <h4 class="list-header">Attached Files :</h4>
-                <ul
-                  class="wider-element wider-container wider-box list-container">
-                  <li
-                    *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
-                    <div
-                      class="flex-box-space">
+                <ul class="wider-element wider-container wider-box list-container">
+                  <li *ngFor="let doc of form.get('attachedDocuments')?.value; let i = index">
+                    <div class="flex-box-space">
                       <div class="list-item">
-                        <mat-icon class="padding-small"
-                          fontIcon="file_copy"></mat-icon>
+                        <mat-icon class="padding-small" fontIcon="file_copy"></mat-icon>
                         <p>{{ doc.fileName }}</p>
                       </div>
                       <div>
@@ -174,15 +163,11 @@
               </ng-container>
               <ng-container *ngIf="form.get('addedDocuments')?.value != null">
                 <h4 class="list-header">Added Files :</h4>
-                <ul
-                  class="wider-element wider-container wider-box list-container">
-                  <li
-                    *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
-                    <div
-                      class="flex-box-space">
+                <ul class="wider-element wider-container wider-box list-container">
+                  <li *ngFor="let doc of form.get('addedDocuments')?.value; let i = index">
+                    <div class="flex-box-space">
                       <div class="list-item">
-                        <mat-icon class="padding-small"
-                          fontIcon="file_copy"></mat-icon>
+                        <mat-icon class="padding-small" fontIcon="file_copy"></mat-icon>
                         <p>{{ doc.name }}</p>
                       </div>
                       <div>
@@ -191,8 +176,7 @@
                           (click)="fileDownloadService.downloadAddedFile(doc)">
                           <mat-icon>download</mat-icon>
                         </button>
-                        <button mat-icon-button matSuffix
-                          (click)="deleteDocs(i)"
+                        <button mat-icon-button matSuffix (click)="deleteDocs(i)"
                           [attr.aria-label]="'Delete added doc' + doc.name + ' with index: ' + i">
                           <mat-icon>clear</mat-icon>
                         </button>
@@ -202,13 +186,13 @@
                 </ul>
               </ng-container>
             </div>
-            <input type="file" accept=".pdf,.doc,.docx,.odt,.ods,.odp,.md,.txt,.xtml,.json,.yaml,.log,.epub,.gif.jpg,.png,.bmp,.svg"
-              #addDocument style="display: none"
-              (change)="onFileSelected($event, FileType.AddDocument)" />
-            <button mat-stroked-button
-              (click)="openFilePicker(addDocumentInput)">Add Documents</button>
+            <input type="file"
+              accept=".pdf,.doc,.docx,.odt,.ods,.odp,.md,.txt,.xtml,.json,.yaml,.log,.epub,.gif.jpg,.png,.bmp,.svg"
+              #addDocument style="display: none" (change)="onFileSelected($event, FileType.AddDocument)" />
+            <button mat-stroked-button (click)="openFilePicker(addDocumentInput)">Add Documents</button>
           </div>
-          <p class="caption">accepted formats: .pdf,.doc,.docx,.odt,.ods,.odp,.md,.txt,.xtml,.json,.yaml,.log,.epub,.gif.jpg,.png,.bmp,.svg</p>
+          <p class="caption">accepted formats:
+            .pdf,.doc,.docx,.odt,.ods,.odp,.md,.txt,.xtml,.json,.yaml,.log,.epub,.gif.jpg,.png,.bmp,.svg</p>
         </div>
       </div>
     </mat-card-content>
