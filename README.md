@@ -1,8 +1,8 @@
 # BoardMeetings
 
-## [Preview](https://boardmeetings.vino.paga.gg/new-meeting)
+## [Preview](https://boardmeetings.vino.paga.gg/)
 
-Click [here](https://boardmeetings.vino.paga.gg/new-meeting) or on sub-title to see my project.
+Click [here](https://boardmeetings.vino.paga.gg/) or on sub-title to see my project.
 
 **This preview of app is full funcionally production build and set on kubernettes kluster with docker image. Front-end and backend are set on two separeted pods**
 
