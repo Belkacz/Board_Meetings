@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
+import mysql.connector
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional, Union
 from fastapi.staticfiles import StaticFiles
@@ -22,10 +23,54 @@ from meetings import (
     ExternalShortMeeting,
     ExternalBaseMeeting,
 )
+
+
+from frontHandlers import (
+    mapShortMeetingToSend,
+    mapGuestsToSend,
+    mapMeetingToSend,
+    atLeastOneAddress,
+    mapGuestsIncoming,
+    mapAgendaIncoming,
+    mapAgendaIncoming,
+    mapAgendaOutgoing,
+    mapNewMeetingIncoming,
+    mapExistedMeetingIncoming,
+    mapPeopleToSend,
+    createAgendaId
+)
+
 from projectInformation import projectInfo1, ProjectDataExternal
 
 app = FastAPI()
 
+
+# database Connection
+
+def get_db_connection():
+    return mysql.connector.connect(
+        host="localhost",
+        user="meetingsAdmin",
+        password="MeetTheAdmin123",
+        database="db_meetings",
+        port="3306"
+    )
+    
+@app.on_event("startup")
+async def startup_event():
+    global guests
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT id, name, surname, job_position FROM guest")
+    result = cursor.fetchall()
+
+    guests = [Guest(id=guest['id'], name=guest['name'], surname=guest['surname'], job_position=guest['job_position']) for guest in result]
+
+    cursor.close()
+    connection.close()
+
+# frontEnd 
 origins = ["http://localhost:4200"]
 
 app.add_middleware(
@@ -39,17 +84,6 @@ app.add_middleware(
 UPLOAD_DIRECTORY = "./meetings_docs"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
-
-
-def mapShortMeetingToSend(meeting: ShortMeeting) -> ExternalShortMeeting:
-    return ExternalShortMeeting(
-        id=meeting.id,
-        meetingType=meeting.meeting_type,
-        meetingName=meeting.meeting_name,
-        startDate=meeting.start_date,
-        endDate=meeting.end_date,
-    )
-
 
 @app.get(
     "/get-meetings/{page}/{pagesize}",
@@ -79,41 +113,6 @@ async def get_meetings_list(page: int, pagesize: int):
     print("get_meetings_list")
     return response_data
 
-
-def mapGuestsToSend(meeting_guests: List[Guest]) -> list[ExternalGuest]:
-    external_guests = []
-    for guest in meeting_guests:
-        external_guest = ExternalGuest(
-            id=guest.id,
-            name=guest.name,
-            surname=guest.surname,
-            jobPosition=guest.job_position,
-        )
-        external_guests.append(external_guest)
-    return external_guests
-
-
-def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
-    guests = mapGuestsToSend(meeting.guests)
-    if meeting.agenda != None:
-        mappedAgenda = mapAgendaOutgoing(meeting.agenda)
-    else:
-        mappedAgenda = None
-    return ExternalExistedMeeting(
-        id=meeting.id,
-        meetingName=meeting.meeting_name,
-        meetingType=meeting.meeting_type,
-        startDate=meeting.start_date,
-        endDate=meeting.end_date,
-        meetingAddress=meeting.meeting_address,
-        onlineAddress=meeting.online_address,
-        guests=guests,
-        tasksList=meeting.tasksList,
-        agenda=mappedAgenda,
-        documents=meeting.documents,
-    )
-
-
 @app.get(
     "/meeting-details/{meeting_id}",
     response_model=ExternalExistedMeeting,
@@ -141,16 +140,6 @@ async def getMeetingDetails(meeting_id: int):
     print(f"get_meetings_details #{meeting_id}")
     return result_meeting
 
-
-def mapPeopleToSend(guest: Guest) -> ExternalGuest:
-    return ExternalGuest(
-        id=guest.id,
-        name=guest.name,
-        surname=guest.surname,
-        jobPosition=guest.job_position,
-    )
-
-
 @app.get("/get-people", response_model=list[ExternalGuest])
 async def getPeopleList():
     external_guests = []
@@ -163,7 +152,6 @@ async def getPeopleList():
 
 @app.get("/get-agendas", response_model=list[ExternalAgenda])
 async def getAgendasList():
-    print("agendas")
     externalAgendas = []
     for agenda in agendas:
         mappedAgenda = mapAgendaOutgoing(agenda)
@@ -199,94 +187,6 @@ async def get_file(file_name: str):
         )
     else:
         raise HTTPException(status_code=404, detail="File not found")
-
-
-def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
-    if (meeting_address and len(meeting_address) > 0) or (
-        online_address and len(online_address) > 0
-    ):
-        return True
-    else:
-        return False
-
-
-def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
-    guests = []
-    for guest in meeting_guests:
-        mapped_guest = Guest(
-            id=guest.id,
-            name=guest.name,
-            surname=guest.surname,
-            job_position=guest.jobPosition,
-        )
-        guests.append(mapped_guest)
-    return guests
-
-
-def mapAgendaIncoming(incomingAgenda: ExternalAgenda) -> Agenda:
-    return Agenda(
-        id=incomingAgenda.id,
-        name=incomingAgenda.agendaName,
-        order=incomingAgenda.order,
-    )
-
-
-def mapAgendaOutgoing(insideAgenda: Agenda) -> ExternalAgenda:
-    return ExternalAgenda(
-        id=insideAgenda.id,
-        agendaName=insideAgenda.name,
-        order=insideAgenda.order,
-    )
-
-
-def mapNewMeetingIncoming(new_id: int, meeting: ExternalBaseMeeting) -> ExistedMeeting:
-    mappedAgenda = None
-    if meeting.agenda is not None:
-        mappedAgenda = mapAgendaIncoming(meeting.agenda)
-    return ExistedMeeting(
-        id=new_id,
-        meeting_type=meeting.meetingType,
-        meeting_name=meeting.meetingName,
-        start_date=meeting.startDate,
-        end_date=meeting.endDate,
-        meeting_address=meeting.meetingAddress,
-        online_address=meeting.onlineAddress,
-        guests=mapGuestsIncoming(meeting.guests),
-        tasksList=meeting.tasksList,
-        agenda=mappedAgenda,
-        documents=meeting.documents,
-    )
-
-
-def mapExistedMeetingIncoming(
-    new_id: int, meeting: ExternalExistedMeeting
-) -> ExistedMeeting:
-    mappedAgenda = None
-    if meeting.agenda is not None:
-        mappedAgenda = mapAgendaIncoming(meeting.agenda)
-    return ExistedMeeting(
-        id=new_id,
-        meeting_type=meeting.meetingType,
-        meeting_name=meeting.meetingName,
-        start_date=meeting.startDate,
-        end_date=meeting.endDate,
-        meeting_address=meeting.meetingAddress,
-        online_address=meeting.onlineAddress,
-        guests=mapGuestsIncoming(meeting.guests),
-        tasksList=meeting.tasksList,
-        agenda=mappedAgenda,
-        documents=meeting.documents,
-    )
-
-
-def createAgendaId():
-    if len(agendas) > 0:
-        last_agenda = agendas[-1]
-        last_agenda_id = last_agenda.id
-    else:
-        last_agenda_id = 1
-
-    return last_agenda_id
 
 
 @app.post(
@@ -349,7 +249,7 @@ def filesNotInOriginal(
 )
 async def update_meeting(edited_meeting: ExternalExistedMeeting):
     if edited_meeting.agenda.id == None and edited_meeting.agenda.agendaName != None:
-        edited_meeting.agenda.id = createAgendaId()
+        edited_meeting.agenda.id = createAgendaId(agendas)
     if edited_meeting.agenda.id == None and edited_meeting.agenda.agendaName == None:
         edited_meeting.agenda = None
 
