@@ -1,8 +1,8 @@
 import os
-from fastapi import FastAPI, Form, File, UploadFile, HTTPException
+from fastapi import FastAPI, Depends, File, UploadFile, HTTPException
 import mysql.connector
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 from fastapi.responses import FileResponse
@@ -26,24 +26,23 @@ from meetings import (
 
 
 from frontHandlers import (
-    mapShortMeetingToSend,
-    mapGuestsToSend,
-    mapMeetingToSend,
-    atLeastOneAddress,
-    mapGuestsIncoming,
-    mapAgendaIncoming,
-    mapAgendaIncoming,
-    mapAgendaOutgoing,
-    mapNewMeetingIncoming,
-    mapExistedMeetingIncoming,
-    mapPeopleToSend,
-    createAgendaId
+    map_short_meeting_to_send,
+    map_guests_to_send,
+    map_meeting_to_send,
+    at_least_one_address,
+    map_guests_incoming,
+    map_agenda_incoming,
+    map_agenda_incoming,
+    map_agenda_outgoing,
+    map_new_meeting_incoming,
+    map_existed_meeting_incoming,
+    map_people_to_send,
+    create_agenda_id
 )
 
 from projectInformation import projectInfo1, ProjectDataExternal
 
 app = FastAPI()
-
 
 # database Connection
 
@@ -55,20 +54,176 @@ def get_db_connection():
         database="db_meetings",
         port="3306"
     )
-    
-@app.on_event("startup")
-async def startup_event():
-    global guests
+
+# @app.on_event("startup")
+def get_guests():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-
-    cursor.execute("SELECT id, name, surname, job_position FROM guest")
+    
+    sqlQuery = "SELECT id, name, surname, job_position FROM guest"
+    cursor.execute(sqlQuery)
     result = cursor.fetchall()
 
     guests = [Guest(id=guest['id'], name=guest['name'], surname=guest['surname'], job_position=guest['job_position']) for guest in result]
-
     cursor.close()
     connection.close()
+
+    return guests
+
+
+def map_agendas(results: List[Dict[str, Any]]) -> List[Agenda]:
+    agenda_dict = {}
+
+    for row in results:
+        agenda_id = row["agenda_id"]
+        agenda_name = row["agenda_name"]
+        order_name = row["order_name"]
+
+        if agenda_id not in agenda_dict:
+            agenda_dict[agenda_id] = {
+                "name": agenda_name,
+                "orders": []
+            }
+
+        if order_name:
+            agenda_dict[agenda_id]["orders"].append(order_name)
+
+    return [
+        Agenda(id=agenda_id, name=agenda_data["name"], order=agenda_data["orders"])
+        for agenda_id, agenda_data in agenda_dict.items()
+    ]
+
+def get_agendas():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    sqlQuery = """
+    SELECT 
+        agenda.id AS agenda_id,
+        agenda.name AS agenda_name,
+        order.id AS order_id,
+        order.order AS order_name
+    FROM agenda
+    LEFT JOIN orders_list ON a.id = orders_list.fk_agenda
+    LEFT JOIN orders ON orders_list.fk_order = order.id;
+    """
+
+    cursor.execute(sqlQuery)
+    results = cursor.fetchall()
+    return results
+
+def get_agendas():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    sqlQuery = """
+    SELECT 
+        agenda.id AS agenda_id,
+        agenda.name AS agenda_name,
+        order.id AS order_id,
+        order.order AS order_name
+    FROM agenda
+    LEFT JOIN orders_list ON a.id = orders_list.fk_agenda
+    LEFT JOIN orders ON orders_list.fk_order = order.id;
+    """
+
+    cursor.execute(sqlQuery)
+    results = cursor.fetchall()
+    return results
+
+def update_meetings():
+    # Pobierz gości (dla późniejszego przypisania)
+    guests_dict = get_guests()
+
+    # Połączenie z bazą danych
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    sqlQuery = """
+    SELECT 
+        meeting.id AS meeting_id,
+        meeting.meeting_name,
+        meeting.start_date,
+        meeting.end_date,
+        meeting.meeting_address,
+        meeting.online_address,
+        meeting_type.type_name AS meeting_type,
+        agenda.name AS agenda_name,
+        GROUP_CONCAT(DISTINCT guest.id, ';',  guest.name, ';', guest.surname, ';', guest.job_position) AS guests,
+        GROUP_CONCAT(DISTINCT document.doc_address) AS documents,
+        GROUP_CONCAT(DISTINCT task.name) AS tasks,
+        GROUP_CONCAT(DISTINCT orders.order) AS orders
+    FROM 
+        meeting
+    LEFT JOIN meeting_type ON meeting.meeting_type = meeting_type.id
+    LEFT JOIN agenda ON meeting.agenda = agenda.id
+    LEFT JOIN guests_list ON meeting.id = guests_list.fk_meeting
+    LEFT JOIN guest ON guests_list.fk_guest_id = guest.id
+    LEFT JOIN documents_list ON meeting.id = documents_list.fk_meeting
+    LEFT JOIN document ON documents_list.fk_document_id = document.id
+    LEFT JOIN tasks_list ON meeting.id = tasks_list.fk_tasks
+    LEFT JOIN task ON tasks_list.fk_task_id = task.id
+    LEFT JOIN orders_list ON agenda.id = orders_list.fk_agenda
+    LEFT JOIN orders ON orders_list.fk_order = orders.id
+    GROUP BY 
+        meeting.id, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address, meeting_type.type_name, agenda.name;
+    """
+    cursor.execute(sqlQuery)
+    results = cursor.fetchall()
+
+    global meetings
+    meetings = []
+    
+    for row in results:
+        guest_list = []
+        if row['guests']:
+            raw_guest_list = row['guests'].split(',')
+            for raw_guest in raw_guest_list:
+                guest_data = raw_guest.split(';')
+                new_guest = Guest(id=guest_data[0], name=guest_data[1], surname=guest_data[2], job_position=guest_data[3])  
+                guest_list.append(new_guest)
+            document_list = []
+            if row['documents']:
+                document_list = row['documents'].split(', ')
+
+        # Parse tasks
+        task_list = []
+        if row['tasks']:
+            task_list = [{"name": task.strip()} for task in row['tasks'].split(', ')]
+
+        # Parse orders (optional)
+        order_list = []
+        if row['orders']:
+            order_list = row['orders'].split(', ')
+            
+        print(document_list)
+        
+        for i in range(len(document_list)):
+            document_list[i] = '/files/' + document_list[i]
+        print(document_list)
+        # Add parsed meeting
+        meetings.append(
+            ExistedMeeting(
+                id=row['meeting_id'],
+                meeting_type=row['meeting_type'] or "unknownType",
+                meeting_name=row['meeting_name'],
+                start_date=row['start_date'].isoformat(),
+                end_date=row['end_date'].isoformat(),
+                meeting_address=row['meeting_address'],
+                online_address=row['online_address'],
+                guests=guest_list,
+                tasksList=task_list,
+                agenda={"name": row['agenda_name']},
+                documents=document_list,
+            )
+        )
+
+    # Close connections
+    cursor.close()
+    connection.close()
+
+    print("Updated meetings:", meetings)
+
 
 # frontEnd 
 origins = ["http://localhost:4200"]
@@ -94,6 +249,7 @@ if not os.path.exists(UPLOAD_DIRECTORY):
     },
 )
 async def get_meetings_list(page: int, pagesize: int):
+    update_meetings()
     if page <= 0 or pagesize <= 0:
         raise HTTPException(status_code=400, detail="Invalid pagination parameters")
 
@@ -104,13 +260,13 @@ async def get_meetings_list(page: int, pagesize: int):
 
     meetings_list: List[ShortMeeting] = []
     for i in range(start_index, end_index):
-        short_meeting = mapShortMeetingToSend(meetings[i])
+        short_meeting = map_short_meeting_to_send(meetings[i])
         meetings_list.append(short_meeting)
 
     total_length = len(meetings)
     response_data = {"meetings": meetings_list, "totalLength": total_length}
 
-    print("get_meetings_list")
+    print(response_data)
     return response_data
 
 @app.get(
@@ -131,7 +287,7 @@ async def getMeetingDetails(meeting_id: int):
     if not result_meeting:
         for meeting in meetings:
             if meeting_id == meeting.id:
-                result_meeting = mapMeetingToSend(meeting)
+                result_meeting = map_meeting_to_send(meeting)
                 break
 
     if result_meeting is None:
@@ -143,18 +299,20 @@ async def getMeetingDetails(meeting_id: int):
 @app.get("/get-people", response_model=list[ExternalGuest])
 async def getPeopleList():
     external_guests = []
+    guests = get_guests()
     if len(guests) > 0:
         for guest in guests:
-            mapped_guest = mapPeopleToSend(guest)
+            mapped_guest = map_people_to_send(guest)
             external_guests.append(mapped_guest)
     return external_guests
 
 
 @app.get("/get-agendas", response_model=list[ExternalAgenda])
 async def getAgendasList():
+    agendas = map_agendas(get_agendas())
     externalAgendas = []
     for agenda in agendas:
-        mappedAgenda = mapAgendaOutgoing(agenda)
+        mappedAgenda = map_agenda_outgoing(agenda)
         externalAgendas.append(mappedAgenda)
     return externalAgendas
 
@@ -174,6 +332,7 @@ async def createUploadFiles(files: List[UploadFile] = File(...)):
 
 @app.get("/files/{file_name}")
 async def get_file(file_name: str):
+    print(file_name)
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     
     if os.path.exists(file_path):
@@ -189,8 +348,7 @@ async def get_file(file_name: str):
         raise HTTPException(status_code=404, detail="File not found")
 
 
-@app.post(
-    "/new-meeting",
+@app.post("/new-meeting",
     responses={
         403: {
             "description": "Meeting need at least one meeting address or online address",
@@ -207,13 +365,13 @@ async def add_meeting(meeting: ExternalBaseMeeting):
     new_meeting_id = last_meeting.id + 1
 
     if meeting.agenda.id == None and meeting.agenda.agendaName != None:
-        meeting.agenda.id = createAgendaId()
+        meeting.agenda.id = create_agenda_id()
     if meeting.agenda.id == None and meeting.agenda.agendaName == None:
         meeting.agenda = None
 
-    new_meeting = mapNewMeetingIncoming(new_meeting_id, meeting)
+    new_meeting = map_new_meeting_incoming(new_meeting_id, meeting)
 
-    if not atLeastOneAddress(new_meeting.meeting_address, new_meeting.online_address):
+    if not at_least_one_address(new_meeting.meeting_address, new_meeting.online_address):
         raise HTTPException(
             status_code=403,
             detail="Meeting need at least one meeting address or online address",
@@ -249,13 +407,13 @@ def filesNotInOriginal(
 )
 async def update_meeting(edited_meeting: ExternalExistedMeeting):
     if edited_meeting.agenda.id == None and edited_meeting.agenda.agendaName != None:
-        edited_meeting.agenda.id = createAgendaId(agendas)
+        edited_meeting.agenda.id = create_agenda_id(agendas)
     if edited_meeting.agenda.id == None and edited_meeting.agenda.agendaName == None:
         edited_meeting.agenda = None
 
-    updated_meeting = mapExistedMeetingIncoming(edited_meeting.id, edited_meeting)
+    updated_meeting = map_existed_meeting_incoming(edited_meeting.id, edited_meeting)
 
-    if not atLeastOneAddress(
+    if not at_least_one_address(
         updated_meeting.meeting_address, updated_meeting.online_address
     ):
         raise HTTPException(

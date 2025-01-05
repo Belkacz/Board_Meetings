@@ -126,7 +126,7 @@ meetings = [
         guests=[guests[0], guests[1]],
         tasksList=[Task(id=1, name="task1", description="task1 desc")],
         agenda=agendas[0],
-        documents=["/files/123$testFile3.txt", "/files/1234$testFile4.txt"],
+        documents=["/files/123$testFile3.txt", "/files/123$testFile4.txt"],
     ),
     ExistedMeeting(
         id=2,
@@ -155,7 +155,7 @@ meetings = [
             Task(id=2, name="task2", description="task2 desc"),
         ],
         agenda=agendas[1],
-        documents=["/files/123$testFile1.txt", "/files/1234$testFile2.txt"],
+        documents=["/files/123$testFile1.txt", "/files/123$testFile2.txt"],
     ),
     ExistedMeeting(
         id=5,

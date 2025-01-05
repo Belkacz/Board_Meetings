@@ -4,7 +4,7 @@ from meetings import (
     )
 
 
-def mapShortMeetingToSend(meeting: ShortMeeting) -> ExternalShortMeeting:
+def map_short_meeting_to_send(meeting: ShortMeeting) -> ExternalShortMeeting:
     return ExternalShortMeeting(
         id=meeting.id,
         meetingType=meeting.meeting_type,
@@ -13,7 +13,7 @@ def mapShortMeetingToSend(meeting: ShortMeeting) -> ExternalShortMeeting:
         endDate=meeting.end_date,
     )
 
-def mapGuestsToSend(meeting_guests: List[Guest]) -> list[ExternalGuest]:
+def map_guests_to_send(meeting_guests: List[Guest]) -> list[ExternalGuest]:
     external_guests = []
     for guest in meeting_guests:
         external_guest = ExternalGuest(
@@ -25,10 +25,10 @@ def mapGuestsToSend(meeting_guests: List[Guest]) -> list[ExternalGuest]:
         external_guests.append(external_guest)
     return external_guests
 
-def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
-    guests = mapGuestsToSend(meeting.guests)
+def map_meeting_to_send(meeting: ExistedMeeting) -> ExternalExistedMeeting:
+    guests = map_guests_to_send(meeting.guests)
     if meeting.agenda != None:
-        mappedAgenda = mapAgendaOutgoing(meeting.agenda)
+        mappedAgenda = map_agenda_outgoing(meeting.agenda)
     else:
         mappedAgenda = None
     return ExternalExistedMeeting(
@@ -46,7 +46,7 @@ def mapMeetingToSend(meeting: ExistedMeeting) -> ExternalExistedMeeting:
     )
 
 
-def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
+def at_least_one_address(meeting_address: str, online_address: str) -> bool:
     if (meeting_address and len(meeting_address) > 0) or (
         online_address and len(online_address) > 0
     ):
@@ -55,7 +55,7 @@ def atLeastOneAddress(meeting_address: str, online_address: str) -> bool:
         return False
 
 
-def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
+def map_guests_incoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
     guests = []
     for guest in meeting_guests:
         mapped_guest = Guest(
@@ -68,7 +68,7 @@ def mapGuestsIncoming(meeting_guests: list[ExternalGuest]) -> list[Guest]:
     return guests
 
 
-def mapAgendaIncoming(incomingAgenda: ExternalAgenda) -> Agenda:
+def map_agenda_incoming(incomingAgenda: ExternalAgenda) -> Agenda:
     return Agenda(
         id=incomingAgenda.id,
         name=incomingAgenda.agendaName,
@@ -76,7 +76,7 @@ def mapAgendaIncoming(incomingAgenda: ExternalAgenda) -> Agenda:
     )
 
 
-def mapAgendaOutgoing(insideAgenda: Agenda) -> ExternalAgenda:
+def map_agenda_outgoing(insideAgenda: Agenda) -> ExternalAgenda:
     return ExternalAgenda(
         id=insideAgenda.id,
         agendaName=insideAgenda.name,
@@ -84,10 +84,10 @@ def mapAgendaOutgoing(insideAgenda: Agenda) -> ExternalAgenda:
     )
 
 
-def mapNewMeetingIncoming(new_id: int, meeting: ExternalBaseMeeting) -> ExistedMeeting:
+def map_new_meeting_incoming(new_id: int, meeting: ExternalBaseMeeting) -> ExistedMeeting:
     mappedAgenda = None
     if meeting.agenda is not None:
-        mappedAgenda = mapAgendaIncoming(meeting.agenda)
+        mappedAgenda = map_agenda_incoming(meeting.agenda)
     return ExistedMeeting(
         id=new_id,
         meeting_type=meeting.meetingType,
@@ -96,19 +96,19 @@ def mapNewMeetingIncoming(new_id: int, meeting: ExternalBaseMeeting) -> ExistedM
         end_date=meeting.endDate,
         meeting_address=meeting.meetingAddress,
         online_address=meeting.onlineAddress,
-        guests=mapGuestsIncoming(meeting.guests),
+        guests=map_guests_incoming(meeting.guests),
         tasksList=meeting.tasksList,
         agenda=mappedAgenda,
         documents=meeting.documents,
     )
 
 
-def mapExistedMeetingIncoming(
+def map_existed_meeting_incoming(
     new_id: int, meeting: ExternalExistedMeeting
 ) -> ExistedMeeting:
     mappedAgenda = None
     if meeting.agenda is not None:
-        mappedAgenda = mapAgendaIncoming(meeting.agenda)
+        mappedAgenda = map_agenda_incoming(meeting.agenda)
     return ExistedMeeting(
         id=new_id,
         meeting_type=meeting.meetingType,
@@ -117,13 +117,13 @@ def mapExistedMeetingIncoming(
         end_date=meeting.endDate,
         meeting_address=meeting.meetingAddress,
         online_address=meeting.onlineAddress,
-        guests=mapGuestsIncoming(meeting.guests),
+        guests=map_guests_incoming(meeting.guests),
         tasksList=meeting.tasksList,
         agenda=mappedAgenda,
         documents=meeting.documents,
     )
 
-def mapPeopleToSend(guest: Guest) -> ExternalGuest:
+def map_people_to_send(guest: Guest) -> ExternalGuest:
     return ExternalGuest(
         id=guest.id,
         name=guest.name,
@@ -131,7 +131,7 @@ def mapPeopleToSend(guest: Guest) -> ExternalGuest:
         jobPosition=guest.job_position,
     )
 
-def createAgendaId(agendas: List[Agenda]):
+def create_agenda_id(agendas: List[Agenda]):
     if len(agendas) > 0:
         last_agenda = agendas[-1]
         last_agenda_id = last_agenda.id
