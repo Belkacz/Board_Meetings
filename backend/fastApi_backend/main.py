@@ -1,3 +1,4 @@
+from numbers import Number
 import os
 from fastapi import FastAPI, Depends, File, UploadFile, HTTPException
 import mysql.connector
@@ -22,6 +23,7 @@ from meetings import (
     ErrorResponse,
     ExternalShortMeeting,
     ExternalBaseMeeting,
+    Task
 )
 
 
@@ -120,21 +122,74 @@ def get_agendas():
     SELECT 
         agenda.id AS agenda_id,
         agenda.name AS agenda_name,
-        order.id AS order_id,
-        order.order AS order_name
+        orders.id AS order_id,
+        orders.order AS order_name
     FROM agenda
-    LEFT JOIN orders_list ON a.id = orders_list.fk_agenda
-    LEFT JOIN orders ON orders_list.fk_order = order.id;
+    LEFT JOIN orders_list ON agenda.id = orders_list.fk_agenda
+    LEFT JOIN orders ON orders_list.fk_order = orders.id;
     """
 
     cursor.execute(sqlQuery)
     results = cursor.fetchall()
     return results
 
-def update_meetings():
-    # Pobierz gości (dla późniejszego przypisania)
-    guests_dict = get_guests()
+def db_delete_meeting(meeting_id: int) -> bool:
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        sql_query_select = "SELECT id, meeting_name FROM meeting WHERE id = %s"
+        cursor.execute(sql_query_select, (meeting_id,))
+        meeting = cursor.fetchone()
+        if not meeting:
+            raise HTTPException(
+                status_code=404, detail=f"Meeting with id #{meeting_id} not found"
+            )
 
+        sql_query_delete_doc = """
+            DELETE FROM document 
+            WHERE id IN (
+                SELECT fk_document_id 
+                FROM documents_list 
+                WHERE fk_meeting = %s
+            )
+        """
+        cursor.execute(sql_query_delete_doc, (meeting_id,))
+
+        sql_query_delete_doc_list = "DELETE FROM documents_list WHERE fk_meeting = %s"
+        cursor.execute(sql_query_delete_doc_list, (meeting_id,))
+
+        sql_query_delete_guests = "DELETE FROM guests_list WHERE fk_meeting = %s"
+        cursor.execute(sql_query_delete_guests, (meeting_id,))
+
+        sql_query_delete_tasks = """
+            DELETE FROM task 
+            WHERE id IN (
+                SELECT fk_task_id 
+                FROM tasks_list 
+                WHERE fk_meeting = %s
+            )
+        """
+        cursor.execute(sql_query_delete_tasks, (meeting_id,))
+
+        sql_query_delete_task_list = "DELETE FROM tasks_list WHERE fk_meeting = %s"
+        cursor.execute(sql_query_delete_task_list, (meeting_id,))
+
+        sql_query_delete_meeting = "DELETE FROM meeting WHERE id = %s"
+        cursor.execute(sql_query_delete_meeting, (meeting_id,))
+        connection.commit()
+        return True
+
+    except Exception as e:
+        connection.rollback()
+        raise HTTPException(status_code=500, detail=f"Error deleting meeting: {str(e)}")
+
+    finally:
+        cursor.close()
+        connection.close()
+
+
+
+def update_meetings():
     # Połączenie z bazą danych
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
@@ -148,25 +203,21 @@ def update_meetings():
         meeting.meeting_address,
         meeting.online_address,
         meeting_type.type_name AS meeting_type,
-        agenda.name AS agenda_name,
+        meeting.agenda AS agenda_id,
         GROUP_CONCAT(DISTINCT guest.id, ';',  guest.name, ';', guest.surname, ';', guest.job_position) AS guests,
         GROUP_CONCAT(DISTINCT document.doc_address) AS documents,
-        GROUP_CONCAT(DISTINCT task.name) AS tasks,
-        GROUP_CONCAT(DISTINCT orders.order) AS orders
+        GROUP_CONCAT(DISTINCT task.id, ';', task.name, ';', task.description) AS tasks
     FROM 
         meeting
     LEFT JOIN meeting_type ON meeting.meeting_type = meeting_type.id
-    LEFT JOIN agenda ON meeting.agenda = agenda.id
     LEFT JOIN guests_list ON meeting.id = guests_list.fk_meeting
     LEFT JOIN guest ON guests_list.fk_guest_id = guest.id
     LEFT JOIN documents_list ON meeting.id = documents_list.fk_meeting
     LEFT JOIN document ON documents_list.fk_document_id = document.id
-    LEFT JOIN tasks_list ON meeting.id = tasks_list.fk_tasks
+    LEFT JOIN tasks_list ON meeting.id = tasks_list.fk_meeting
     LEFT JOIN task ON tasks_list.fk_task_id = task.id
-    LEFT JOIN orders_list ON agenda.id = orders_list.fk_agenda
-    LEFT JOIN orders ON orders_list.fk_order = orders.id
     GROUP BY 
-        meeting.id, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address, meeting_type.type_name, agenda.name;
+        meeting.id, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address, meeting_type.type_name, agenda_id;
     """
     cursor.execute(sqlQuery)
     results = cursor.fetchall()
@@ -180,28 +231,34 @@ def update_meetings():
             raw_guest_list = row['guests'].split(',')
             for raw_guest in raw_guest_list:
                 guest_data = raw_guest.split(';')
-                new_guest = Guest(id=guest_data[0], name=guest_data[1], surname=guest_data[2], job_position=guest_data[3])  
+                new_guest = Guest(id=guest_data[0], name=guest_data[1], surname=guest_data[2], job_position=guest_data[3])
                 guest_list.append(new_guest)
-            document_list = []
-            if row['documents']:
-                document_list = row['documents'].split(', ')
+        document_list = []
+        if row['documents']:
+            document_list = row['documents'].split(', ')
 
-        # Parse tasks
         task_list = []
         if row['tasks']:
-            task_list = [{"name": task.strip()} for task in row['tasks'].split(', ')]
+            raw_tasks_list = row['tasks'].split(',')
+            for raw_tasks in raw_tasks_list:
+                task_data = raw_tasks.split(';')
+                new_Task = Task(id=task_data[0], name=task_data[1], description=task_data[2])
+                task_list.append(new_Task)
 
-        # Parse orders (optional)
-        order_list = []
-        if row['orders']:
-            order_list = row['orders'].split(', ')
-            
-        print(document_list)
+        meeting_agenda = Agenda()
+        agendas = get_agendas()
+        agenda_orders = []
+        for agenda in agendas:
+            if agenda['agenda_id'] == row['agenda_id']:
+                meeting_agenda.id = agenda['agenda_id']
+                meeting_agenda.name = agenda['agenda_name']
+                agenda_orders.append(agenda['order_name'])
+        meeting_agenda.order = agenda_orders
+
         
         for i in range(len(document_list)):
             document_list[i] = '/files/' + document_list[i]
-        print(document_list)
-        # Add parsed meeting
+
         meetings.append(
             ExistedMeeting(
                 id=row['meeting_id'],
@@ -213,7 +270,7 @@ def update_meetings():
                 online_address=row['online_address'],
                 guests=guest_list,
                 tasksList=task_list,
-                agenda={"name": row['agenda_name']},
+                agenda=meeting_agenda,
                 documents=document_list,
             )
         )
@@ -449,8 +506,9 @@ async def delete_meetings(meeting_id: int):
     tempMeetings = meetings
     for meeting in tempMeetings:
         if meeting.id == meeting_id:
-            if meeting.documents:
-                deleteFiles(meeting.documents)
+            if(db_delete_meeting(meeting_id)):
+                if meeting.documents:
+                    deleteFiles(meeting.documents)
             meetings.remove(meeting)
             return f"deleted meeting #{meeting_id}"
     raise HTTPException(
