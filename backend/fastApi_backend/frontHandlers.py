@@ -45,7 +45,6 @@ def map_meeting_to_send(meeting: ExistedMeeting) -> ExternalExistedMeeting:
         documents=meeting.documents,
     )
 
-
 def at_least_one_address(meeting_address: str, online_address: str) -> bool:
     if (meeting_address and len(meeting_address) > 0) or (
         online_address and len(online_address) > 0
@@ -77,6 +76,8 @@ def map_agenda_incoming(incomingAgenda: ExternalAgenda) -> Agenda:
 
 
 def map_agenda_outgoing(insideAgenda: Agenda) -> ExternalAgenda:
+    if insideAgenda.order == [None]:
+        insideAgenda.order = [""]
     return ExternalAgenda(
         id=insideAgenda.id,
         agendaName=insideAgenda.name,
@@ -138,4 +139,4 @@ def create_agenda_id(agendas: List[Agenda]):
     else:
         last_agenda_id = 1
 
-    return last_agenda_id
+    return last_agenda_id + 1

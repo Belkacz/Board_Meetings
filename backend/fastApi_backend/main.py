@@ -23,7 +23,8 @@ from meetings import (
     ErrorResponse,
     ExternalShortMeeting,
     ExternalBaseMeeting,
-    Task
+    Task,
+    MeetingType
 )
 
 
@@ -48,7 +49,7 @@ app = FastAPI()
 
 # database Connection
 
-def get_db_connection():
+def db_get_connection():
     return mysql.connector.connect(
         host="localhost",
         user="meetingsAdmin",
@@ -58,8 +59,8 @@ def get_db_connection():
     )
 
 # @app.on_event("startup")
-def get_guests():
-    connection = get_db_connection()
+def db_get_guests():
+    connection = db_get_connection()
     cursor = connection.cursor(dictionary=True)
     
     sqlQuery = "SELECT id, name, surname, job_position FROM guest"
@@ -96,7 +97,7 @@ def map_agendas(results: List[Dict[str, Any]]) -> List[Agenda]:
     ]
 
 def get_agendas():
-    connection = get_db_connection()
+    connection = db_get_connection()
     cursor = connection.cursor(dictionary=True)
     
     sqlQuery = """
@@ -115,7 +116,7 @@ def get_agendas():
     return results
 
 def get_agendas():
-    connection = get_db_connection()
+    connection = db_get_connection()
     cursor = connection.cursor(dictionary=True)
     
     sqlQuery = """
@@ -134,7 +135,7 @@ def get_agendas():
     return results
 
 def db_delete_meeting(meeting_id: int) -> bool:
-    connection = get_db_connection()
+    connection = db_get_connection()
     cursor = connection.cursor(dictionary=True)
     try:
         sql_query_select = "SELECT id, meeting_name FROM meeting WHERE id = %s"
@@ -191,10 +192,10 @@ def db_delete_meeting(meeting_id: int) -> bool:
 
 def update_meetings():
     # Połączenie z bazą danych
-    connection = get_db_connection()
+    connection = db_get_connection()
     cursor = connection.cursor(dictionary=True)
 
-    sqlQuery = """
+    sql_query = """
     SELECT 
         meeting.id AS meeting_id,
         meeting.meeting_name,
@@ -219,7 +220,7 @@ def update_meetings():
     GROUP BY 
         meeting.id, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address, meeting_type.type_name, agenda_id;
     """
-    cursor.execute(sqlQuery)
+    cursor.execute(sql_query)
     results = cursor.fetchall()
 
     global meetings
@@ -233,9 +234,11 @@ def update_meetings():
                 guest_data = raw_guest.split(';')
                 new_guest = Guest(id=guest_data[0], name=guest_data[1], surname=guest_data[2], job_position=guest_data[3])
                 guest_list.append(new_guest)
+
         document_list = []
         if row['documents']:
-            document_list = row['documents'].split(', ')
+            for doc in row['documents'].split(','):
+                document_list.append(doc.strip())
 
         task_list = []
         if row['tasks']:
@@ -257,7 +260,7 @@ def update_meetings():
 
         
         for i in range(len(document_list)):
-            document_list[i] = '/files/' + document_list[i]
+            document_list[i] = document_list[i]
 
         meetings.append(
             ExistedMeeting(
@@ -280,7 +283,123 @@ def update_meetings():
     connection.close()
 
     print("Updated meetings:", meetings)
+    return meetings
+    
+    
+def db_add_agenda(agenda: Agenda)-> Number:
+    # Połączenie z bazą danych
+    connection = db_get_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(
+        "INSERT INTO agenda (`name`) VALUES (%s)",
+        (agenda.name,),
+        )
+    db_agenda_id = cursor.lastrowid
+    connection.commit()
 
+    try:
+        for order in agenda.order:
+            cursor.execute(
+                "INSERT INTO orders (`order`) VALUES (%s)",
+                (order,),
+            )
+            order_id = cursor.lastrowid
+
+            cursor.execute(
+                "INSERT INTO orders_list (fk_agenda, fk_order) VALUES (%s, %s)",
+                (agenda.id, order_id),
+            )
+        
+        connection.commit()
+        print("Agenda and orders successfully added")
+        return db_agenda_id
+    except Exception as e:
+        connection.rollback()
+        print(f"Error while adding agenda: {str(e)}")
+        raise
+    finally:
+        cursor.close()
+        connection.close()
+        
+        
+def db_add_meeting(meeting: ExistedMeeting)-> Number:
+    # Połączenie z bazą danych
+    connection = db_get_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        numeric_meeting_type = 0
+        if meeting.meeting_type == MeetingType.BOARDMEETINGS:
+            numeric_meeting_type = 1
+        elif meeting.meeting_type == MeetingType.GENERALASSEMBLY:
+            numeric_meeting_type = 2
+        elif meeting.meeting_type == MeetingType.OTHER:
+            numeric_meeting_type = 3
+        else:
+            numeric_meeting_type = 3
+            print("Unknown meeting type")
+        cursor.execute(
+            "INSERT INTO meeting (meeting_type, meeting_name, start_date, end_date, meeting_address, online_address, agenda) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            (numeric_meeting_type, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address,  meeting.agenda.id if meeting.agenda is not None else None )
+        )
+        meeting_id = cursor.lastrowid
+        connection.commit()
+        print(f"Meeting #{meeting_id} successfully added")
+        return meeting_id
+    except Exception as e:
+        connection.rollback()
+        print(f"Error while adding agenda: {str(e)}")
+        raise
+    finally:
+        cursor.close()
+        connection.close()
+        
+def db_add_tasks(tasks: List[Task], meeting_id):
+    # Połączenie z bazą danych
+    connection = db_get_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        for task in tasks:
+            cursor.execute(
+                "INSERT INTO task (name, description) VALUES (%s, %s)",
+                (task.name, task.description,)
+            )
+            task_id = cursor.lastrowid
+            cursor.execute(
+                "INSERT INTO tasks_list (fk_meeting, fk_task_id) VALUES (%s, %s)",
+                (meeting_id, task_id,)
+            )
+            connection.commit()
+    except Exception as e:
+        connection.rollback()
+        print(f"Error while adding tasks: {str(e)}")
+        raise
+    finally:
+        cursor.close()
+        connection.close()
+    
+def db_add_docs(docs: List[str], meeting_id):
+    # Połączenie z bazą danych
+    connection = db_get_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        for doc in docs:
+            cursor.execute(
+                "INSERT INTO document (doc_address) VALUES (%s)",
+                (doc,)
+            )
+            doc_id = cursor.lastrowid
+            cursor.execute(
+                "INSERT INTO documents_list (fk_meeting, fk_document_id) VALUES (%s, %s)",
+                (meeting_id, doc_id,)
+            )
+            connection.commit()
+    except Exception as e:
+        connection.rollback()
+        print(f"Error while adding docs: {str(e)}")
+        raise
+    finally:
+        cursor.close()
+        connection.close()
 
 # frontEnd 
 origins = ["http://localhost:4200"]
@@ -306,7 +425,7 @@ if not os.path.exists(UPLOAD_DIRECTORY):
     },
 )
 async def get_meetings_list(page: int, pagesize: int):
-    update_meetings()
+    meetings = update_meetings()
     if page <= 0 or pagesize <= 0:
         raise HTTPException(status_code=400, detail="Invalid pagination parameters")
 
@@ -334,6 +453,8 @@ async def get_meetings_list(page: int, pagesize: int):
     },
 )
 async def getMeetingDetails(meeting_id: int):
+    meetings = update_meetings()
+    
     result_meeting: ExternalExistedMeeting = None
     if (
         meeting_id - 1 >= 0
@@ -356,7 +477,7 @@ async def getMeetingDetails(meeting_id: int):
 @app.get("/get-people", response_model=list[ExternalGuest])
 async def getPeopleList():
     external_guests = []
-    guests = get_guests()
+    guests = db_get_guests()
     if len(guests) > 0:
         for guest in guests:
             mapped_guest = map_people_to_send(guest)
@@ -389,13 +510,10 @@ async def createUploadFiles(files: List[UploadFile] = File(...)):
 
 @app.get("/files/{file_name}")
 async def get_file(file_name: str):
-    print(file_name)
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
-    
     if os.path.exists(file_path):
         dollar_index = file_name.find("$") + 1
         new_file_name = file_name[dollar_index:] if dollar_index != 0 else file_name
-
         return FileResponse(
             path=file_path,
             filename=new_file_name,
@@ -403,7 +521,6 @@ async def get_file(file_name: str):
         )
     else:
         raise HTTPException(status_code=404, detail="File not found")
-
 
 @app.post("/new-meeting",
     responses={
@@ -421,8 +538,10 @@ async def add_meeting(meeting: ExternalBaseMeeting):
 
     new_meeting_id = last_meeting.id + 1
 
+    agendas = map_agendas(get_agendas())
     if meeting.agenda.id == None and meeting.agenda.agendaName != None:
-        meeting.agenda.id = create_agenda_id()
+        meeting.agenda.id = create_agenda_id(agendas)
+        db_add_agenda(map_agenda_incoming(meeting.agenda))
     if meeting.agenda.id == None and meeting.agenda.agendaName == None:
         meeting.agenda = None
 
@@ -434,7 +553,11 @@ async def add_meeting(meeting: ExternalBaseMeeting):
             detail="Meeting need at least one meeting address or online address",
         )
     meetings.append(new_meeting)
-    return {"message": f"Created new meeting with id# {new_meeting_id}"}
+    new_db_meeting_id = db_add_meeting(new_meeting)
+    db_add_tasks(meeting.tasksList, new_db_meeting_id)
+    db_add_docs(meeting.documents, new_db_meeting_id)
+    
+    return {"message": f"Created new meeting with id# {new_db_meeting_id}"}
 
 
 def filesNotInOriginal(
@@ -481,7 +604,6 @@ async def update_meeting(edited_meeting: ExternalExistedMeeting):
     for index, meeting in enumerate(meetings):
         if meeting.id == updated_meeting.id:
             if meeting.documents is not None and len(meeting.documents) > 0:
-                print(meeting.documents)
                 if meeting.documents != None:
                     deleteFiles(
                         filesNotInOriginal(updated_meeting.documents, meeting.documents)
