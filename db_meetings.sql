@@ -5,24 +5,6 @@ CREATE USER 'meetingsAdmin'@'localhost' IDENTIFIED BY 'MeetTheAdmin123';
 GRANT SELECT, INSERT, DELETE, UPDATE ON db_meetings.* TO 'meetingsAdmin'@'localhost';
 
 FLUSH PRIVILEGES;
--- phpMyAdmin SQL Dump
--- version 5.1.1deb5ubuntu1
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Czas generowania: 05 Sty 2025, 20:41
--- Wersja serwera: 8.0.40-0ubuntu0.22.04.1
--- Wersja PHP: 8.1.2-1ubuntu2.20
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Baza danych: `db_meetings`
@@ -65,10 +47,10 @@ CREATE TABLE `document` (
 --
 
 INSERT INTO `document` (`id`, `doc_address`) VALUES
-(1, '123$testFile1.txt'),
-(2, '123$testFile2.txt'),
-(3, 'testFile3.txt'),
-(4, 'testFile4.txt');
+(1, '/files/123$testFile1.txt'),
+(2, '/files/123$testFile2.txt'),
+(3, '/files/123$testFile3.txt'),
+(4, '/files/123$testFile4.txt');
 
 -- --------------------------------------------------------
 
@@ -87,7 +69,10 @@ CREATE TABLE `documents_list` (
 --
 
 INSERT INTO `documents_list` (`id`, `fk_meeting`, `fk_document_id`) VALUES
-(1, 1, 1);
+(1, 1, 1),
+(2, 2, 2),
+(3, 2, 3),
+(4, 4, 4);
 
 -- --------------------------------------------------------
 
@@ -131,9 +116,12 @@ CREATE TABLE `guests_list` (
 --
 
 INSERT INTO `guests_list` (`id`, `fk_meeting`, `fk_guest_id`) VALUES
-(1, 1, 3),
-(2, 1, 1),
-(3, 1, 6);
+(1, 1, 4),
+(2, 2, 2),
+(3, 3, 6),
+(4, 3, 3),
+(5, 3, 5),
+(6, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -157,8 +145,10 @@ CREATE TABLE `meeting` (
 --
 
 INSERT INTO `meeting` (`id`, `meeting_type`, `meeting_name`, `start_date`, `end_date`, `meeting_address`, `online_address`, `agenda`) VALUES
-(1, 1, 'Spotkanie testowe', '2025-01-06 20:03:50', '2025-01-06 21:37:50', 'adres1', 'online 123', 1),
-(2, 1, 'test2', '2025-01-06 19:41:46', '2025-01-06 19:42:46', '123', '123', 1);
+(1, 1, 'test1', '2025-01-09 11:29:11', '2025-01-09 12:29:11', 'test1', NULL, 1),
+(2, 1, 'test2', '2025-01-09 11:29:11', '2025-01-09 12:29:11', 'test2', NULL, 1),
+(3, 2, 'test3', '2025-01-09 11:29:11', '2025-01-09 13:29:11', 'test3', NULL, 3),
+(4, 3, 'test4', '2025-01-09 11:29:11', '2025-01-09 15:29:11', 'test4', NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -219,10 +209,9 @@ CREATE TABLE `orders_list` (
 
 INSERT INTO `orders_list` (`id`, `fk_agenda`, `fk_order`) VALUES
 (1, 1, 1),
-(2, 1, 2),
-(3, 2, 2),
-(4, 2, 3),
-(5, 2, 4);
+(2, 2, 2),
+(3, 3, 3),
+(4, 4, 4);
 
 -- --------------------------------------------------------
 
@@ -241,9 +230,9 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `name`, `description`) VALUES
-(1, 'Wykonać analize', 'Wykonać analize danych'),
-(2, 'Zaplanować przyszły kwartał', 'zaplanować zadania na nastepny kwartał'),
-(3, 'Zwolnić pracowników', 'zwolnić nierobów');
+(1, 'New task name 4', 'New task description 1'),
+(2, 'New task name 1', 'New task description 1'),
+(3, 'New task name 2', 'New task description 2');
 
 -- --------------------------------------------------------
 
@@ -253,9 +242,18 @@ INSERT INTO `task` (`id`, `name`, `description`) VALUES
 
 CREATE TABLE `tasks_list` (
   `id` int NOT NULL,
-  `fk_tasks` int DEFAULT NULL,
+  `fk_meeting` int DEFAULT NULL,
   `fk_task_id` int DEFAULT NULL
 );
+
+--
+-- Zrzut danych tabeli `tasks_list`
+--
+
+INSERT INTO `tasks_list` (`id`, `fk_meeting`, `fk_task_id`) VALUES
+(1, 1, 2),
+(2, 2, 3),
+(3, 3, 1);
 
 --
 -- Indeksy dla zrzutów tabel
@@ -334,7 +332,7 @@ ALTER TABLE `task`
 --
 ALTER TABLE `tasks_list`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_tasks` (`fk_tasks`),
+  ADD KEY `fk_tasks` (`fk_meeting`),
   ADD KEY `fk_task_id` (`fk_task_id`);
 
 --
@@ -345,61 +343,61 @@ ALTER TABLE `tasks_list`
 -- AUTO_INCREMENT dla tabeli `agenda`
 --
 ALTER TABLE `agenda`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `document`
 --
 ALTER TABLE `document`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `documents_list`
 --
 ALTER TABLE `documents_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `guest`
 --
 ALTER TABLE `guest`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `guests_list`
 --
 ALTER TABLE `guests_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `meeting`
 --
 ALTER TABLE `meeting`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `meeting_type`
 --
 ALTER TABLE `meeting_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `orders_list`
 --
 ALTER TABLE `orders_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `tasks_list`
@@ -443,6 +441,6 @@ ALTER TABLE `orders_list`
 -- Ograniczenia dla tabeli `tasks_list`
 --
 ALTER TABLE `tasks_list`
-  ADD CONSTRAINT `tasks_list_ibfk_1` FOREIGN KEY (`fk_tasks`) REFERENCES `meeting` (`id`),
+  ADD CONSTRAINT `tasks_list_ibfk_1` FOREIGN KEY (`fk_meeting`) REFERENCES `meeting` (`id`),
   ADD CONSTRAINT `tasks_list_ibfk_2` FOREIGN KEY (`fk_task_id`) REFERENCES `task` (`id`);
 COMMIT;
