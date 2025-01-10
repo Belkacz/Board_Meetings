@@ -76,6 +76,10 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.updateDataEditedMeeting();
+    this.inviteService.inviteList$.subscribe(invited => {
+      this.guestsList = invited;
+      this.combinedData.guests = this.guestsList;
+    })
   }
 
   private updateDataEditedMeeting(): void {
@@ -155,6 +159,8 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
     } else if (!this.combinedData.onlineAddress ? false : true || !this.combinedData.meetingAddress ? false : true) {
       alert("You need to provide a location or choose an online option");
     }
+    this.receiveForm;
+    console.log(this.combinedData)
     if (this.editedMeeting) {
       this.combinedData = { ...this.combinedData, id: this.editedMeeting.id };
       if (this.newFiles && this.newFiles.length > 0) {
@@ -184,7 +190,7 @@ export class EditMeetingPageComponent implements OnInit, OnDestroy {
 
 
   public saveTasksList(tasksList: Task[]): void {
-    // this.tasksList = tasksList;
+    this.tasksList = tasksList;
     this.combinedData.tasksList = this.tasksList;
   }
 

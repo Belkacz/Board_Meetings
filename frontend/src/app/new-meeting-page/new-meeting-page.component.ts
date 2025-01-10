@@ -31,7 +31,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   private newFiles: any;
   public activeHamburger: boolean = false;
 
-  constructor(private newMeeting: NewMeetingComponent, private inviteService: InviteService, private restService: RestService,
+  constructor(private inviteService: InviteService, private restService: RestService,
     private dataService: dataService, private breakpointObserver: BreakpointObserver
   ) {
     this.guestsList = [{ id: 0, name: "", surname: "", jobPosition: null, invited: false }]
@@ -67,6 +67,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.inviteService.inviteList$.subscribe(invited => {
       this.guestsList = invited;
+      this.combinedData.guests = this.guestsList;
     })
   }
 
@@ -95,7 +96,7 @@ export class NewMeetingPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-
+    this.receiveForm;
     if (this.newFiles && this.newFiles.length > 0) {
       this.restService.uploadFiles(this.newFiles, urls.UPLOADFILES).subscribe({
         next: (response: FileUploadResponse) => {

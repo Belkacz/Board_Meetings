@@ -273,101 +273,48 @@ def db_get_meeting(meeting_id: Number):
         cursor.close()
         connection.close()
 
-def update_meetings():
+def db_get_meetings()-> List[ExistedMeeting]:
     # Połączenie z bazą danych
     connection = db_get_connection()
     cursor = connection.cursor(dictionary=True)
-
-    sql_query = """
-    SELECT 
-        meeting.id AS meeting_id,
-        meeting.meeting_name,
-        meeting.start_date,
-        meeting.end_date,
-        meeting.meeting_address,
-        meeting.online_address,
-        meeting_type.type_name AS meeting_type,
-        meeting.agenda AS agenda_id,
-        GROUP_CONCAT(DISTINCT guest.id, ';',  guest.name, ';', guest.surname, ';', guest.job_position) AS guests,
-        GROUP_CONCAT(DISTINCT document.doc_address) AS documents,
-        GROUP_CONCAT(DISTINCT task.id, ';', task.name, ';', task.description) AS tasks
-    FROM 
-        meeting
-    LEFT JOIN meeting_type ON meeting.meeting_type = meeting_type.id
-    LEFT JOIN guests_list ON meeting.id = guests_list.fk_meeting
-    LEFT JOIN guest ON guests_list.fk_guest_id = guest.id
-    LEFT JOIN documents_list ON meeting.id = documents_list.fk_meeting
-    LEFT JOIN document ON documents_list.fk_document_id = document.id
-    LEFT JOIN tasks_list ON meeting.id = tasks_list.fk_meeting
-    LEFT JOIN task ON tasks_list.fk_task_id = task.id
-    GROUP BY 
-        meeting.id, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address, meeting_type.type_name, agenda_id;
-    """
-    cursor.execute(sql_query)
-    results = cursor.fetchall()
-
-    global meetings
-    meetings = []
-    
-    for row in results:
-        meetings.append(db_map_meeting(row))
-        # guest_list = []
-        # if row['guests']:
-        #     raw_guest_list = row['guests'].split(',')
-        #     for raw_guest in raw_guest_list:
-        #         guest_data = raw_guest.split(';')
-        #         new_guest = Guest(id=guest_data[0], name=guest_data[1], surname=guest_data[2], job_position=guest_data[3])
-        #         guest_list.append(new_guest)
-
-        # document_list = []
-        # if row['documents']:
-        #     for doc in row['documents'].split(','):
-        #         document_list.append(doc.strip())
-
-        # task_list = []
-        # if row['tasks']:
-        #     raw_tasks_list = row['tasks'].split(',')
-        #     for raw_tasks in raw_tasks_list:
-        #         task_data = raw_tasks.split(';')
-        #         new_Task = Task(id=task_data[0], name=task_data[1], description=task_data[2])
-        #         task_list.append(new_Task)
-
-        # meeting_agenda = Agenda()
-        # agendas = get_agendas()
-        # agenda_orders = []
-        # for agenda in agendas:
-        #     if agenda['agenda_id'] == row['agenda_id']:
-        #         meeting_agenda.id = agenda['agenda_id']
-        #         meeting_agenda.name = agenda['agenda_name']
-        #         agenda_orders.append(agenda['order_name'])
-        # meeting_agenda.order = agenda_orders
-
+    try:
+        sql_query = """
+        SELECT 
+            meeting.id AS meeting_id,
+            meeting.meeting_name,
+            meeting.start_date,
+            meeting.end_date,
+            meeting.meeting_address,
+            meeting.online_address,
+            meeting_type.type_name AS meeting_type,
+            meeting.agenda AS agenda_id,
+            GROUP_CONCAT(DISTINCT guest.id, ';',  guest.name, ';', guest.surname, ';', guest.job_position) AS guests,
+            GROUP_CONCAT(DISTINCT document.doc_address) AS documents,
+            GROUP_CONCAT(DISTINCT task.id, ';', task.name, ';', task.description) AS tasks
+        FROM 
+            meeting
+        LEFT JOIN meeting_type ON meeting.meeting_type = meeting_type.id
+        LEFT JOIN guests_list ON meeting.id = guests_list.fk_meeting
+        LEFT JOIN guest ON guests_list.fk_guest_id = guest.id
+        LEFT JOIN documents_list ON meeting.id = documents_list.fk_meeting
+        LEFT JOIN document ON documents_list.fk_document_id = document.id
+        LEFT JOIN tasks_list ON meeting.id = tasks_list.fk_meeting
+        LEFT JOIN task ON tasks_list.fk_task_id = task.id
+        GROUP BY 
+            meeting.id, meeting.meeting_name, meeting.start_date, meeting.end_date, meeting.meeting_address, meeting.online_address, meeting_type.type_name, agenda_id;
+        """
+        cursor.execute(sql_query)
+        results = cursor.fetchall()
+        meetings = []
         
-        # for i in range(len(document_list)):
-        #     document_list[i] = document_list[i]
-
-        # meetings.append(
-        #     ExistedMeeting(
-        #         id=row['meeting_id'],
-        #         meeting_type=row['meeting_type'] or "unknownType",
-        #         meeting_name=row['meeting_name'],
-        #         start_date=row['start_date'].isoformat(),
-        #         end_date=row['end_date'].isoformat(),
-        #         meeting_address=row['meeting_address'],
-        #         online_address=row['online_address'],
-        #         guests=guest_list,
-        #         tasksList=task_list,
-        #         agenda=meeting_agenda,
-        #         documents=document_list,
-        #     )
-        # )
-
-    # Close connections
-    cursor.close()
-    connection.close()
-
-    # print("Updated meetings:", meetings)
-    return meetings
+        for row in results:
+            meetings.append(db_map_meeting(row))
+        return meetings
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching meeting details: {str(e)}")
+    finally:
+        cursor.close()
+        connection.close()
     
     
 def db_add_agenda(agenda: Agenda)-> Number:
@@ -484,7 +431,8 @@ def db_add_docs(docs: List[str], meeting_id):
     finally:
         cursor.close()
         connection.close()
-        # guests_list
+
+# guests_list
 def db_add_guests(guests: List[Guest], meeting_id): 
     # Połączenie z bazą danych
     connection = db_get_connection()
@@ -528,7 +476,7 @@ if not os.path.exists(UPLOAD_DIRECTORY):
     },
 )
 async def get_meetings_list(page: int, pagesize: int):
-    meetings = update_meetings()
+    meetings = db_get_meetings()
     if page <= 0 or pagesize <= 0:
         raise HTTPException(status_code=400, detail="Invalid pagination parameters")
 
@@ -554,7 +502,7 @@ async def get_meetings_list(page: int, pagesize: int):
     },
 )
 async def getMeetingDetails(meeting_id: int):
-    meetings = update_meetings()
+    meetings = db_get_meetings()
     
     result_meeting: ExternalExistedMeeting = None
     if (
@@ -649,6 +597,9 @@ async def add_meeting(meeting: ExternalBaseMeeting):
         db_add_tasks(meeting.tasksList, new_db_meeting_id)
     if(meeting.documents != None):
         db_add_docs(meeting.documents, new_db_meeting_id)
+    if(meeting.guests != None and len(meeting.guests) > 0):
+        print(meeting.guests)
+        db_add_guests(meeting.guests, new_db_meeting_id)
     
     return {"message": f"Created new meeting with id# {new_db_meeting_id}"}
 
@@ -798,7 +749,6 @@ def db_update_meeting(updated_meeting: ExistedMeeting):
                 cursor.execute("INSERT INTO guests_list (fk_meeting, fk_guest_id) VALUES (%s, %s)", (updated_meeting.id, guest.id))
 
         connection.commit()
-
     except Exception as e:
         connection.rollback()
         raise HTTPException(status_code=500, detail=f"Error when updating meeting: {str(e)}")

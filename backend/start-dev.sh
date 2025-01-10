@@ -21,16 +21,25 @@ if ! command -v python3 -m venv ; then
     exit 1
 fi
 
-cd ./fastApi_backend
 
-if [ ! -d ./fastapienv ]; then
-    python3 -m venv ./fastapienv
-    . ./fastapienv/bin/activate
+if [ ! -d ./fast-env ]; then
+    python3 -m venv ./fast-env
+    . ./fast-env/bin/activate
     pip install -r ./requirements.txt
 else 
-    . ./fastapienv/bin/activate
+    . ./fast-env/bin/activate
+    # Porównanie pip freeze z requirements.txt
+    pip freeze > ./current_packages.txt
+    if ! diff -q ./current_packages.txt ./requirements.txt > /dev/null 2>&1; then
+        echo "Znaleziono różnice w pakietach. Aktualizacja środowiska..."
+        pip install -r ./requirements.txt
+    else
+        echo "Pakiety są zgodne z requirements.txt."
+    fi
+    rm ./current_packages.txt
 fi
 
+cd ./fastApi_backend
 
 echo "Uruchamianie w tybie HTTP"
 uvicorn main:app
