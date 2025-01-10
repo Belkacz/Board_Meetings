@@ -1,13 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, NativeDateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
-import { LOCALE_ID } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importuj CommonModule
+import { CommonModule } from '@angular/common';
 
-/** @title Datepicker with min & max validation */
 @Component({
   selector: 'app-datepicker',
   templateUrl: 'datepicker.component.html',
@@ -22,16 +20,22 @@ import { CommonModule } from '@angular/common'; // Importuj CommonModule
   ],
   styleUrls: ['./datepicker.component.css'],
   providers: [
-    { provide: LOCALE_ID, useValue: 'pl-PL' },
+    { provide: MAT_DATE_LOCALE, useValue: 'pl-PL' },
     {
       provide: DateAdapter,
       useClass: NativeDateAdapter
     }
-  ],
+  ]
 })
-export class DatepickerComponent {
+export class DatepickerComponent implements OnInit {
   @Input() defaultDate: Date | null = null;
   @Output() dateSelected = new EventEmitter<Date>();
+
+  ngOnInit() {
+    if (typeof this.defaultDate === 'string') {
+      this.defaultDate = new Date(this.defaultDate);
+    }
+  }
 
   public onDateChange(date: Date) {
     this.dateSelected.emit(date);
