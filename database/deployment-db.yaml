@@ -79,9 +79,9 @@ metadata:
 spec:
   ports:
   - name: mariadb
-    port: 8080
+    port: 3306
     protocol: TCP
-    targetPort: 8080
+    targetPort: 3306
   selector:
     app: mariadb-meetings
   sessionAffinity: None

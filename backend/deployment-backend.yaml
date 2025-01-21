@@ -18,6 +18,9 @@ spec:
         ports:
         - containerPort: 8000
         imagePullPolicy: Always
+        env:
+        - name: DB_HOST
+          value: meetings-db
 ---
 apiVersion: v1
 kind: Service
