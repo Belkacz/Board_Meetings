@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+  labels:
+    app: mariadb-meetings
+  name: mariadb-meetings-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ceph-block
+  volumeMode: Filesystem
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mariadb-meetings
+  name: mariadb-meetings
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb-meetings
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mariadb-meetings
+    spec:
+      containers:
+      - image: docker.io/library/mariadb:lts
+        name: mariadb
+        resources: {}
+        env:
+          - name: MARIADB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-meetings
+                key: MARIADB_PASSWORD
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-meetings
+                key: MARIADB_PASSWORD
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-meetings
+                key: MARIADB_ROOT_PASSWORD
+          - name: MARIADB_DATABASE
+            value: db_meetings
+        volumeMounts:
+          - name: data
+            mountPath: /var/lib/mysql
+          - name: mariadb-sql 
+            mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mariadb-meetings-data
+        - configMap:
+            defaultMode: 420
+            name: mariadb-sql
+          name: mariadb-sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mariadb-meetings
+  name: meetings-db
+spec:
+  ports:
+  - name: mariadb
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: mariadb-meetings
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
