@@ -299,27 +299,37 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
   }
 
   toggleAddress() {
-    this.form.get('meetingAddress')?.enable();
-    this.form.get('onlineAddress')?.disable();
-    this.isOnlineChecked = false;
-    this.isHybridChecked = false;
+    if (this.isHybridChecked) {
+      this.isHybridChecked = false;
+    }
+
     this.isAddressChecked = !this.isAddressChecked;
+
     if (this.isAddressChecked) {
       this.form.get('meetingAddress')?.enable();
+      this.form.get('onlineAddress')?.disable();
+      this.isOnlineChecked = false;
     } else {
       this.form.get('meetingAddress')?.disable();
+      this.isOnlineChecked = true;
     }
   }
 
   toggleOnline() {
-    this.form.get('meetingAddress')?.disable();
-    this.isAddressChecked = false;
-    this.isHybridChecked = false;
+    if (this.isHybridChecked) {
+      this.isHybridChecked = false;
+    }
+
     this.isOnlineChecked = !this.isOnlineChecked;
+  
     if (this.isOnlineChecked) {
       this.form.get('onlineAddress')?.enable();
+      this.form.get('meetingAddress')?.disable();
+      this.isAddressChecked = false;
     } else {
       this.form.get('onlineAddress')?.disable();
+      this.form.get('meetingAddress')?.enable();
+      this.isAddressChecked = true; 
     }
   }
 
@@ -414,7 +424,7 @@ export class NewMeetingComponent extends BaseFormComponent implements OnInit {
       Validators.required,
     ]);
     this.form.setValidators([
-      FormValidators.locationValidator(this.isHybridChecked, this.isAddressChecked, this.isOnlineChecked),
+      FormValidators.locationValidator(),
     ]);
   }
 

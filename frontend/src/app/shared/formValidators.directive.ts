@@ -28,14 +28,13 @@ export class FormValidators {
     };
   }
 
-  public static locationValidator(isHybridChecked: boolean, isAddressChecked: boolean, isOnlineChecked: boolean) {
+  public static locationValidator() {
     return (control: AbstractControl) => {
       const onlineAddress = control.get('onlineAddress');
       const meetingAddress = control.get('meetingAddress');
       const hybridType = control.get('hybridType');
-
       let validLocation = false
-      if (hybridType!.value) {
+      if (hybridType?.value) {
         validLocation = onlineAddress!.value && meetingAddress!.value ? true : false
       } else {
         validLocation = onlineAddress!.value || meetingAddress!.value ? true : false
