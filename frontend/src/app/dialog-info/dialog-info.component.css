@@ -75,6 +75,18 @@ h4 {
     align-items: center;
     justify-content: center;
 }
+.dialog {
+    width: 75vw;
+}
+
+.expansion-panel-title {
+    flex-grow: 8;
+}
+
+.expansion-panel-description {
+    flex-grow: 1;
+}
+
 
 @media only screen and (max-height: 750px) {
     .scrollable-content {
