@@ -9,9 +9,11 @@
         <button mat-stroked-button class="margin-top-10px"
           routerLink="/meetings-list">Meetings List</button>
         <button mat-stroked-button class="margin-top-10px"
-          [routerLink]="[{ outlets: { bottomOutlet: ['about'] } }]">About</button>
+          (click)="handleAboutVisibility()">About</button>
       </div>
     </div>
-    <router-outlet name="bottomOutlet"></router-outlet>
+    <div *ngIf="isAboutVisible">
+      <app-about (visibilityOutput)="handleAboutVisibility()"></app-about>
+    </div>
   </div>
 </div>

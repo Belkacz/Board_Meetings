@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-about',
@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AboutComponent {
 
+    @Output() visibilityOutput = new EventEmitter<boolean>();
+
+    public changeVisibility(){
+      this.visibilityOutput.emit(true);
+    }
 }

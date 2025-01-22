@@ -14,13 +14,8 @@ const routes: Routes = [
   { path: 'new-meeting', component: NewMeetingPageComponent },
   { path: 'meetings-list', component: MeetingsListComponent },
   { path: 'edit-meeting/:id', component: EditMeetingPageComponent },
-  {
-    path: '',
-    component: MainMenuComponent,
-    children: [
-      { path: 'about', component: AboutComponent, outlet: 'bottomOutlet' },
-    ]
-  },
+  { path: '',
+    component: MainMenuComponent,},
   { path: '**', component: PageNotFoundComponent },
 ];
 

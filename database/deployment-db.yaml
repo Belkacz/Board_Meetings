@@ -43,7 +43,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: mariadb-meetings
-                key: MARIADB_PASSWORD
+                key: MARIADB_USER
           - name: MARIADB_PASSWORD
             valueFrom:
               secretKeyRef:

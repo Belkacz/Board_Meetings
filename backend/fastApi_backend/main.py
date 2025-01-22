@@ -46,21 +46,22 @@ from frontHandlers import (
 from projectInformation import projectInfo1, ProjectDataExternal
 
 app = FastAPI()
-hostAddress = None
-try:
-    hostAddress = os.environ['DB_HOST']
-except:
-    print("Domyślny host")
-    hostAddress = "localhost"
 
 # database Connection
 def db_get_connection():
+    hostAddress = None
+    try:
+        hostAddress = os.environ['DB_HOST']
+    except:
+        print("Domyślny host")
+        hostAddress = "localhost"
     return mysql.connector.connect(
         host=hostAddress,
         user="meetingsAdmin",
         password="MeetTheAdmin123",
         database="db_meetings",
-        port="3306"
+        port="3306",
+        collation="utf8mb4_general_ci"
     )
 
 # @app.on_event("startup")

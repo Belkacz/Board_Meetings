@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class MainMenuComponent {
 
+  public isAboutVisible = false;
+
+  public handleAboutVisibility(){
+    this.isAboutVisible = !this.isAboutVisible;
+  }
+
 }
