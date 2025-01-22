@@ -20,7 +20,7 @@ jobs:
 
       # Log in to Harbor Docker Registry
       - name: Log in to Harbor
-        run: echo "${{ secrets.ROBOJANUSZ_PASS }}" | docker login harbor.druid.moe -u "${{ secrets.ROBOJANUSZ_NAME }}" --password-stdin
+        run: echo "${{ secrets.OWNER_PASS }}" | docker login harbor.druid.moe -u "${{ secrets.OWNER_NAME }}" --password-stdin
 
       # Build and Push Docker images
       - name: Build and Push Backend Docker image
